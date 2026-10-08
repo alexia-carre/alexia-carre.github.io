@@ -1335,7 +1335,9 @@ a.window:hover .project-card__cta svg {
   gap: var(--space-5);
   min-height: calc(100vh - var(--nav-height));
   padding: var(--space-7) var(--gutter) var(--section-y);
-  background: var(--surface);
+  /* Same tint as the My Work / My Skills banners: the page fits the theme,
+     and the resume (image, unchanged) stands out like a document */
+  background: var(--tint-accent-2);
 }
 
 .resume-page__actions {
