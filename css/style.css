@@ -434,6 +434,12 @@ a {
    - on the My Work page, in a grid (.work-card: placement)
    The appearance lives here only: change the card once, both update. */
 .project-card {
+  /* Inside the cards, accent 1 (forest green/mint) is replaced by accent 2
+     (raspberry/pink), to match the rest of the page. Custom properties
+     are inherited: the pill and tags below follow without being changed. */
+  --primary: var(--accent-2);
+  --on-primary: var(--on-accent-2);
+  --accent: var(--accent-2);
   display: flex;
   flex-direction: column;
   gap: 8px;
