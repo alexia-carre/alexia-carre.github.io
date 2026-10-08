@@ -33,12 +33,15 @@
   --border-strong: #2f4a3a;
   --primary: #2f4a3a;
   --on-primary: #f6efe3;
-  --accent: #a64b26;        /* rust: the ONLY accent in light mode */
+  --accent: #a64b26;        /* rust: accent 1 = ACTIONS (buttons, CTA) */
   --on-accent: #f6efe3;
+  --accent-2: #a8285f;      /* raspberry: accent 2 = HIGHLIGHTS (5.9:1 on cream) */
+  --on-accent-2: #f6efe3;
+  --accent-2-on-band: #f2a7c3; /* light pink for the forest band (5.1:1) */
   --band: #2f4a3a;          /* dark section within light mode */
   --on-band: #f6efe3;
   /* Additions specific to our site (not in the file) */
-  --key-figure: var(--heading);  /* key figures: forest in light… */
+  --key-figure: var(--accent-2); /* key figures: accent 2 in both modes */
   --logo-filter: none;           /* black logos: unchanged in light */
   --facade-dim: 0;               /* facade (photos): not darkened in light */
 }
@@ -56,13 +59,15 @@
     --heading: #f2ede3;
     --border: #26332c;
     --border-strong: #3a4a41;
-    --primary: #3df5c8;     /* mint: the ONLY accent in dark mode */
+    --primary: #3df5c8;     /* mint: accent 1 = ACTIONS */
     --on-primary: #0e1512;
     --accent: #3df5c8;
     --on-accent: #0e1512;
+    --accent-2: #ff3d81;    /* pink: accent 2 = HIGHLIGHTS (5.5:1 on the background) */
+    --on-accent-2: #0e1512;
+    --accent-2-on-band: #ff3d81;
     --band: #16201b;
     --on-band: #f2ede3;
-    --key-figure: var(--accent);                 /* …mint in dark */
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
     --facade-dim: 0.5;                           /* "no brown in dark": darkened facade */
   }
@@ -82,9 +87,11 @@
   --on-primary: #0e1512;
   --accent: #3df5c8;
   --on-accent: #0e1512;
+  --accent-2: #ff3d81;
+  --on-accent-2: #0e1512;
+  --accent-2-on-band: #ff3d81;
   --band: #16201b;
   --on-band: #f2ede3;
-  --key-figure: var(--accent);
   --logo-filter: invert(1) hue-rotate(180deg);
   --facade-dim: 0.5;
 }
@@ -215,12 +222,16 @@ a {
   letter-spacing: -0.01em;
 }
 
+/* Underline in accent 2: shown on the current page, appears on hover */
 .site-nav__links a {
-  transition: opacity 0.2s;
+  padding-block: 4px;
+  background: linear-gradient(var(--accent-2), var(--accent-2)) left bottom / 0 2px no-repeat;
+  transition: background-size 0.25s ease;
 }
 
-.site-nav__links a:hover {
-  opacity: 0.6;
+.site-nav__links a:hover,
+.site-nav__links a[aria-current="page"] {
+  background-size: 100% 2px;
 }
 
 /* --- Light/dark toggle (created by js/theme.js) --- */
@@ -294,9 +305,9 @@ a {
 
 /* The url() values are written HERE (not in the HTML): a relative path in CSS
    is resolved from the CSS file, so "../assets" is always right. */
-.doodle--star       { --doodle-mask: url("../assets/images/deco/stickman-left.svg");  aspect-ratio: 160 / 163; --doodle-color: var(--heading); }
+.doodle--star       { --doodle-mask: url("../assets/images/deco/stickman-left.svg");  aspect-ratio: 160 / 163; --doodle-color: var(--accent-2); }
 .doodle--sun        { --doodle-mask: url("../assets/images/deco/stickman-right.svg"); aspect-ratio: 142 / 140; --doodle-color: var(--accent); }
-.doodle--about-sun  { --doodle-mask: url("../assets/images/deco/sun.png");            aspect-ratio: 142 / 141; --doodle-color: var(--heading); }
+.doodle--about-sun  { --doodle-mask: url("../assets/images/deco/sun.png");            aspect-ratio: 142 / 141; --doodle-color: var(--accent-2); }
 .doodle--about-star { --doodle-mask: url("../assets/images/deco/star.png");           aspect-ratio: 262 / 267; --doodle-color: var(--accent); }
 .doodle--a2         { --doodle-mask: url("../assets/images/deco/a-squared.svg");      aspect-ratio: 60 / 58;   --doodle-color: var(--fg); }
 
@@ -359,7 +370,8 @@ a {
   color: var(--fg);
   box-shadow: inset 0 0 0 1px var(--border-strong);
 }
-.tag--green { color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.tag--green  { color: var(--accent);   box-shadow: inset 0 0 0 1px var(--accent); }
+.tag--purple { color: var(--accent-2); box-shadow: inset 0 0 0 1px var(--accent-2); }
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
@@ -650,11 +662,18 @@ a.work-card:hover {
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--on-band);
-  opacity: 0.85;
 }
 
 .venn__list strong {
   font-weight: 700;
+}
+
+/* Second circle (UX Design) and its title in accent 2:
+   the two disciplines become visually distinct */
+.venn__circles circle:last-child,
+.venn__list--right strong {
+  stroke: var(--accent-2-on-band);
+  color: var(--accent-2-on-band);
 }
 
 .venn__circles {
@@ -1270,6 +1289,7 @@ a.window:hover .window__cta svg {
 
 .case__stats strong {
   display: block;
+  color: var(--key-figure);
   font-size: 28px;
   font-weight: 500;
   letter-spacing: -0.04em;
