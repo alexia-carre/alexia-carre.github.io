@@ -117,6 +117,10 @@
   --color-icon: var(--accent);
   --color-pill: var(--surface);
 
+  /* Spring easing: the curve goes above 1 → slight overshoot, like Framer's "bounce: 0.2".
+     Moved up to :root because the project cards use it outside the facade too */
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
   /* Highlighted sections (key figures, page banners): 12% of accent 2 */
   --tint-accent-2: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
 
@@ -425,9 +429,101 @@ a {
   .page-banner p { font-size: 30px; }
 }
 
-/* --- Work card (My Work page) --- */
+/* --- Project card: ONE component, used in two places ---
+   - on the home page, inside each facade window (.window__card: placement)
+   - on the My Work page, in a grid (.work-card: placement)
+   The appearance lives here only: change the card once, both update. */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+/* Lift on hover: the card itself (My Work) or its window (home page) */
+a.project-card:hover,
+a.window:hover .project-card {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 34px -14px rgba(0, 0, 0, 0.45);
+}
+
+/* Top row: year on the left, call to action on the right */
+.project-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 28px; /* reserves the pill's height: the card doesn't "jump" */
+}
+
+.project-card__year {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fg-muted);
+}
+
+/* "View more" pill (visible by default; the facade hides it until the window opens) */
+.project-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, translate 0.4s var(--ease-spring);
+}
+
+.project-card__cta svg {
+  width: 14px;
+  height: 14px;
+  transition: translate 0.2s ease;
+}
+
+/* Hover: the arrow nudges forward → "it's clickable" */
+a.project-card:hover .project-card__cta svg,
+a.window:hover .project-card__cta svg {
+  translate: 3px 0;
+}
+
+/* "Coming soon" variant: muted, it's not an action */
+.project-card__cta--soon {
+  background: color-mix(in srgb, var(--fg) 10%, var(--surface));
+  color: var(--fg);   /* --fg-muted only reached 4.3:1 on this background */
+}
+
+.project-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-subheading);
+}
+
+/* margin-top: auto pushes the tags to the bottom of the card:
+   year and title at the top, tags at the bottom, whatever the height */
+.project-card .tags {
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+@media (min-width: 810px) {
+  .project-card { padding: 20px 22px 22px; }
+  .project-card__title { font-size: 20px; }
+}
+
+/* --- My Work page: card grid --- */
 .work-grid {
   display: grid;
+  grid-auto-rows: 1fr;   /* all rows the height of the tallest → identical cards */
   gap: 32px;
   width: min(100% - 2 * var(--gutter), 929px);
   margin: 60px auto 100px;
@@ -438,70 +534,14 @@ a {
 @media (min-width: 810px) {
   .work-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 60px 59px;
-    align-items: start;
+    gap: 40px;
+    /* "stretch" (the default): the cards in the same row take the same
+       height, no JS needed here since they are siblings in the grid */
   }
 }
 
 .work-card {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  transition: transform 0.25s, box-shadow 0.25s;
-}
-
-a.work-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.18);
-}
-
-.work-card__header {
-  height: 80px;
-  background: var(--band);
-}
-
-.work-card__badge {
-  position: absolute;
-  top: 22px;
-  right: 22px;
-  display: grid;
-  place-items: center;
-  min-width: 35px;
-  height: 36px;
-  padding: 0 8px;
-  background: var(--color-bg);
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-faint);
-}
-
-.work-card__badge svg {
-  width: 18px;
-  height: 18px;
-}
-
-.work-card__body {
-  display: grid;
-  gap: 12px;
-  padding: 26px 22px 22px;
-}
-
-.work-card__year {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-faint);
-}
-
-.work-card__title {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--color-subheading);
-  margin-bottom: 8px;
+  height: 100%;   /* fills the grid cell (stretched to the tallest one) */
 }
 
 
@@ -836,8 +876,6 @@ a.work-card:hover {
    On hover we fade one out and the other in. */
 .window {
   --window-open: url("../assets/images/facade/window-open-overwhelmed.png");
-  /* Spring easing: the curve goes above 1 → slight overshoot, like Framer's "bounce: 0.2" */
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
   position: relative;
   /* flow-root (rather than block): a block that is "self-contained". Without it,
      the card's margin-top would "collapse" outside the window and the card would
@@ -886,104 +924,28 @@ a.work-card:hover {
   scale: 1;
 }
 
-/* Frosted glass card: backdrop-filter blurs what is BEHIND it */
-/* Mobile: the card sits BELOW the window, only overlapping the ledge,
+/* Placement of the project card (.project-card) in a window.
+   Mobile: the card sits BELOW the window, only overlapping the ledge,
    so the character stays visible. (A % margin is computed from the WIDTH.) */
 .window__card {
   z-index: 1;   /* above the window images */
   position: relative;
   margin: 85% 5% 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   /* Same height for all cards: js/main.js measures the tallest one and
      sets --window-card-height. Without JS: natural height (auto). */
   min-height: var(--window-card-height, auto);
-  padding: 18px 20px 20px;
-  /* Same style as the My Work cards: solid surface + thin border.
-     The shadow "lifts" the card off the facade photo. */
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.45);
-  text-align: left;
-  transition: transform 0.25s, box-shadow 0.25s;
 }
 
-/* Only windows that are links (a.window) lift their card */
-a.window:hover .window__card {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 34px -14px rgba(0, 0, 0, 0.5);
-}
-
-/* Top row of the card: year on the left, call to action on the right */
-.window__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 28px; /* reserves the pill's height: the card doesn't "jump" */
-}
-
-/* "View more" pill: hidden while the window is closed */
-.window__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--primary);
-  color: var(--on-primary);
-  font-size: 13px;
-  font-weight: 700;
-  white-space: nowrap;
+/* On the facade, the CTA stays hidden until the window opens
+   (same 3 triggers as the shutters: mouse, keyboard, scroll on mobile) */
+.window .project-card__cta {
   opacity: 0;
   translate: -8px 0;
-  transition: opacity 0.3s ease, translate 0.4s var(--ease-spring);
 }
 
-.window__cta svg {
-  width: 14px;
-  height: 14px;
-  transition: translate 0.2s ease;
-}
-
-/* "Coming soon" variant: muted, it's not an action */
-.window__cta--soon {
-  background: color-mix(in srgb, var(--fg) 10%, var(--surface));
-  color: var(--fg);   /* --fg-muted only reached 4.3:1 on this background */
-}
-
-/* Shows up when the window opens (same 3 triggers as the shutters) */
-.window:is(:hover, :focus-within, .is-open) .window__cta {
+.window:is(:hover, :focus-within, .is-open) .project-card__cta {
   opacity: 1;
   translate: 0 0;
-}
-
-/* Hovering the window: the arrow nudges forward → "it's clickable" */
-a.window:hover .window__cta svg {
-  translate: 3px 0;
-}
-
-/* Year and title: same treatment as .work-card__year / __title */
-.window__year {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--fg-muted);
-}
-
-.window__title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--color-subheading);
-}
-
-/* margin-top: auto pushes the tags to the bottom of the card:
-   year and title at the top, tags at the bottom, whatever the height */
-.window__card .tags {
-  margin-top: auto;
-  padding-top: 4px;
 }
 
 @media (min-width: 810px) {
@@ -1002,9 +964,7 @@ a.window:hover .window__cta svg {
     right: 5%;
     bottom: 2%;
     margin: 0;
-    padding: 20px 22px 22px;  /* same padding as the My Work cards */
   }
-  .window__title { font-size: 20px; }
 }
 
 /* ---------- HOME: about teaser + credits ---------- */
