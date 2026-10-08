@@ -970,6 +970,18 @@ a.window:hover .project-card__cta svg {
   scale: 1;
 }
 
+/* Project not available yet: the shutters STAY closed.
+   (:is() raises the specificity above the rules just above.)
+   The "Coming soon" label appears anyway, via the CTA rule below. */
+.window--soon:is(:hover, :focus-within, .is-open)::before {
+  opacity: 1;
+}
+
+.window--soon:is(:hover, :focus-within, .is-open)::after {
+  opacity: 0;
+  scale: 0.92 1;
+}
+
 /* Placement of the project card (.project-card) in a window.
    Mobile: the card sits BELOW the window, only overlapping the ledge,
    so the character stays visible. (A % margin is computed from the WIDTH.) */
