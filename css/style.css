@@ -521,8 +521,8 @@ a.work-card:hover {
   translate: 0 -50%;
 }
 
-.hero__doodle--left  { left: -32px; }
-.hero__doodle--right { right: -32px; }
+.hero__doodle--left  { left: -42px; }
+.hero__doodle--right { right: -42px; }
 
 .hero__stage {
   display: grid;
@@ -573,8 +573,8 @@ a.work-card:hover {
   .hero { padding: 60px var(--gutter) 140px; }
   .hero__title { font-size: 40px; }
   .hero__doodle { width: 35px; }
-  .hero__doodle--left  { left: -44px; }
-  .hero__doodle--right { right: -44px; }
+  .hero__doodle--left  { left: -62px; }
+  .hero__doodle--right { right: -62px; }
 
   /* Desktop: logos | portrait | logos */
   .hero__stage {
