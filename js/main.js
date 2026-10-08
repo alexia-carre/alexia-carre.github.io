@@ -1,3 +1,84 @@
+// Does the visitor want reduced animations? (system setting, accessibility)
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// Does the device have a mouse/trackpad that can "hover" over elements?
+const canHover = matchMedia("(hover: hover)").matches;
+
+
+// ===========================================================================
+// Galaxy: mouse parallax on the logos (home page)
+// ---------------------------------------------------------------------------
+// 1. On each mouse movement, we compute where it is relative to the
+//    center of the screen: from -1 (left/top) to +1 (right/bottom).
+// 2. Each logo should move by that value × its depth (data-depth),
+//    in the opposite direction from the mouse → depth effect.
+// 3. Rather than jumping straight to the target, the logo covers 8% of the
+//    remaining distance on every frame: that's what makes the movement smooth.
+// ===========================================================================
+
+const logos = [...document.querySelectorAll(".logo-grid img[data-depth]")];
+
+if (logos.length && canHover && !reduceMotion) {
+  let targetX = 0, targetY = 0;   // where the mouse is (-1 → 1)
+  let currentX = 0, currentY = 0; // where the animation is
+  let running = false;
+
+  const SMOOTHING = 0.08;
+
+  const animate = () => {
+    currentX += (targetX - currentX) * SMOOTHING;
+    currentY += (targetY - currentY) * SMOOTHING;
+
+    logos.forEach((logo) => {
+      const depth = Number(logo.dataset.depth);
+      logo.style.setProperty("--px", `${(-currentX * depth).toFixed(2)}px`);
+      logo.style.setProperty("--py", `${(-currentY * depth).toFixed(2)}px`);
+    });
+
+    // Target reached (to within a hair)? Stop the loop to save battery.
+    if (Math.abs(targetX - currentX) < 0.001 && Math.abs(targetY - currentY) < 0.001) {
+      running = false;
+      return;
+    }
+    // requestAnimationFrame: "call me again on the next frame" (~60 times/second)
+    requestAnimationFrame(animate);
+  };
+
+  window.addEventListener("pointermove", (event) => {
+    targetX = (event.clientX / window.innerWidth) * 2 - 1;
+    targetY = (event.clientY / window.innerHeight) * 2 - 1;
+    if (!running) {
+      running = true;
+      requestAnimationFrame(animate);
+    }
+  }, { passive: true });
+}
+
+
+// ===========================================================================
+// Facade windows on touchscreens (home page)
+// ---------------------------------------------------------------------------
+// No hover on a phone: the window opens on its own when it passes
+// through the middle of the screen. IntersectionObserver tells the browser
+// "notify me when this element enters/leaves this zone", which is far more
+// efficient than computing positions on every scroll.
+// ===========================================================================
+
+const windows = document.querySelectorAll(".window");
+
+if (windows.length && !canHover) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle("is-open", entry.isIntersecting);
+    });
+  }, {
+    // Shrinks the detection zone to a horizontal band in the middle of the screen
+    rootMargin: "-35% 0px -35% 0px",
+  });
+
+  windows.forEach((w) => observer.observe(w));
+}
+
+
 // ===========================================================================
 // Photo carousel (About page)
 // ---------------------------------------------------------------------------

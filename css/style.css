@@ -410,6 +410,14 @@ a.work-card:hover {
    and we halve it on mobile. */
 .logo-grid img {
   width: calc(var(--w) * 0.5);
+  /* "translate" and "scale" are separate properties: JS drives the first
+     (parallax), CSS drives the second (hover), without either overwriting the other. */
+  translate: var(--px, 0) var(--py, 0);
+  transition: scale 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.logo-grid img:hover {
+  scale: 1.08;
 }
 
 @media (min-width: 810px) {
@@ -565,19 +573,63 @@ a.work-card:hover {
   list-style: none;
 }
 
+/* Each window stacks two layers:
+     ::before = closed window, ::after = open window (image chosen by --window-open)
+   On hover we fade one out and the other in. */
 .window {
+  --window-open: url("../assets/images/facade/window-open-overwhelmed.png");
+  /* Spring easing: the curve goes above 1 → slight overshoot, like Framer's "bounce: 0.2" */
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
   position: relative;
+  display: block; /* an <a> is "inline" by default: it couldn't have a size */
   width: 100%;
-  aspect-ratio: 453 / 485;
-  background: url("../assets/images/facade/window.png") center top / contain no-repeat;
+}
+
+.window--inspecting { --window-open: url("../assets/images/facade/window-open-inspecting.png"); }
+.window--cooking    { --window-open: url("../assets/images/facade/window-open-cooking.png"); }
+
+.window::before,
+.window::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;          /* pinned to the top… */
+  aspect-ratio: 453 / 485;  /* …with the window's proportions */
+  background: center / contain no-repeat;
+  transition: opacity 0.3s ease, scale 0.4s var(--ease-spring);
+}
+
+.window::before {
+  background-image: url("../assets/images/facade/window-closed.png");
+}
+
+.window::after {
+  background-image: var(--window-open);
+  opacity: 0;
+  scale: 0.92 1;   /* shutters slightly "folded": they unfold on opening */
+}
+
+/* Opening: mouse hover, keyboard focus on the card,
+   or .is-open class (added by JS on touchscreens) */
+.window:hover::before,
+.window:focus-within::before,
+.window.is-open::before {
+  opacity: 0;
+}
+
+.window:hover::after,
+.window:focus-within::after,
+.window.is-open::after {
+  opacity: 1;
+  scale: 1;
 }
 
 /* Frosted glass card: backdrop-filter blurs what is BEHIND it */
+/* Mobile: the card sits BELOW the window, only overlapping the ledge,
+   so the character stays visible. (A % margin is computed from the WIDTH.) */
 .window__card {
-  position: absolute;
-  left: 5%;
-  right: 5%;
-  bottom: 2%;
+  z-index: 1;   /* above the window images */
+  position: relative;
+  margin: 85% 5% 0;
   display: grid;
   gap: 8px;
   padding: 18px 20px 20px;
@@ -590,8 +642,58 @@ a.work-card:hover {
   transition: transform 0.25s;
 }
 
-a.window__card:hover {
+/* Only windows that are links (a.window) lift their card */
+a.window:hover .window__card {
   transform: translateY(-4px);
+}
+
+/* Top row of the card: year on the left, call to action on the right */
+.window__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 28px; /* reserves the pill's height: the card doesn't "jump" */
+}
+
+/* "View more" pill: hidden while the window is closed */
+.window__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  translate: -8px 0;
+  transition: opacity 0.3s ease, translate 0.4s var(--ease-spring);
+}
+
+.window__cta svg {
+  width: 14px;
+  height: 14px;
+  transition: translate 0.2s ease;
+}
+
+/* "Coming soon" variant: muted, it's not an action */
+.window__cta--soon {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+/* Shows up when the window opens (same 3 triggers as the shutters) */
+.window:is(:hover, :focus-within, .is-open) .window__cta {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Hovering the window: the arrow nudges forward → "it's clickable" */
+a.window:hover .window__cta svg {
+  translate: 3px 0;
 }
 
 .window__year {
@@ -620,8 +722,17 @@ a.window__card:hover {
     grid-template-columns: repeat(2, 453px);
     gap: 29px 30px;
   }
+  /* Desktop: the card overlaps the bottom of the window, like on Framer */
+  .window { aspect-ratio: 453 / 485; }
+  .window__card {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    bottom: 2%;
+    margin: 0;
+    padding: 22px 30px 20px;
+  }
   .window__title { font-size: 20px; }
-  .window__card { padding: 22px 30px 20px; }
 }
 
 /* ---------- HOME: about teaser + credits ---------- */
