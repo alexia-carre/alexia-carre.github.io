@@ -606,17 +606,19 @@ a.work-card:hover {
 }
 
 /* ---------- HOME: key figures ---------- */
-/* "Surface" band for the figures (DESIGN-TOKENS §2) */
+/* Key-figures band: inverted colors (accent 2 background, text in the
+   page background color) → a section that stands out in both themes */
 .stats {
   display: grid;
   gap: 40px;
   padding: 80px var(--gutter);
-  background: var(--surface);
+  background: var(--accent-2);
+  color: var(--on-accent-2);
   text-align: center;
 }
 
 .stat__value {
-  color: var(--key-figure);
+  color: var(--on-accent-2);
   font-size: 52px;
   letter-spacing: -0.04em;
 }
@@ -625,7 +627,8 @@ a.work-card:hover {
   max-width: 240px;
   margin: 6px auto 0;
   font-size: 18px;
-  color: var(--color-muted);
+  font-weight: 500;   /* no fading: opacity would drop it below 4.5:1 */
+  color: var(--on-accent-2);
 }
 
 @media (min-width: 810px) {
