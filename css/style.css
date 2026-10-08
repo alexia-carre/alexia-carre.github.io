@@ -878,18 +878,20 @@ a.work-card:hover {
   display: grid;
   gap: 8px;
   padding: 18px 20px 20px;
-  background: rgba(168, 141, 86, 0.09);
-  -webkit-backdrop-filter: blur(13px);
-  backdrop-filter: blur(13px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 14px;
+  /* Same style as the My Work cards: solid surface + thin border.
+     The shadow "lifts" the card off the facade photo. */
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.45);
   text-align: left;
-  transition: transform 0.25s;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
 /* Only windows that are links (a.window) lift their card */
 a.window:hover .window__card {
   transform: translateY(-4px);
+  box-shadow: 0 18px 34px -14px rgba(0, 0, 0, 0.5);
 }
 
 /* Top row of the card: year on the left, call to action on the right */
@@ -926,8 +928,8 @@ a.window:hover .window__card {
 
 /* "Coming soon" variant: muted, it's not an action */
 .window__cta--soon {
-  background: rgba(255, 255, 255, 0.25);
-  color: #fff;
+  background: color-mix(in srgb, var(--fg) 10%, var(--surface));
+  color: var(--fg);   /* --fg-muted only reached 4.3:1 on this background */
 }
 
 /* Shows up when the window opens (same 3 triggers as the shutters) */
@@ -941,18 +943,18 @@ a.window:hover .window__cta svg {
   translate: 3px 0;
 }
 
+/* Year and title: same treatment as .work-card__year / __title */
 .window__year {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  color: #e6e6e6;
+  color: var(--fg-muted);
 }
 
 .window__title {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: #fff;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  color: var(--heading);
 }
 
 .window__card .tags {
@@ -975,7 +977,7 @@ a.window:hover .window__cta svg {
     right: 5%;
     bottom: 2%;
     margin: 0;
-    padding: 22px 30px 20px;
+    padding: 20px 22px 22px;  /* same padding as the My Work cards */
   }
   .window__title { font-size: 20px; }
 }
