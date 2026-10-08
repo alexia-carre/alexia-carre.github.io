@@ -824,7 +824,10 @@ a.work-card:hover {
   /* Spring easing: the curve goes above 1 → slight overshoot, like Framer's "bounce: 0.2" */
   --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
   position: relative;
-  display: block; /* an <a> is "inline" by default: it couldn't have a size */
+  /* flow-root (rather than block): a block that is "self-contained". Without it,
+     the card's margin-top would "collapse" outside the window and the card would
+     cover the illustration on mobile. (An <a> is inline by default.) */
+  display: flow-root;
   width: 100%;
 }
 
@@ -875,8 +878,12 @@ a.work-card:hover {
   z-index: 1;   /* above the window images */
   position: relative;
   margin: 85% 5% 0;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
+  /* Same height for all cards: js/main.js measures the tallest one and
+     sets --window-card-height. Without JS: natural height (auto). */
+  min-height: var(--window-card-height, auto);
   padding: 18px 20px 20px;
   /* Same style as the My Work cards: solid surface + thin border.
      The shadow "lifts" the card off the facade photo. */
@@ -957,8 +964,11 @@ a.window:hover .window__cta svg {
   color: var(--heading);
 }
 
+/* margin-top: auto pushes the tags to the bottom of the card:
+   year and title at the top, tags at the bottom, whatever the height */
 .window__card .tags {
-  margin-top: 4px;
+  margin-top: auto;
+  padding-top: 4px;
 }
 
 @media (min-width: 810px) {

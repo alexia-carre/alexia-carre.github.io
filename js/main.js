@@ -80,6 +80,45 @@ if (windows.length && !canHover) {
 
 
 // ===========================================================================
+// Facade cards: same height (home page)
+// ---------------------------------------------------------------------------
+// Each card sits inside ITS OWN window: CSS can't align them with one
+// another. So we measure the tallest one and give its height to all of them
+// (via the --window-card-height variable). Recalculated if the width changes
+// (text wrapping onto more or fewer lines) and once the font has loaded.
+// ===========================================================================
+
+const windowList = document.querySelector(".windows");
+const windowCards = [...document.querySelectorAll(".window__card")];
+
+if (windowList && windowCards.length) {
+  const equalizeCards = () => {
+    // 1. Return to natural height to measure the real content…
+    windowList.style.removeProperty("--window-card-height");
+    // 2. …find the tallest card…
+    const tallest = Math.max(...windowCards.map((card) => card.offsetHeight));
+    // 3. …and apply its height to all of them.
+    windowList.style.setProperty("--window-card-height", `${tallest}px`);
+  };
+
+  // ResizeObserver: notified whenever the list's size changes (window,
+  // phone rotation, zoom…). We only recalculate if the WIDTH changed:
+  // adjusting the heights changes the height of the list, which would
+  // otherwise trigger the observer again in a loop.
+  let lastWidth = 0;
+  new ResizeObserver(([entry]) => {
+    const width = Math.round(entry.contentRect.width);
+    if (width === lastWidth) return;
+    lastWidth = width;
+    equalizeCards();
+  }).observe(windowList);
+
+  // The font (Inter) can load after the script: we measure again once it's ready
+  document.fonts?.ready.then(equalizeCards);
+}
+
+
+// ===========================================================================
 // Photo carousel (About page)
 // ---------------------------------------------------------------------------
 // "Progressive enhancement" principle: the HTML/CSS already work without
