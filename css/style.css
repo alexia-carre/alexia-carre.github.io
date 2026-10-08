@@ -44,6 +44,7 @@
   --key-figure: var(--accent-2); /* key figures: accent 2 in both modes */
   --logo-filter: none;           /* black logos: unchanged in light */
   --facade-dim: 0;               /* facade (photos): not darkened in light */
+  --tag-darken: 20%;             /* tag text slightly darkened (contrast) */
 }
 
 /* Dark mode "B2 – Clean dark": follows the system setting, unless the button forced light.
@@ -70,6 +71,7 @@
     --on-band: #f2ede3;
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
     --facade-dim: 0.5;                           /* "no brown in dark": darkened facade */
+    --tag-darken: 0%;                            /* the dark-mode colors already pass */
   }
 }
 
@@ -94,6 +96,7 @@
   --on-band: #f2ede3;
   --logo-filter: invert(1) hue-rotate(180deg);
   --facade-dim: 0.5;
+  --tag-darken: 0%;
 }
 
 /* b) Component aliases → tokens (the same for both themes) */
@@ -362,22 +365,19 @@ a {
   line-height: 1.2;
 }
 
-/* "One accent per mode" rule: no more green/blue/purple.
-   The discipline tag (formerly green) takes the accent, the others stay neutral.
-   Solid background: stays readable even on the facade photo. */
+/* Tags without an outline: each one only declares its color (--tag-color),
+   and color-mix() derives the rest from it:
+   - background = 14% of the color blended into the page background → a tinted
+     pill, visible on cream, cards or white, and opaque over the facade photo;
+   - text = the color, darkened with a bit of --fg (--tag-darken) so it stays
+     ≥ 4.5:1 on that tinted background (not needed in dark mode). */
 .tag {
-  background: var(--bg);
-  color: var(--fg);
-  box-shadow: inset 0 0 0 1px var(--border-strong);
+  --tag-color: var(--fg);   /* neutral tag (client) */
+  background: color-mix(in srgb, var(--tag-color) 14%, var(--bg));
+  color: color-mix(in srgb, var(--tag-color), var(--fg) var(--tag-darken));
 }
-.tag--green  { color: var(--accent);   box-shadow: inset 0 0 0 1px var(--accent); }
-.tag--purple { color: var(--accent-2); box-shadow: inset 0 0 0 1px var(--accent-2); }
-
-/* In the case study previews (facade windows, My Work cards):
-   no outline, only the background and colored text */
-:is(.window__card, .work-card) .tag {
-  box-shadow: none;
-}
+.tag--green  { --tag-color: var(--accent); }    /* type of work */
+.tag--purple { --tag-color: var(--accent-2); }  /* personal project */
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
