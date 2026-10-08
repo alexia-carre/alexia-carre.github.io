@@ -373,6 +373,12 @@ a {
 .tag--green  { color: var(--accent);   box-shadow: inset 0 0 0 1px var(--accent); }
 .tag--purple { color: var(--accent-2); box-shadow: inset 0 0 0 1px var(--accent-2); }
 
+/* In the case study previews (facade windows, My Work cards):
+   no outline, only the background and colored text */
+:is(.window__card, .work-card) .tag {
+  box-shadow: none;
+}
+
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
   display: grid;
