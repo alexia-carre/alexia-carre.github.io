@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alexia Carré · Product-minded Designer</title>
+  <meta name="description" content="Alexia Carré, Product-minded Designer. I bridge Product Strategy and UX Design to deliver valuable and desirable innovations to enterprise users and businesses.">
+
+  <!-- Preview when the link is shared (LinkedIn, Slack, iMessage…) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Alexia's Portfolio">
+  <meta property="og:description" content="Product-minded Designer">
+  <meta property="og:image" content="https://alexia-carre.github.io/assets/images/og-image.png">
+  <meta property="og:url" content="https://alexia-carre.github.io/">
+  <link rel="canonical" href="https://alexia-carre.github.io/">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="site-nav" aria-label="Main navigation">
+    <a class="site-nav__avatar" href="index.html" aria-label="Home">
+      <img src="assets/images/portrait.jpg" alt="" width="31" height="31">
+    </a>
+    <ul class="site-nav__links">
+      <li><a href="mywork.html">My Work</a></li>
+      <li><a href="myskills.html">My Skills</a></li>
+      <li><a href="about.html">About me</a></li>
+      <li><a href="resume.html">Resume</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- HERO: title, portrait and logos -->
+    <section class="hero grain">
+      <h1 class="hero__title">
+        <span>Hi,</span>
+        <span class="hero__name">
+          <img class="hero__doodle hero__doodle--left" src="assets/images/deco/stickman-left.svg" alt="">
+          I'm Alexia Carré.
+          <img class="hero__doodle hero__doodle--right" src="assets/images/deco/stickman-right.svg" alt="">
+        </span>
+        <span class="accent">Designing for Enterprise UX.</span>
+      </h1>
+
+      <div class="hero__stage">
+        <img class="hero__portrait" src="assets/images/portrait.jpg" alt="Portrait of Alexia Carré" width="399" height="399">
+
+        <div class="hero__logos">
+          <ul class="logo-grid logo-grid--left" aria-label="Companies and schools">
+            <li><img src="assets/images/logos/tcs.svg" alt="Tata Consultancy Services" style="--w: 256px"></li>
+            <li><img src="assets/images/logos/addict-mobile.png" alt="Addict Mobile" style="--w: 132px"></li>
+            <li><img src="assets/images/logos/politecnico.png" alt="Politecnico di Milano" style="--w: 176px"></li>
+          </ul>
+          <ul class="logo-grid logo-grid--right" aria-label="Companies and schools (continued)">
+            <li><img src="assets/images/logos/ubisoft.svg" alt="Ubisoft" style="--w: 89px"></li>
+            <li><img src="assets/images/logos/skema.png" alt="SKEMA Business School" style="--w: 174px"></li>
+            <li><img src="assets/images/logos/holusion.png" alt="Holusion" style="--w: 171px"></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY FIGURES -->
+    <section class="stats" aria-label="Key figures">
+      <div class="stat">
+        <p class="stat__value">80%</p>
+        <p class="stat__label">cut in manual reviews for a product I have designed</p>
+      </div>
+      <div class="stat">
+        <p class="stat__value">13+</p>
+        <p class="stat__label">leading French and European logos</p>
+      </div>
+      <div class="stat">
+        <p class="stat__value">50M+ €</p>
+        <p class="stat__label">value of the deals I have been supporting</p>
+      </div>
+    </section>
+
+    <!-- VENN DIAGRAM: Product × UX -->
+    <section class="venn-section grain">
+      <h2>I bridge Product Strategy and UX Design to deliver valuable and desirable innovations to enterprise users and businesses.</h2>
+
+      <div class="venn">
+        <ul class="venn__list venn__list--left">
+          <li><strong>Product</strong></li>
+          <li>Product Discovery</li>
+          <li>Vision</li>
+          <li>Backlog Prioritization</li>
+          <li>Multi-stakeholders</li>
+        </ul>
+
+        <!-- Two circles drawn directly in SVG: no image to load -->
+        <svg class="venn__circles" viewBox="0 0 210 130" fill="none" stroke="#fff" stroke-width="3" aria-hidden="true">
+          <circle cx="70" cy="65" r="62"/>
+          <circle cx="140" cy="65" r="62"/>
+        </svg>
+
+        <ul class="venn__list venn__list--right">
+          <li><strong>UX Design</strong></li>
+          <li>User Discovery</li>
+          <li>Identifying user needs</li>
+          <li>Prototyping</li>
+          <li>Prospective Design</li>
+        </ul>
+      </div>
+
+      <a class="btn btn--light" href="myskills.html">Discover my skills</a>
+    </section>
+
+    <!-- FEATURED PRODUCTS: the building facade -->
+    <section class="facade" aria-labelledby="featured-title">
+      <div class="facade__cornice">
+        <h2 id="featured-title">My Featured Products.</h2>
+      </div>
+
+      <div class="facade__wall">
+        <ul class="windows">
+          <li class="window">
+            <a class="window__card" href="fire_safety.html">
+              <span class="window__year">2023</span>
+              <span class="window__title">Fire &amp; Safety technicians stuck searching through 600+ pages</span>
+              <span class="tags">
+                <span class="tag tag--green">UX/UI Design</span>
+                <span class="tag tag--blue">Global Energy &amp; Services Leader</span>
+              </span>
+            </a>
+          </li>
+          <li class="window">
+            <a class="window__card" href="data_tagging.html">
+              <span class="window__year">2025</span>
+              <span class="window__title">Compliance officers struggling with 100k+ docs to classify</span>
+              <span class="tags">
+                <span class="tag tag--green">AI Experience Design</span>
+                <span class="tag tag--blue">Leading Aerospace Manufacturer</span>
+              </span>
+            </a>
+          </li>
+          <li class="window">
+            <!-- Work in progress: no page yet, so it's not a link -->
+            <div class="window__card">
+              <span class="window__year">2024</span>
+              <span class="window__title">Inconsistent datasets slowing down decarbonation audits</span>
+              <span class="tags">
+                <span class="tag tag--green">Product Strategy</span>
+                <span class="tag tag--blue">Global Energy &amp; Services Leader</span>
+              </span>
+            </div>
+          </li>
+          <li class="window">
+            <a class="window__card" href="cookbook.html">
+              <span class="window__year">2025</span>
+              <span class="window__title">Cookbook for my best friend's wedding</span>
+              <span class="tags">
+                <span class="tag tag--green">Graphic Design &amp; Print</span>
+                <span class="tag tag--purple">Personal</span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ABOUT TEASER -->
+    <section class="teaser">
+      <h2>Curious &amp; detail-oriented.</h2>
+      <a class="btn btn--gradient" href="about.html">Get to know me</a>
+    </section>
+
+  </main>
+
+  <footer class="credits">
+    <p>AI-generated background and windows. Stickmans from <a href="https://www.flaticon.com/fr/auteurs/paulalee">Paulalee</a>.</p>
+  </footer>
+
+</body>
+</html>

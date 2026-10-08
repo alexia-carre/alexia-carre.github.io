@@ -1,0 +1,4 @@
+# System files Windows/macOS create on their own: no reason to save them
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About me · Alexia Carré</title>
+  <meta name="description" content="Alexia Carré, Product-minded Designer based in Paris.">
+  <meta property="og:title" content="About Alexia">
+  <meta property="og:image" content="https://alexia-carre.github.io/assets/images/og-image.png">
+  <meta property="og:url" content="https://alexia-carre.github.io/about">
+  <link rel="canonical" href="https://alexia-carre.github.io/about">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- "defer": the script runs once the HTML has been read -->
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+
+  <nav class="site-nav" aria-label="Main navigation">
+    <a class="site-nav__avatar" href="index.html" aria-label="Home">
+      <img src="assets/images/portrait.jpg" alt="" width="31" height="31">
+    </a>
+    <ul class="site-nav__links">
+      <li><a href="mywork.html">My Work</a></li>
+      <li><a href="myskills.html">My Skills</a></li>
+      <li><a href="about.html" aria-current="page">About me</a></li>
+      <li><a href="resume.html">Resume</a></li>
+    </ul>
+  </nav>
+
+  <main class="about">
+    <img class="about__sticker about__sticker--sun" src="assets/images/deco/sun-star.png" alt="">
+    <img class="about__sticker about__sticker--a2" src="assets/images/deco/a-squared.svg" alt="">
+
+    <h1>
+      <span class="about__name">Alexia Carré</span><br>
+      <span class="about__role">Product-minded Designer.</span>
+    </h1>
+
+    <div class="about__text">
+      <p>True life enthusiast, I find joy in the little things. My morning coffee, meeting-up with my friends, playing video games or wandering in Paris. I find inspiration wherever I look.</p>
+
+      <h2>🚜 Fun fact: I drove John Deer tractors</h2>
+      <p>I grew up in Chartres, a city located in Beauce, a very famous agricultural area. My family lineage goes up to the 16th century (that we know of!), and since then we have ALL been farmers. Here's to breaking conventions AND moving to Paris!</p>
+
+      <h2>🧠 My mindset</h2>
+      <p>When I turned 18, I dedicated 2 years of my life to do a Prépa B/L, the most multidisciplinary one in France. I learned a LOT, and it was probably the time were my brain was the most filled, but it was definitely not sustainable. My key takeways: social sciences &amp; mathematics, the need of combining different perspectives to consider a problem, and the intellectual curiosity of always wondering "why?".</p>
+    </div>
+
+    <div class="about__links">
+      <p>Find me on</p>
+      <ul>
+        <li><a class="btn btn--grey" href="https://www.linkedin.com/in/alexia-carr%C3%A9-6aa138195/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a class="btn btn--grey" href="https://www.pixilart.com/sthy/gallery" target="_blank" rel="noopener">Pixilart</a></li>
+      </ul>
+    </div>
+
+    <!-- Carousel: without JS it's a horizontal scrolling strip;
+         js/main.js adds the arrows and dots. -->
+    <section class="carousel" aria-label="Photos" data-carousel>
+      <ul class="carousel__track">
+        <li class="carousel__slide"><img src="assets/images/about/award.jpg" alt="Alexia posing with her innovation award" width="840" height="612"></li>
+        <li class="carousel__slide"><img src="assets/images/about/note-taking.jpg" alt="Alexia focused on note-taking" width="840" height="612" loading="lazy"></li>
+        <li class="carousel__slide"><img src="assets/images/about/enjoying-life.jpg" alt="Alexia enjoying life" width="840" height="612" loading="lazy"></li>
+        <li class="carousel__slide"><img src="assets/images/about/pitching.jpg" alt="Alexia after pitching an idea to her team" width="840" height="612" loading="lazy"></li>
+        <li class="carousel__slide"><img src="assets/images/about/hackathon.jpg" alt="Alexia with her hackathon team, who won" width="840" height="612" loading="lazy"></li>
+      </ul>
+    </section>
+    <p class="carousel__caption">Posing with my award · Focused note-taking · Enjoying life · After pitching an idea to my team · Posing with my hackathon team (we won!)</p>
+  </main>
+
+</body>
+</html>
