@@ -1167,8 +1167,11 @@ a.window:hover .project-card__cta svg {
     display: block;
     position: absolute;
   }
-  .about__sticker--sun { width: 195px; top: 180px; right: -210px; aspect-ratio: 460 / 267; }
-  .about__sticker--a2  { width: 83px;  top: 450px; right: -165px; }
+  /* INSIDE the column (right: 0), in the space left free by the text
+     (max 600 px wide). The width adapts if that space shrinks:
+     100% - 620px = what remains to the right of the text, minus a 20 px gap. */
+  .about__sticker--sun { width: min(195px, calc(100% - 620px)); top: 150px; right: 0; aspect-ratio: 460 / 267; }
+  .about__sticker--a2  { width: min(83px, calc((100% - 620px) / 2)); top: 360px; right: 50px; }
   /* Sun + star rebuilt with the positions they had in the original image */
   .doodle--about-sun  { position: absolute; left: 0;   top: 39%; width: 30.9%; }
   .doodle--about-star { position: absolute; left: 43%; top: 0;   width: 57%; }
