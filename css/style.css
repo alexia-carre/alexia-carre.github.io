@@ -981,7 +981,7 @@ a.window:hover .project-card__cta svg {
   /* Denser variant (one step smaller on the scale): on the facade the card must
      leave the illustration visible above it */
   gap: var(--space-2);
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-4);   /* the same on all 4 sides: the pill is as far from the top as from the right */
 }
 
 .window__card .tags {
