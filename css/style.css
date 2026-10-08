@@ -606,19 +606,18 @@ a.work-card:hover {
 }
 
 /* ---------- HOME: key figures ---------- */
-/* Key-figures band: inverted colors (accent 2 background, text in the
-   page background color) → a section that stands out in both themes */
+/* Key-figures band: a light wash of accent 2 (12%) as background,
+   figures in accent 2 → a dedicated section, without being flashy */
 .stats {
   display: grid;
   gap: 40px;
   padding: 80px var(--gutter);
-  background: var(--accent-2);
-  color: var(--on-accent-2);
+  background: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
   text-align: center;
 }
 
 .stat__value {
-  color: var(--on-accent-2);
+  color: var(--accent-2);
   font-size: 52px;
   letter-spacing: -0.04em;
 }
@@ -627,8 +626,7 @@ a.work-card:hover {
   max-width: 240px;
   margin: 6px auto 0;
   font-size: 18px;
-  font-weight: 500;   /* no fading: opacity would drop it below 4.5:1 */
-  color: var(--on-accent-2);
+  color: var(--fg);
 }
 
 @media (min-width: 810px) {
