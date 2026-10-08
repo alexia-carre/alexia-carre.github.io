@@ -26,8 +26,8 @@
   color-scheme: light;   /* also tells the browser: light scrollbars, fields… */
   --bg: #f6efe3;            /* cream */
   --surface: #efe5d3;       /* dark cream */
-  --fg: #2a211b;            /* ink */
-  --fg-muted: #5b4d41;      /* muted ink */
+  --fg: #2f3437;            /* charcoal (11:1 on cream) */
+  --fg-muted: #5a6066;      /* muted charcoal (5.1:1 on the cards) */
   --heading: #2f4a3a;       /* forest */
   --border: #dccfb8;
   --border-strong: #2f4a3a;
