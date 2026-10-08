@@ -115,7 +115,8 @@
   --color-pill: var(--surface);
 
   /* Typography */
-  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --tracking-tight: -0.015em;  /* headings and figures: tightened slightly (tuned for Jakarta) */
 
   /* Spacing & layout */
   --nav-height: 64px;
@@ -141,7 +142,6 @@
 body {
   margin: 0;
   font-family: var(--font);
-  font-optical-sizing: auto;  /* Inter switches to its "Display" cut at large sizes */
   color: var(--color-text);
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
@@ -155,7 +155,7 @@ h1, h2, h3, p, ul, dl, dd, figure, blockquote {
 h1, h2, h3 {
   color: var(--heading);
   font-weight: 500;
-  letter-spacing: -0.04em;   /* tight letter-spacing, like on Framer */
+  letter-spacing: var(--tracking-tight);
 }
 
 img {
@@ -401,7 +401,7 @@ a {
   font-weight: 500;
   color: var(--on-band);
   opacity: 0.8;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--tracking-tight);
 }
 
 @media (min-width: 810px) {
@@ -688,7 +688,7 @@ a.work-card:hover {
 .stat__value {
   color: var(--accent-2);
   font-size: 52px;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--tracking-tight);
 }
 
 .stat__label {
@@ -1361,7 +1361,6 @@ a.window:hover .window__cta svg {
 .case__head p {
   font-size: 18px;
   color: var(--color-muted);
-  letter-spacing: -0.02em;
 }
 
 .case__head .tags {
@@ -1382,7 +1381,7 @@ a.window:hover .window__cta svg {
   color: var(--key-figure);
   font-size: 28px;
   font-weight: 500;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--tracking-tight);
 }
 
 .case__stats span {
@@ -1443,7 +1442,6 @@ a.window:hover .window__cta svg {
   font-size: 18px;
   line-height: 1.2;
   color: var(--color-muted);
-  letter-spacing: -0.02em;
 }
 
 .case__section ul {

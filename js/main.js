@@ -113,7 +113,7 @@ if (windowList && windowCards.length) {
     equalizeCards();
   }).observe(windowList);
 
-  // The font (Inter) can load after the script: we measure again once it's ready
+  // The web font can load after the script: we measure again once it's ready
   document.fonts?.ready.then(equalizeCards);
 }
 
