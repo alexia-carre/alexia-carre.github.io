@@ -413,8 +413,10 @@ a {
   background: color-mix(in srgb, var(--tag-color) 14%, var(--bg));
   color: color-mix(in srgb, var(--tag-color), var(--fg) var(--tag-darken));
 }
-.tag--green  { --tag-color: var(--accent); }    /* type of work */
-.tag--purple { --tag-color: var(--accent-2); }  /* personal project */
+/* Two roles, two colors. The classes describe the ROLE (skill / client),
+   not the color: the colors can change without touching the HTML. */
+.tag--skill  { --tag-color: var(--accent); }  /* the skill: accent color */
+.tag--client { --tag-color: var(--fg); }      /* the client (or "Personal"): neutral */
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
