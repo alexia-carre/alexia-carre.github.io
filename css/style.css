@@ -114,6 +114,9 @@
   --color-icon: var(--accent);
   --color-pill: var(--surface);
 
+  /* Highlighted sections (key figures, page banners): 12% of accent 2 */
+  --tint-accent-2: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
+
   /* Typography */
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --tracking-tight: -0.015em;  /* headings and figures: tightened slightly (tuned for Jakarta) */
@@ -387,20 +390,21 @@ a {
   min-height: 260px;
   padding: 40px var(--gutter);
   text-align: center;
-  background: var(--band);
-  color: var(--on-band);
+  /* Same tint as the home page's key figures:
+     title in accent 2 (like the figures), subtitle in the text color */
+  background: var(--tint-accent-2);
+  color: var(--fg);
 }
 
 .page-banner h1 {
   font-size: 32px;
-  color: var(--on-band);
+  color: var(--accent-2);
 }
 
 .page-banner p {
   font-size: 20px;
   font-weight: 500;
-  color: var(--on-band);
-  opacity: 0.8;
+  color: var(--fg);
   letter-spacing: var(--tracking-tight);
 }
 
@@ -681,7 +685,7 @@ a.work-card:hover {
   display: grid;
   gap: 40px;
   padding: 80px var(--gutter);
-  background: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
+  background: var(--tint-accent-2);
   text-align: center;
 }
 
