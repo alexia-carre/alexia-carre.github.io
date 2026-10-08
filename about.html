@@ -34,8 +34,12 @@
   </nav>
 
   <main class="about">
-    <img class="about__sticker about__sticker--sun" src="assets/images/deco/sun-star.png" alt="">
-    <img class="about__sticker about__sticker--a2" src="assets/images/deco/a-squared.svg" alt="">
+    <!-- Decorative doodles: drawn by CSS masks (see "Doodles" in style.css) -->
+    <div class="about__sticker about__sticker--sun" aria-hidden="true">
+      <span class="doodle doodle--about-sun"></span>
+      <span class="doodle doodle--about-star"></span>
+    </div>
+    <span class="about__sticker about__sticker--a2 doodle doodle--a2" aria-hidden="true"></span>
 
     <h1>
       <span class="about__name">Alexia Carré</span><br>
