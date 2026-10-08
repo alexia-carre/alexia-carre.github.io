@@ -494,6 +494,7 @@ a.work-card:hover {
 }
 
 .hero__title {
+  color: var(--fg);   /* charcoal (instead of the forest of the other headings) */
   font-size: 30px;
   line-height: 1;
 }
