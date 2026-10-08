@@ -483,6 +483,7 @@ a.window:hover .project-card {
   justify-content: space-between;
   gap: var(--space-3);
   min-height: 28px; /* reserves the pill's height: the card doesn't "jump" */
+  margin-bottom: var(--space-2);  /* gap with the title: the pill doesn't "stick" to the text */
 }
 
 .project-card__year {
