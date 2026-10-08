@@ -350,39 +350,62 @@ a {
 .doodle--about-star { --doodle-mask: url("../assets/images/deco/star.png");           aspect-ratio: 262 / 267; --doodle-color: var(--accent); }
 .doodle--a2         { --doodle-mask: url("../assets/images/deco/a-squared.svg");      aspect-ratio: 60 / 58;   --doodle-color: var(--fg); }
 
-/* --- Pill-shaped buttons --- */
+/* --- Buttons: ONE shape, TWO variants ---
+   Same size, radius, font and hover effect everywhere. Only the role
+   changes the look:
+   - .btn--primary   = THE main action of a block (fill, accent 2)
+   - .btn--secondary = supporting action (outline)
+   The "View more" in the cards (.project-card__cta) is the compact version
+   of the primary: same color and shape, smaller to fit next to the year. */
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-pill);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 700;
   line-height: 1.2;   /* UI label, not reading text */
   white-space: nowrap;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  opacity: 0.85;
+  transform: translateY(-2px);
 }
 
-/* Main button = primary; secondary = outline (DESIGN-TOKENS §6) */
-.btn--dark  { background: var(--primary); color: var(--on-primary); }
-.btn--light { background: var(--bg); color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong); }
-.btn--grey  { background: var(--surface); color: var(--fg); box-shadow: inset 0 0 0 1px var(--border); }
-.btn--lg    { padding: var(--space-2) var(--space-4); font-size: 16px; font-weight: 400; }
+.btn--primary {
+  background: var(--accent-2);
+  color: var(--on-accent-2);   /* 5.9:1 light, 5.5:1 dark */
+}
+
+.btn--primary:hover {
+  box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--accent-2) 70%, transparent);
+}
+
+/* Outline in --fg-muted (≥ 3:1 on the background in both modes:
+   the outline of an interactive element must be perceivable) */
+.btn--secondary {
+  background: transparent;
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1.5px var(--fg-muted);
+}
+
+.btn--secondary:hover {
+  color: var(--accent-2);
+  box-shadow: inset 0 0 0 1.5px var(--accent-2);
+}
+
+/* Very narrow screens: slightly tighter buttons so they stay side by side */
+@media (max-width: 400px) {
+  .btn { padding-inline: var(--space-4); font-size: 14px; }
+}
 
 .btn svg {
-  width: 1em;
-  height: 1em;
+  width: 1.1em;
+  height: 1.1em;
   flex-shrink: 0;
-}
-
-@media (min-width: 810px) {
-  .btn--lg { font-size: 22px; }
 }
 
 /* --- Tags (UX/UI Design, Personal…) --- */
@@ -502,8 +525,8 @@ a.window:hover .project-card {
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-pill);
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--accent-2);       /* same colors as .btn--primary */
+  color: var(--on-accent-2);
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
@@ -1047,12 +1070,6 @@ a.window:hover .project-card__cta svg {
   font-size: 28px;
 }
 
-/* Final CTA: accent in light (rust), primary in dark (mint), see DESIGN-TOKENS §6 */
-.btn--gradient {
-  padding: var(--space-3) var(--space-8);
-  background: var(--accent);
-  color: var(--on-accent);
-}
 
 .credits {
   padding: 0 var(--gutter) var(--space-7);
