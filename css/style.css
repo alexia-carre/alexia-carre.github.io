@@ -550,6 +550,21 @@ a.window:hover .project-card__cta svg {
   height: 100%;   /* fills the grid cell (stretched to the tallest one) */
 }
 
+/* "View more" only on hover (or keyboard focus)… but only on devices
+   that CAN hover: on a touchscreen it stays visible, otherwise it would never
+   appear. "Coming soon" stays visible: it's information, not a button. */
+@media (hover: hover) {
+  .work-card .project-card__cta:not(.project-card__cta--soon) {
+    opacity: 0;
+    translate: -8px 0;
+  }
+
+  .work-card:is(:hover, :focus-within) .project-card__cta {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
 
 /* 4. PAGES ================================================================= */
 
