@@ -10,7 +10,7 @@ index.html              Home page
 mywork.html             List of projects
 myskills.html           Skills + testimonial
 about.html              About me (+ photo carousel)
-resume.html             Resume
+resume.html             Resume (in HTML: follows the theme; edit the text directly)
 fire_safety.html        Case study
 data_tagging.html       Case study
 cookbook.html           Case study
@@ -18,7 +18,7 @@ cookbook.html           Case study
 css/style.css           All the styles. Colors/sizes are in :root at the top
 js/main.js              Carousel on the About page
 assets/images/          Images, sorted by purpose
-assets/alexia-carre-resume.png   Downloadable resume
+assets/images/resume.png         Downloadable resume (image) — keep it in sync with resume.html
 ```
 
 ## Editing the site

@@ -31,22 +31,120 @@
     </ul>
   </nav>
 
-  <main class="resume-page grain">
-    <h1 class="visually-hidden">Resume</h1>
+  <!-- The resume in HTML (no longer an image): it follows the theme colors and
+       light/dark mode, and its text is readable by search engines and screen readers. -->
+  <main class="resume-page">
+    <article class="resume">
 
-    <div class="resume-page__actions">
-      <a class="btn btn--light" href="https://www.linkedin.com/in/alexia-carr%C3%A9-6aa138195/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
-        LinkedIn
-      </a>
-      <a class="btn btn--light" href="assets/alexia-carre-resume.png" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
-        Download
-      </a>
-    </div>
+      <header class="resume__head">
+        <img class="resume__photo" src="assets/images/portrait.jpg" alt="" width="120" height="120">
+        <div class="resume__id">
+          <h1>Alexia Carré</h1>
+          <p class="resume__role">Product Manager &amp; Designer for Enterprise UX</p>
+        </div>
+        <div class="resume__actions">
+          <a class="btn btn--light" href="https://www.linkedin.com/in/alexia-carr%C3%A9-6aa138195/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+            LinkedIn
+          </a>
+          <a class="btn btn--dark" href="assets/images/resume.png" download="Alexia-Carre-Resume.png">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+            Download
+          </a>
+        </div>
+      </header>
 
-    <img class="resume-page__doc" src="assets/images/resume.png" width="742" height="1050"
-         alt="Resume of Alexia Carré, Product Manager &amp; Designer for Enterprise UX. Experience: Product Manager / Designer at TCS Pace (since June 2023), Marketing Product Manager Assistant at Ubisoft (2021). Education: MSc Product Management &amp; UX/UI at SKEMA Business School and Politecnico di Milano; Master in Management at SKEMA.">
+      <div class="resume__body">
+        <div class="resume__main">
+          <section class="resume__section">
+            <h2>Profile</h2>
+            <p>Impact-driven and human-centered, I place the understanding of users pain points, emotions and needs at the heart of my practice. I'm curious, detail-oriented, enthusiast, and a defender of continuous improvement.</p>
+          </section>
+
+          <section class="resume__section">
+            <h2>Experience</h2>
+            <div class="resume__entry">
+              <h3>Product Manager / Designer · TCS Pace</h3>
+              <p class="resume__meta">June 2023 – Today · CDI · Paris</p>
+              <p>Collaborated with the Pace Innovation Team to identify innovative and valuable opportunities for our customers, co-create, design, deliver and evaluate proof of concepts.</p>
+              <ul>
+                <li>4 innovative products.</li>
+                <li>3 large deals enablement.</li>
+                <li>10+ workshops facilitated.</li>
+              </ul>
+            </div>
+            <div class="resume__entry">
+              <h3>Marketing Product Manager Assistant · Ubisoft</h3>
+              <p class="resume__meta">July 2021 – December 2021 · Internship · Paris</p>
+              <p>Collaborated with two Product Managers on the launch of Wild Arena Survivors and the branding of an unannounced project.</p>
+              <ul>
+                <li>1 App Preview Brief and a dozen of marketing crea briefs.</li>
+                <li>2 Benchmarks for internal teams (Riot's Arcane, Virtual Influencers).</li>
+                <li>24 Weekly internal Newsletter on the Industry's latest trends.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="resume__section">
+            <h2>Education</h2>
+            <div class="resume__entry">
+              <h3>MSc Product Management &amp; UX/UI</h3>
+              <p class="resume__meta">2022 – 2023 · SKEMA Business School, Paris × Politecnico di Milano, Milan</p>
+              <p>User Research, UX writing, Product Management, SQL, Data Management, NoCode, UX/UI design, Compliance &amp; Ethics.</p>
+            </div>
+            <div class="resume__entry">
+              <h3>Master in Management – Programme Grande Ecole</h3>
+              <p class="resume__meta">2019 – 2022 · SKEMA Business School, Lille – Paris – Toronto</p>
+              <p>Rank: 152; entry after a preparatory class (B/L). Passed with Honors. Membership: OneID (digital and new tech) – Gargantue'Sk (oenology).</p>
+            </div>
+          </section>
+        </div>
+
+        <aside class="resume__side">
+          <section class="resume__section">
+            <h2>Contact</h2>
+            <p>Paris, France</p>
+            <p><a class="resume__link" href="https://www.linkedin.com/in/alexia-carr%C3%A9-6aa138195/" target="_blank" rel="noopener">LinkedIn</a></p>
+          </section>
+
+          <section class="resume__section">
+            <h2>Languages</h2>
+            <ul class="resume__plain">
+              <li>English <span class="resume__meta">(Fluent)</span></li>
+              <li>French <span class="resume__meta">(Native)</span></li>
+            </ul>
+          </section>
+
+          <section class="resume__section">
+            <h2>Tools</h2>
+            <ul class="tags">
+              <li class="tag">Figma</li>
+              <li class="tag">Excel</li>
+              <li class="tag">Maze</li>
+              <li class="tag">Framer</li>
+              <li class="tag">Powerpoint</li>
+              <li class="tag">SQL</li>
+              <li class="tag">Trello</li>
+              <li class="tag">Notion</li>
+            </ul>
+          </section>
+
+          <section class="resume__section">
+            <h2>Skills</h2>
+            <ul class="resume__plain">
+              <li>Product Management</li>
+              <li>User Experience</li>
+              <li>AI Experience Design</li>
+              <li>Storytelling</li>
+              <li>Prototyping</li>
+              <li>Design Thinking</li>
+              <li>User Acquisition</li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+
+    </article>
   </main>
 
 </body>
