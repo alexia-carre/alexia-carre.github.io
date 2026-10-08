@@ -128,10 +128,27 @@
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --tracking-tight: -0.015em;  /* headings and figures: tightened slightly (tuned for Jakarta) */
 
-  /* Spacing & layout */
+  /* Spacing scale: EVERY margin/padding/gap uses one of these steps.
+     A small set of values (multiples of 4/8 px) = a regular rhythm that the
+     eye picks up, and which makes the page easy to scan. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  /* Vertical padding of the sections: the same everywhere, 64 px on mobile → 128 px
+     on a large screen. clamp(min, ideal, max) with an ideal in vw (window width). */
+  --section-y: clamp(64px, 9vw, 128px);
+  /* Comfortable line length for reading (~65 characters) */
+  --measure: 65ch;
+
+  /* Layout */
   --nav-height: 64px;
   --container: 1044px;
-  --gutter: 20px;
+  --gutter: 24px;
   --radius-sm: 7px;
   --radius-md: 11px;
   --radius-lg: 19px;
@@ -155,7 +172,7 @@ body {
   color: var(--color-text);
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
-  line-height: 1.2;
+  line-height: 1.6;   /* reading text: 1.5–1.6 is the standard (1.2 was cramped) */
 }
 
 h1, h2, h3, p, ul, dl, dd, figure, blockquote {
@@ -165,6 +182,7 @@ h1, h2, h3, p, ul, dl, dd, figure, blockquote {
 h1, h2, h3 {
   color: var(--heading);
   font-weight: 500;
+  line-height: 1.15;  /* headings: tighter than text, they're read as one block */
   letter-spacing: var(--tracking-tight);
 }
 
@@ -220,7 +238,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: var(--space-4);
   padding-inline: var(--gutter);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
@@ -235,7 +253,7 @@ a {
 
 .site-nav__links {
   display: flex;
-  gap: 14px;
+  gap: var(--space-3);
   padding: 0;
   list-style: none;
   font-size: 14px;
@@ -245,7 +263,7 @@ a {
 
 /* Underline in accent 2: shown on the current page, appears on hover */
 .site-nav__links a {
-  padding-block: 4px;
+  padding-block: var(--space-1);
   background: linear-gradient(var(--accent-2), var(--accent-2)) left bottom / 0 2px no-repeat;
   transition: background-size 0.25s ease;
 }
@@ -288,8 +306,8 @@ a {
 }
 
 @media (min-width: 810px) {
-  .site-nav { gap: 20px; }
-  .site-nav__links { gap: 20px; font-size: 15px; }
+  .site-nav { gap: var(--space-5); }
+  .site-nav__links { gap: var(--space-5); font-size: 15px; }
   /* Desktop: the menu stays centered, the button goes to the top right */
   .theme-toggle {
     position: absolute;
@@ -336,11 +354,12 @@ a {
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-pill);
   font-size: 14px;
   font-weight: 500;
+  line-height: 1.2;   /* UI label, not reading text */
   white-space: nowrap;
   transition: transform 0.2s, opacity 0.2s;
 }
@@ -354,7 +373,7 @@ a {
 .btn--dark  { background: var(--primary); color: var(--on-primary); }
 .btn--light { background: var(--bg); color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .btn--grey  { background: var(--surface); color: var(--fg); box-shadow: inset 0 0 0 1px var(--border); }
-.btn--lg    { padding: 6px 14px; font-size: 16px; font-weight: 400; }
+.btn--lg    { padding: var(--space-2) var(--space-4); font-size: 16px; font-weight: 400; }
 
 .btn svg {
   width: 1em;
@@ -370,13 +389,13 @@ a {
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-2);
   padding: 0;
   list-style: none;
 }
 
 .tag {
-  padding: 8px 10px;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
@@ -401,9 +420,8 @@ a {
 .page-banner {
   display: grid;
   place-content: center;
-  gap: 10px;
-  min-height: 260px;
-  padding: 40px var(--gutter);
+  gap: var(--space-3);
+  padding: var(--section-y) var(--gutter);   /* same rhythm as the other sections */
   text-align: center;
   /* Same tint as the home page's key figures:
      title in accent 2 (like the figures), subtitle in the text color */
@@ -424,7 +442,6 @@ a {
 }
 
 @media (min-width: 810px) {
-  .page-banner { min-height: 393px; }
   .page-banner h1 { font-size: 40px; }
   .page-banner p { font-size: 30px; }
 }
@@ -442,8 +459,8 @@ a {
   --accent: var(--accent-2);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 18px 20px 20px;
+  gap: var(--space-3);
+  padding: var(--space-5);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -464,13 +481,14 @@ a.window:hover .project-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
   min-height: 28px; /* reserves the pill's height: the card doesn't "jump" */
 }
 
 .project-card__year {
   font-size: 14px;
   font-weight: 700;
+  line-height: 1.2;
   color: var(--fg-muted);
 }
 
@@ -478,13 +496,14 @@ a.window:hover .project-card {
 .project-card__cta {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-pill);
   background: var(--primary);
   color: var(--on-primary);
   font-size: 13px;
   font-weight: 700;
+  line-height: 1;
   white-space: nowrap;
   transition: opacity 0.3s ease, translate 0.4s var(--ease-spring);
 }
@@ -510,6 +529,7 @@ a.window:hover .project-card__cta svg {
 .project-card__title {
   font-size: 18px;
   font-weight: 700;
+  line-height: 1.3;
   letter-spacing: -0.01em;
   color: var(--color-subheading);
 }
@@ -518,11 +538,10 @@ a.window:hover .project-card__cta svg {
    year and title at the top, tags at the bottom, whatever the height */
 .project-card .tags {
   margin-top: auto;
-  padding-top: 4px;
+  padding-top: var(--space-3);
 }
 
 @media (min-width: 810px) {
-  .project-card { padding: 20px 22px 22px; }
   .project-card__title { font-size: 20px; }
 }
 
@@ -530,9 +549,9 @@ a.window:hover .project-card__cta svg {
 .work-grid {
   display: grid;
   grid-auto-rows: 1fr;   /* all rows the height of the tallest → identical cards */
-  gap: 32px;
+  gap: var(--space-5);
   width: min(100% - 2 * var(--gutter), 929px);
-  margin: 60px auto 100px;
+  margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
 }
@@ -540,7 +559,7 @@ a.window:hover .project-card__cta svg {
 @media (min-width: 810px) {
   .work-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: var(--space-6);
     /* "stretch" (the default): the cards in the same row take the same
        height, no JS needed here since they are siblings in the grid */
   }
@@ -625,7 +644,7 @@ a.window:hover .project-card__cta svg {
 .hero__title {
   color: var(--fg);   /* charcoal (instead of the forest of the other headings) */
   font-size: 30px;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .hero__title span {
@@ -654,6 +673,8 @@ a.window:hover .project-card__cta svg {
 .hero__doodle--left  { left: -42px; }
 .hero__doodle--right { right: -42px; }
 
+/* The hero's spacing stays "out of the system" on purpose: it's tuned
+   (with svh) so the hero + the arrow fit in every window height. */
 .hero__stage {
   display: grid;
   gap: 40px;
@@ -755,8 +776,8 @@ a.window:hover .project-card__cta svg {
 .stats {
   scroll-margin-top: var(--nav-height);  /* the sticky menu doesn't cover the top when you arrive */
   display: grid;
-  gap: 40px;
-  padding: 80px var(--gutter);
+  gap: var(--space-7);
+  padding: var(--section-y) var(--gutter);
   background: var(--tint-accent-2);
   text-align: center;
 }
@@ -764,13 +785,15 @@ a.window:hover .project-card__cta svg {
 .stat__value {
   color: var(--accent-2);
   font-size: 52px;
+  line-height: 1;
   letter-spacing: var(--tracking-tight);
 }
 
 .stat__label {
   max-width: 240px;
-  margin: 6px auto 0;
+  margin: var(--space-3) auto 0;
   font-size: 18px;
+  line-height: 1.4;
   color: var(--fg);
 }
 
@@ -778,15 +801,14 @@ a.window:hover .project-card__cta svg {
   .stats {
     grid-template-columns: repeat(3, 240px);
     justify-content: center;
-    gap: 40px;
-    padding: 180px var(--gutter);
+    gap: var(--space-7);
   }
   .stat__value { font-size: 64px; }
 }
 
 /* ---------- HOME: Venn diagram ---------- */
 .venn-section {
-  padding: 80px var(--gutter);
+  padding: var(--section-y) var(--gutter);
   background: var(--band);
   color: var(--on-band);   /* the SVG circles use "currentColor" → this color */
   text-align: center;
@@ -802,18 +824,19 @@ a.window:hover .project-card__cta svg {
 .venn {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: var(--space-5);
   justify-items: center;
-  margin: 50px auto;
+  margin: var(--space-7) auto;
 }
 
 .venn__list {
   display: grid;
-  gap: 2px;
+  gap: var(--space-1);
   padding: 0;
   list-style: none;
   font-size: 18px;
   font-weight: 500;
+  line-height: 1.4;
   letter-spacing: -0.01em;
   color: var(--on-band);
 }
@@ -835,14 +858,13 @@ a.window:hover .project-card__cta svg {
 }
 
 @media (min-width: 810px) {
-  .venn-section { padding: 70px var(--gutter) 40px; }
   .venn-section h2 { font-size: 30px; }
   .venn {
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 20px;
+    gap: var(--space-5);
     max-width: 840px;
-    margin: 80px auto 90px;
+    margin: var(--space-8) auto;
   }
   .venn__list { font-size: 22px; }
   .venn__list--left  { justify-self: end;   text-align: right; }
@@ -877,7 +899,7 @@ a.window:hover .project-card__cta svg {
 }
 
 .facade__wall {
-  padding: 60px var(--gutter) 120px;
+  padding: var(--section-y) var(--gutter);
   background:
     linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
     url("../assets/images/facade/bricks.png") center bottom / cover;
@@ -886,7 +908,7 @@ a.window:hover .project-card__cta svg {
 .windows {
   display: grid;
   grid-template-columns: minmax(0, 453px); /* explicit column: avoids the collapse */
-  gap: 40px;
+  gap: var(--space-7);
   justify-content: center;
   padding: 0;
   list-style: none;
@@ -955,6 +977,14 @@ a.window:hover .project-card__cta svg {
   /* Same height for all cards: js/main.js measures the tallest one and
      sets --window-card-height. Without JS: natural height (auto). */
   min-height: var(--window-card-height, auto);
+  /* Denser variant (one step smaller on the scale): on the facade the card must
+     leave the illustration visible above it */
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+}
+
+.window__card .tags {
+  padding-top: var(--space-2);
 }
 
 /* On the facade, the CTA stays hidden until the window opens
@@ -972,10 +1002,11 @@ a.window:hover .project-card__cta svg {
 @media (min-width: 810px) {
   .facade__cornice { height: 276px; }
   .facade__cornice h2 { font-size: 40px; }
-  .facade__wall { padding: 210px var(--gutter) 210px; }
+  /* A bit more wall above/below: the facade is an illustration, it needs room */
+  .facade__wall { padding: calc(var(--section-y) + var(--space-8)) var(--gutter); }
   .windows {
     grid-template-columns: repeat(2, 453px);
-    gap: 29px 30px;
+    gap: var(--space-6);
   }
   /* Desktop: the card overlaps the bottom of the window, like on Framer */
   .window { aspect-ratio: 453 / 485; }
@@ -983,7 +1014,7 @@ a.window:hover .project-card__cta svg {
     position: absolute;
     left: 5%;
     right: 5%;
-    bottom: 2%;
+    bottom: 0;
     margin: 0;
   }
 }
@@ -991,9 +1022,9 @@ a.window:hover .project-card__cta svg {
 /* ---------- HOME: about teaser + credits ---------- */
 .teaser {
   display: grid;
-  gap: 24px;
+  gap: var(--space-5);
   justify-items: center;
-  padding: 80px var(--gutter) 50px;
+  padding: var(--section-y) var(--gutter) var(--space-7);
   text-align: center;
 }
 
@@ -1003,13 +1034,13 @@ a.window:hover .project-card__cta svg {
 
 /* Final CTA: accent in light (rust), primary in dark (mint), see DESIGN-TOKENS §6 */
 .btn--gradient {
-  padding: 9px 80px;
+  padding: var(--space-3) var(--space-8);
   background: var(--accent);
   color: var(--on-accent);
 }
 
 .credits {
-  padding: 0 var(--gutter) 40px;
+  padding: 0 var(--gutter) var(--space-7);
   text-align: center;
   font-size: 14px;
   color: var(--fg-muted);
@@ -1021,7 +1052,6 @@ a.window:hover .project-card__cta svg {
 }
 
 @media (min-width: 810px) {
-  .teaser { padding: 140px var(--gutter) 60px; }
   .teaser h2 { font-size: 32px; }
   .credits { font-size: 16px; }
 }
@@ -1029,9 +1059,9 @@ a.window:hover .project-card__cta svg {
 /* ---------- MY SKILLS ---------- */
 .skills-grid {
   display: grid;
-  gap: 40px;
+  gap: var(--space-7);
   width: min(100% - 2 * var(--gutter), 960px);
-  margin: 80px auto;
+  margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
 }
@@ -1043,29 +1073,31 @@ a.window:hover .project-card__cta svg {
   border-radius: 20px;
 }
 
+/* More space above the heading (24) than below (8):
+   the heading visibly "belongs" to the paragraph it introduces */
 .skill h2 {
-  margin: 20px 0 10px;
+  margin: var(--space-5) 0 var(--space-2);
   font-size: 22px;
 }
 
 .skill p {
   font-size: 17px;
-  line-height: 1.25;
   color: var(--color-muted);
-  letter-spacing: -0.01em;
 }
 
 @media (min-width: 810px) {
-  .skills-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .skills-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
 }
 
+/* Its top margin "collapses" with the bottom margin of .skills-grid:
+   the larger of the two wins → one single section rhythm */
 .testimonial {
   width: min(100% - 2 * var(--gutter), 1024px);
-  margin: 120px auto 0;
+  margin: var(--section-y) auto;
 }
 
 .testimonial h2 {
-  margin-bottom: 50px;
+  margin-bottom: var(--space-6);
   text-align: center;
   font-size: 26px;
   font-weight: 700;
@@ -1073,35 +1105,34 @@ a.window:hover .project-card__cta svg {
 
 .testimonial blockquote {
   display: grid;
-  gap: 16px;
-  padding: 32px 24px;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-5);
   background: var(--color-quote);
   border: 1px solid var(--border);   /* visible in dark, where band = surface */
   border-radius: 10px;
   color: var(--on-band);
   font-size: 16px;
   font-weight: 500;
-  line-height: 1.2;
 }
 
 .testimonial figcaption {
-  margin-top: 16px;
+  margin-top: var(--space-2);
   text-align: right;
   font-weight: 900;
 }
 
 @media (min-width: 810px) {
   .testimonial h2 { font-size: 32px; }
-  .testimonial blockquote { padding: 38px 40px; font-size: 18px; }
+  .testimonial blockquote { padding: var(--space-7); font-size: 18px; }
 }
 
 .traits {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 40px 20px;
+  gap: var(--space-7) var(--space-5);
   width: min(100% - 2 * var(--gutter), 960px);
-  margin: 80px auto 120px;
-  padding-top: 80px;
+  margin: var(--section-y) auto;
+  padding-top: var(--section-y);
   border-top: 1px solid var(--color-border);
   list-style: none;
   text-align: center;
@@ -1110,7 +1141,7 @@ a.window:hover .project-card__cta svg {
 .traits svg {
   width: 30px;
   height: 30px;
-  margin: 0 auto 14px;
+  margin: 0 auto var(--space-3);
   stroke: var(--color-icon);
 }
 
@@ -1127,7 +1158,7 @@ a.window:hover .project-card__cta svg {
 .about {
   position: relative;
   width: min(100% - 2 * var(--gutter), 840px);
-  margin: 60px auto 100px;
+  margin: var(--section-y) auto;
 }
 
 .about__name {
@@ -1141,37 +1172,37 @@ a.window:hover .project-card__cta svg {
 
 .about__text {
   display: grid;
-  gap: 14px;
+  gap: var(--space-2);
   max-width: 600px;
-  margin-top: 40px;
+  margin-top: var(--space-7);
 }
 
 .about__text p {
-  font-size: 15px;
-  line-height: 1.3;
+  font-size: 16px;   /* 15 → 16: the comfortable minimum for reading */
   color: var(--color-subtle);
 }
 
+/* 24 px above (+ the 8 px gap) vs 8 px below: the heading belongs to its paragraph */
 .about__text h2 {
-  margin-top: 10px;
+  margin-top: var(--space-5);
   font-size: 21px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .about__links {
-  margin-top: 30px;
+  margin-top: var(--space-7);
 }
 
 .about__links p {
-  margin-bottom: 10px;
+  margin-bottom: var(--space-2);
   font-size: 13px;
   color: var(--color-subtle);
 }
 
 .about__links ul {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
   padding: 0;
   list-style: none;
 }
@@ -1181,7 +1212,6 @@ a.window:hover .project-card__cta svg {
 }
 
 @media (min-width: 810px) {
-  .about { margin-top: 80px; }
   .about__name { font-size: 48px; }
   .about__role { font-size: 38px; }
   .about__sticker {
@@ -1202,7 +1232,7 @@ a.window:hover .project-card__cta svg {
    JS adds the arrows and dots. */
 .carousel {
   position: relative;
-  margin-top: 40px;
+  margin-top: var(--space-7);
 }
 
 .carousel__track {
@@ -1254,8 +1284,8 @@ a.window:hover .project-card__cta svg {
   left: 50%;
   translate: -50% 0;
   display: flex;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
   background: rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -1277,7 +1307,7 @@ a.window:hover .project-card__cta svg {
 }
 
 .carousel__caption {
-  margin-top: 12px;
+  margin-top: var(--space-3);
   font-size: 12px;
   color: var(--color-subtle);
 }
@@ -1287,15 +1317,15 @@ a.window:hover .project-card__cta svg {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: var(--space-5);
   min-height: calc(100vh - var(--nav-height));
-  padding: 25px var(--gutter) 60px;
+  padding: var(--space-7) var(--gutter) var(--section-y);
   background: var(--surface);
 }
 
 .resume-page__actions {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
 }
 
 .resume-page__doc {
@@ -1314,22 +1344,22 @@ a.window:hover .project-card__cta svg {
 
 /* ---------- CASE STUDY ---------- */
 .case-page {
-  padding: 40px var(--gutter) 80px;
+  padding: var(--space-7) var(--gutter) var(--section-y);
   background: var(--surface);
 }
 
 .case-nav {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
   width: min(100%, var(--container));
-  margin: 0 auto 20px;
+  margin: 0 auto var(--space-5);
 }
 
 .case {
   width: min(100%, var(--container));
   margin-inline: auto;
-  padding-bottom: 60px;
+  padding-bottom: var(--space-8);
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -1337,15 +1367,15 @@ a.window:hover .project-card__cta svg {
 }
 
 .case__inner {
-  width: min(100% - 40px, 783px);
+  width: min(100% - 2 * var(--space-5), 783px);
   margin-inline: auto;
 }
 
 .case__head {
   display: grid;
-  gap: 16px;
+  gap: var(--space-4);
   justify-items: center;
-  padding: 40px 0 24px;
+  padding: var(--space-7) 0 var(--space-6);
   text-align: center;
 }
 
@@ -1358,7 +1388,9 @@ a.window:hover .project-card__cta svg {
 }
 
 .case__head p {
+  max-width: var(--measure);
   font-size: 18px;
+  line-height: 1.45;
   color: var(--color-muted);
 }
 
@@ -1369,22 +1401,25 @@ a.window:hover .project-card__cta svg {
 .case__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding: 20px 0;
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
   border-top: 1px solid var(--color-border);
   text-align: center;
 }
 
 .case__stats strong {
   display: block;
+  margin-bottom: var(--space-1);
   color: var(--key-figure);
   font-size: 28px;
   font-weight: 500;
+  line-height: 1.1;
   letter-spacing: var(--tracking-tight);
 }
 
 .case__stats span {
   font-size: 14px;
+  line-height: 1.4;
   color: var(--color-muted);
 }
 
@@ -1403,7 +1438,7 @@ a.window:hover .project-card__cta svg {
   top: 50%;
   left: 50%;
   translate: -50% -50%;
-  padding: 13px 20px;
+  padding: var(--space-3) var(--space-5);
   background: var(--color-bg);
   border-radius: var(--radius-sm);
   font-size: 14px;
@@ -1414,10 +1449,11 @@ a.window:hover .project-card__cta svg {
 
 .case__team {
   display: flex;
-  gap: 14px;
+  gap: var(--space-3);
   align-items: flex-start;
-  margin: 20px auto 40px;
+  margin: var(--space-5) auto var(--space-7);
   font-size: 15px;
+  line-height: 1.5;
   color: var(--color-muted);
 }
 
@@ -1427,37 +1463,41 @@ a.window:hover .project-card__cta svg {
   height: 26px;
 }
 
+/* Between two sections: 48 px. Between a heading and its text: 12 px.
+   That contrast is what makes the page easy to scan: you can see
+   where each block starts at a glance. */
 .case__section {
-  margin-bottom: 36px;
+  margin-bottom: var(--space-7);
 }
 
 .case__section h2 {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-3);
   font-size: 22px;
 }
 
 .case__section p,
 .case__section li {
+  max-width: var(--measure);
   font-size: 18px;
-  line-height: 1.2;
   color: var(--color-muted);
 }
 
 .case__section ul {
-  margin-top: 8px;
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
   padding-left: 1.2em;
 }
 
 @media (min-width: 810px) {
-  .case-page { padding-top: 80px; }
-  .case__head { padding: 50px 0 30px; }
+  .case-page { padding-top: var(--space-8); }
+  .case__head { padding: var(--space-8) 0 var(--space-6); }
   .case__head h1 { font-size: 30px; }
   .case__head p { font-size: 22px; }
-  .case__stats { padding: 30px 0; }
   .case__stats strong { font-size: 34px; }
   .case__stats span { font-size: 18px; }
   .case__cover img { height: 298px; }
-  .case__team { width: min(100% - 40px, 680px); font-size: 18px; }
+  .case__team { width: min(100% - 2 * var(--space-5), 680px); font-size: 18px; }
   .case__section h2 { font-size: 24px; }
   .case__section p,
   .case__section li { font-size: 22px; }
@@ -1467,7 +1507,7 @@ a.window:hover .project-card__cta svg {
 .not-found {
   display: grid;
   place-content: center;
-  gap: 20px;
+  gap: var(--space-5);
   min-height: calc(100vh - var(--nav-height));
   padding: var(--gutter);
   text-align: center;
