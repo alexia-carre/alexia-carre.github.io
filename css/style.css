@@ -504,6 +504,7 @@ a.work-card:hover {
 }
 
 .hero__title .accent {
+  margin-top: 0.3em;        /* in em: the gap follows the text size (mobile/desktop) */
   color: var(--accent-2);   /* accent 2: highlight */
 }
 
