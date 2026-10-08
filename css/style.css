@@ -181,7 +181,7 @@ h1, h2, h3, p, ul, dl, dd, figure, blockquote {
 
 h1, h2, h3 {
   color: var(--heading);
-  font-weight: 500;
+  font-weight: 700;   /* bold headings: the structure of the page jumps out */
   line-height: 1.15;  /* headings: tighter than text, they're read as one block */
   letter-spacing: var(--tracking-tight);
 }
