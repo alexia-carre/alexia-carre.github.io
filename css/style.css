@@ -103,6 +103,9 @@
 :root {
   --color-text: var(--fg);
   --color-text-strong: var(--heading);
+  /* Subheadings (block titles, card titles): charcoal like the text;
+     the big titles keep --heading (forest) */
+  --color-subheading: var(--fg);
   --color-muted: var(--fg-muted);
   --color-subtle: var(--fg-muted);
   --color-faint: var(--fg-muted);
@@ -159,6 +162,14 @@ h1, h2, h3 {
   color: var(--heading);
   font-weight: 500;
   letter-spacing: var(--tracking-tight);
+}
+
+/* Subheadings (titles of content blocks): charcoal rather than forest */
+.about__text h2,
+.case__section h2,
+.skill h2,
+.traits h3 {
+  color: var(--color-subheading);
 }
 
 img {
@@ -489,7 +500,7 @@ a.work-card:hover {
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--color-text-strong);
+  color: var(--color-subheading);
   margin-bottom: 8px;
 }
 
@@ -965,7 +976,7 @@ a.window:hover .window__cta svg {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--heading);
+  color: var(--color-subheading);
 }
 
 /* margin-top: auto pushes the tags to the bottom of the card:
