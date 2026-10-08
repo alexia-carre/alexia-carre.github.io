@@ -504,7 +504,7 @@ a.work-card:hover {
 }
 
 .hero__title .accent {
-  color: var(--color-accent);
+  color: var(--accent-2);   /* accent 2: highlight */
 }
 
 /* The doodles are positioned relative to the "I'm Alexia Carré." line */
