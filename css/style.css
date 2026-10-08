@@ -13,26 +13,96 @@
 
 /* 1. DESIGN TOKENS ---------------------------------------------------------
    Every value reused across the site lives here. Change a color once
-   and it updates everywhere. */
-:root {
-  /* Colors */
-  --color-text: #000;
-  --color-text-strong: #1f1f1f;
-  --color-muted: #999;
-  --color-subtle: #777;
-  --color-faint: #5e5e5e;
-  --color-bg: #fff;
-  --color-bg-soft: #fafafa;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-accent: #b49572;        /* gold/beige: "Designing for Enterprise UX" */
-  --color-quote: #cd9979;         /* testimonial box */
-  --color-icon: #d9605a;          /* coral icons on Skills */
-  --color-pill: #eee;
+   and it updates everywhere.
 
-  /* Tag colors (background / text) */
-  --tag-green-bg: #e1ffdb;  --tag-green-text: #158229;
-  --tag-blue-bg: #e3edff;   --tag-blue-text: #1260e6;
-  --tag-purple-bg: #fbe6ff; --tag-purple-text: #c209e3;
+   Colors are in TWO layers (source: DESIGN-TOKENS.md):
+     a) Semantic tokens (--bg, --fg, --primary…): change with the theme.
+     b) Component aliases (--color-text…): point to the tokens. The rest of
+        the CSS only uses these aliases, so it doesn't need to know
+        which theme is active. */
+
+/* a) Light mode "A2 – Clean light" (default) */
+:root {
+  color-scheme: light;   /* also tells the browser: light scrollbars, fields… */
+  --bg: #f6efe3;            /* cream */
+  --surface: #efe5d3;       /* dark cream */
+  --fg: #2a211b;            /* ink */
+  --fg-muted: #5b4d41;      /* muted ink */
+  --heading: #2f4a3a;       /* forest */
+  --border: #dccfb8;
+  --border-strong: #2f4a3a;
+  --primary: #2f4a3a;
+  --on-primary: #f6efe3;
+  --accent: #a64b26;        /* rust: the ONLY accent in light mode */
+  --on-accent: #f6efe3;
+  --band: #2f4a3a;          /* dark section within light mode */
+  --on-band: #f6efe3;
+  /* Additions specific to our site (not in the file) */
+  --key-figure: var(--heading);  /* key figures: forest in light… */
+  --logo-filter: none;           /* black logos: unchanged in light */
+  --facade-dim: 0;               /* facade (photos): not darkened in light */
+}
+
+/* Dark mode "B2 – Clean dark": follows the system setting, unless the button forced light.
+   The block is repeated below: CSS can't share the same rules between
+   a @media and a selector, so we duplicate (that's the standard approach). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1512;          /* green night */
+    --surface: #16201b;
+    --fg: #f2ede3;          /* cream */
+    --fg-muted: #a8b3ac;    /* green grey */
+    --heading: #f2ede3;
+    --border: #26332c;
+    --border-strong: #3a4a41;
+    --primary: #3df5c8;     /* mint: the ONLY accent in dark mode */
+    --on-primary: #0e1512;
+    --accent: #3df5c8;
+    --on-accent: #0e1512;
+    --band: #16201b;
+    --on-band: #f2ede3;
+    --key-figure: var(--accent);                 /* …mint in dark */
+    --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
+    --facade-dim: 0.5;                           /* "no brown in dark": darkened facade */
+  }
+}
+
+/* Dark mode forced by the button (data-theme="dark" on <html>) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1512;
+  --surface: #16201b;
+  --fg: #f2ede3;
+  --fg-muted: #a8b3ac;
+  --heading: #f2ede3;
+  --border: #26332c;
+  --border-strong: #3a4a41;
+  --primary: #3df5c8;
+  --on-primary: #0e1512;
+  --accent: #3df5c8;
+  --on-accent: #0e1512;
+  --band: #16201b;
+  --on-band: #f2ede3;
+  --key-figure: var(--accent);
+  --logo-filter: invert(1) hue-rotate(180deg);
+  --facade-dim: 0.5;
+}
+
+/* b) Component aliases → tokens (the same for both themes) */
+:root {
+  --color-text: var(--fg);
+  --color-text-strong: var(--heading);
+  --color-muted: var(--fg-muted);
+  --color-subtle: var(--fg-muted);
+  --color-faint: var(--fg-muted);
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-quote: var(--band);
+  --color-icon: var(--accent);
+  --color-pill: var(--surface);
 
   /* Typography */
   --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -48,7 +118,6 @@
 
   /* Textures */
   --grain: url("../assets/images/textures/grain.png");
-  --gradient: url("../assets/images/textures/gradient.png");
 }
 
 
@@ -74,6 +143,7 @@ h1, h2, h3, p, ul, dl, dd, figure, blockquote {
 }
 
 h1, h2, h3 {
+  color: var(--heading);
   font-weight: 500;
   letter-spacing: -0.04em;   /* tight letter-spacing, like on Framer */
 }
@@ -153,9 +223,46 @@ a {
   opacity: 0.6;
 }
 
+/* --- Light/dark toggle (created by js/theme.js) --- */
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-strong);
+  transform: rotate(-15deg);
+}
+
+.theme-toggle svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* Mobile: little room → we tighten up and the button takes the last spot */
+@media (max-width: 809px) {
+  .site-nav { gap: 10px; padding-inline: 12px; }
+  .site-nav__links { gap: 10px; font-size: 13px; }
+}
+
 @media (min-width: 810px) {
   .site-nav { gap: 20px; }
   .site-nav__links { gap: 20px; font-size: 15px; }
+  /* Desktop: the menu stays centered, the button goes to the top right */
+  .theme-toggle {
+    position: absolute;
+    right: var(--gutter);
+  }
 }
 
 /* --- Grain texture: added on top of a colored background --- */
@@ -192,9 +299,10 @@ a {
   opacity: 0.85;
 }
 
-.btn--light { background: var(--color-bg); color: var(--color-text); }
-.btn--dark  { background: var(--color-text); color: var(--color-bg); }
-.btn--grey  { background: var(--color-pill); color: var(--color-text); }
+/* Main button = primary; secondary = outline (DESIGN-TOKENS §6) */
+.btn--dark  { background: var(--primary); color: var(--on-primary); }
+.btn--light { background: var(--bg); color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong); }
+.btn--grey  { background: var(--surface); color: var(--fg); box-shadow: inset 0 0 0 1px var(--border); }
 .btn--lg    { padding: 6px 14px; font-size: 16px; font-weight: 400; }
 
 .btn svg {
@@ -224,9 +332,15 @@ a {
   line-height: 1.2;
 }
 
-.tag--green  { background: var(--tag-green-bg);  color: var(--tag-green-text); }
-.tag--blue   { background: var(--tag-blue-bg);   color: var(--tag-blue-text); }
-.tag--purple { background: var(--tag-purple-bg); color: var(--tag-purple-text); }
+/* "One accent per mode" rule: no more green/blue/purple.
+   The discipline tag (formerly green) takes the accent, the others stay neutral.
+   Solid background: stays readable even on the facade photo. */
+.tag {
+  background: var(--bg);
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+.tag--green { color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
@@ -236,18 +350,20 @@ a {
   min-height: 260px;
   padding: 40px var(--gutter);
   text-align: center;
-  background: var(--gradient) center / cover;
+  background: var(--band);
+  color: var(--on-band);
 }
 
 .page-banner h1 {
   font-size: 32px;
-  color: #fff;
+  color: var(--on-band);
 }
 
 .page-banner p {
   font-size: 20px;
   font-weight: 500;
-  color: #dedede;
+  color: var(--on-band);
+  opacity: 0.8;
   letter-spacing: -0.04em;
 }
 
@@ -279,8 +395,8 @@ a {
   position: relative;
   display: block;
   overflow: hidden;
-  background: var(--color-bg);
-  border: 1px solid #f0d6d2;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   transition: transform 0.25s, box-shadow 0.25s;
 }
@@ -292,7 +408,7 @@ a.work-card:hover {
 
 .work-card__header {
   height: 80px;
-  background: url("../assets/images/textures/card-header.png") center / cover;
+  background: var(--band);
 }
 
 .work-card__badge {
@@ -413,6 +529,7 @@ a.work-card:hover {
   /* "translate" and "scale" are separate properties: JS drives the first
      (parallax), CSS drives the second (hover), without either overwriting the other. */
   translate: var(--px, 0) var(--py, 0);
+  filter: var(--logo-filter);   /* black logos would disappear on the dark background */
   transition: scale 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
@@ -450,14 +567,17 @@ a.work-card:hover {
 }
 
 /* ---------- HOME: key figures ---------- */
+/* "Surface" band for the figures (DESIGN-TOKENS §2) */
 .stats {
   display: grid;
   gap: 40px;
   padding: 80px var(--gutter);
+  background: var(--surface);
   text-align: center;
 }
 
 .stat__value {
+  color: var(--key-figure);
   font-size: 52px;
   letter-spacing: -0.04em;
 }
@@ -482,7 +602,8 @@ a.work-card:hover {
 /* ---------- HOME: Venn diagram ---------- */
 .venn-section {
   padding: 80px var(--gutter);
-  background: var(--color-accent);
+  background: var(--band);
+  color: var(--on-band);   /* the SVG circles use "currentColor" → this color */
   text-align: center;
 }
 
@@ -490,7 +611,7 @@ a.work-card:hover {
   max-width: 820px;
   margin-inline: auto;
   font-size: 24px;
-  color: #fff;
+  color: var(--on-band);
 }
 
 .venn {
@@ -509,11 +630,12 @@ a.work-card:hover {
   font-size: 18px;
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: #fff;
+  color: var(--on-band);
+  opacity: 0.85;
 }
 
 .venn__list strong {
-  color: #292929;
+  font-weight: 700;
 }
 
 .venn__circles {
@@ -542,7 +664,10 @@ a.work-card:hover {
   display: grid;
   place-items: center;
   height: 180px;
-  background: url("../assets/images/facade/cornice.png") center / cover;
+  /* A "green night" veil over the photo, transparent in light (--facade-dim: 0) */
+  background:
+    linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
+    url("../assets/images/facade/cornice.png") center / cover;
 }
 
 /* dark gradient over the cornice for text legibility */
@@ -561,7 +686,9 @@ a.work-card:hover {
 
 .facade__wall {
   padding: 60px var(--gutter) 120px;
-  background: url("../assets/images/facade/bricks.png") center bottom / cover;
+  background:
+    linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
+    url("../assets/images/facade/bricks.png") center bottom / cover;
 }
 
 .windows {
@@ -595,6 +722,8 @@ a.work-card:hover {
   inset: 0 0 auto;          /* pinned to the top… */
   aspect-ratio: 453 / 485;  /* …with the window's proportions */
   background: center / contain no-repeat;
+  /* Windows darkened a little less than the wall: the lit window stands out at night */
+  filter: brightness(calc(1 - var(--facade-dim) * 0.6));
   transition: opacity 0.3s ease, scale 0.4s var(--ease-spring);
 }
 
@@ -663,8 +792,8 @@ a.window:hover .window__card {
   gap: 6px;
   padding: 6px 12px;
   border-radius: var(--radius-pill);
-  background: #fff;
-  color: var(--color-text);
+  background: var(--primary);
+  color: var(--on-primary);
   font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
@@ -748,17 +877,18 @@ a.window:hover .window__cta svg {
   font-size: 28px;
 }
 
+/* Final CTA: accent in light (rust), primary in dark (mint), see DESIGN-TOKENS §6 */
 .btn--gradient {
   padding: 9px 80px;
-  background: var(--gradient) center / cover;
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .credits {
   padding: 0 var(--gutter) 40px;
   text-align: center;
   font-size: 14px;
-  color: #8c8c8c;
+  color: var(--fg-muted);
 }
 
 .credits a {
@@ -822,8 +952,9 @@ a.window:hover .window__cta svg {
   gap: 16px;
   padding: 32px 24px;
   background: var(--color-quote);
+  border: 1px solid var(--border);   /* visible in dark, where band = surface */
   border-radius: 10px;
-  color: #fff;
+  color: var(--on-band);
   font-size: 16px;
   font-weight: 500;
   line-height: 1.2;
@@ -1029,7 +1160,7 @@ a.window:hover .window__cta svg {
   gap: 20px;
   min-height: calc(100vh - var(--nav-height));
   padding: 25px var(--gutter) 60px;
-  background: var(--gradient) center / cover;
+  background: var(--surface);
 }
 
 .resume-page__actions {
@@ -1054,7 +1185,7 @@ a.window:hover .window__cta svg {
 /* ---------- CASE STUDY ---------- */
 .case-page {
   padding: 40px var(--gutter) 80px;
-  background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), var(--gradient) center / cover;
+  background: var(--surface);
 }
 
 .case-nav {
@@ -1069,7 +1200,8 @@ a.window:hover .window__cta svg {
   width: min(100%, var(--container));
   margin-inline: auto;
   padding-bottom: 60px;
-  background: var(--color-bg);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
@@ -1146,7 +1278,7 @@ a.window:hover .window__cta svg {
   border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 700;
-  color: #ccc;
+  color: var(--fg-muted);
   white-space: nowrap;
 }
 

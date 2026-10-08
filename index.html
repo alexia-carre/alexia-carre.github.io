@@ -19,6 +19,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <!-- No "defer": applies the saved theme before the page is displayed -->
+  <script src="js/theme.js"></script>
   <script src="js/main.js" defer></script>
 </head>
 <body>
@@ -98,7 +100,7 @@
         </ul>
 
         <!-- Two circles drawn directly in SVG: no image to load -->
-        <svg class="venn__circles" viewBox="0 0 210 130" fill="none" stroke="#fff" stroke-width="3" aria-hidden="true">
+        <svg class="venn__circles" viewBox="0 0 210 130" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
           <circle cx="70" cy="65" r="62"/>
           <circle cx="140" cy="65" r="62"/>
         </svg>
