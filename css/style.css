@@ -645,6 +645,55 @@ a.window__card:hover {
   transform: translateY(-4px);
 }
 
+/* Top row of the card: year on the left, call to action on the right */
+.window__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 28px; /* reserves the pill's height: the card doesn't "jump" */
+}
+
+/* "View more" pill: hidden while the window is closed */
+.window__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  translate: -8px 0;
+  transition: opacity 0.3s ease, translate 0.4s var(--ease-spring);
+}
+
+.window__cta svg {
+  width: 14px;
+  height: 14px;
+  transition: translate 0.2s ease;
+}
+
+/* "Coming soon" variant: muted, it's not an action */
+.window__cta--soon {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+/* Shows up when the window opens (same 3 triggers as the shutters) */
+.window:is(:hover, :focus-within, .is-open) .window__cta {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Hovering the card itself: the arrow nudges forward → "it's clickable" */
+.window__card:hover .window__cta svg {
+  translate: 3px 0;
+}
+
 .window__year {
   font-size: 13px;
   font-weight: 700;
