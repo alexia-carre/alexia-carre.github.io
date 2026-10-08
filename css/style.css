@@ -493,10 +493,57 @@ a.work-card:hover {
 /* 4. PAGES ================================================================= */
 
 /* ---------- HOME: hero ---------- */
+/* The hero fills the visible window (minus the menu).
+   svh = "small viewport height": on mobile, the height visible even when the
+   address bar is shown (vh would ignore it and hide the bottom).
+   The first line is a fallback for older browsers without svh. */
 .hero {
-  padding: 60px var(--gutter) 80px;
+  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100svh - var(--nav-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* vertically centers the content */
+  padding: 32px var(--gutter) 84px;   /* bottom: room for the arrow */
   background: var(--color-bg-soft);
   text-align: center;
+}
+
+/* "Scroll down" arrow: a real link to the next section */
+.scroll-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  translate: -50% 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--fg-muted);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.scroll-hint:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.scroll-hint svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* The bounce only plays for people who haven't asked to reduce motion.
+   "transform" (animation) and "translate" (centering) add up without conflict. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .scroll-hint { animation: nudge 2s ease-in-out infinite; }
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
 }
 
 .hero__title {
@@ -535,11 +582,13 @@ a.work-card:hover {
   display: grid;
   gap: 40px;
   justify-items: center;
-  margin-top: 60px;
+  margin-top: clamp(24px, 5svh, 60px);
 }
 
+/* Photo size: limited by the width AND the height of the window,
+   so everything fits on screen, arrow included */
 .hero__portrait {
-  width: min(280px, 70vw);
+  width: min(280px, 70vw, 34svh);
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
@@ -577,7 +626,7 @@ a.work-card:hover {
 }
 
 @media (min-width: 810px) {
-  .hero { padding: 60px var(--gutter) 140px; }
+  .hero { padding: 40px var(--gutter) 96px; }
   .hero__title { font-size: 40px; }
   .hero__doodle { width: 35px; }
   .hero__doodle--left  { left: -62px; }
@@ -588,12 +637,13 @@ a.work-card:hover {
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     max-width: 1020px;
-    margin: 80px auto 0;
+    margin: clamp(28px, 6svh, 80px) auto 0;
   }
-  .hero__portrait { width: 399px; grid-column: 2; grid-row: 1; }
+  /* clamp(min, ideal, max): 399 px on a large screen, smaller if the window is short */
+  .hero__portrait { width: clamp(220px, 46svh, 399px); grid-column: 2; grid-row: 1; }
   .logo-grid {
     grid-template-columns: 1fr;
-    gap: 70px;
+    gap: clamp(24px, 7svh, 70px);
     max-width: none;
   }
   .logo-grid--left  { grid-column: 1; grid-row: 1; }
@@ -605,10 +655,29 @@ a.work-card:hover {
   .logo-grid--right li:nth-child(3) { transform: translateX(-40px); }
 }
 
+/* Short screens (small laptops): we tighten up so the hero AND the arrow
+   fit in the window. A media query can also target the HEIGHT. */
+@media (min-width: 810px) and (max-height: 720px) {
+  .hero { padding-block: 24px 76px; }
+  .hero__title { font-size: 34px; }
+  .logo-grid img { width: calc(var(--w) * 0.8); }
+}
+
+/* Same thing for small phones (e.g. iPhone SE, 667 px tall) */
+@media (max-width: 809px) and (max-height: 720px) {
+  .hero { padding-block: 20px 72px; }
+  .hero__title { font-size: 26px; }
+  .hero__stage { gap: 24px; }
+  .hero__portrait { width: min(280px, 70vw, 30svh); }
+  .logo-grid { row-gap: 14px; }
+  .logo-grid img { width: calc(var(--w) * 0.42); }
+}
+
 /* ---------- HOME: key figures ---------- */
 /* Key-figures band: a light wash of accent 2 (12%) as background,
    figures in accent 2 → a dedicated section, without being flashy */
 .stats {
+  scroll-margin-top: var(--nav-height);  /* the sticky menu doesn't cover the top when you arrive */
   display: grid;
   gap: 40px;
   padding: 80px var(--gutter);
