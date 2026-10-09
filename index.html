@@ -17,8 +17,10 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <!-- No "defer": applies the saved theme before the page is displayed -->
+  <script src="js/theme.js"></script>
   <script src="js/main.js" defer></script>
 </head>
 <body>
@@ -42,9 +44,9 @@
       <h1 class="hero__title">
         <span>Hi,</span>
         <span class="hero__name">
-          <img class="hero__doodle hero__doodle--left" src="assets/images/deco/stickman-left.svg" alt="">
+          <span class="hero__doodle hero__doodle--left doodle doodle--star" aria-hidden="true"></span>
           I'm Alexia Carré.
-          <img class="hero__doodle hero__doodle--right" src="assets/images/deco/stickman-right.svg" alt="">
+          <span class="hero__doodle hero__doodle--right doodle doodle--sun" aria-hidden="true"></span>
         </span>
         <span class="accent">Designing for Enterprise UX.</span>
       </h1>
@@ -66,10 +68,15 @@
           </ul>
         </div>
       </div>
+
+      <!-- Link to the next section: says "there's more below" -->
+      <a class="scroll-hint" href="#key-figures" aria-label="Scroll down to see more">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
     </section>
 
     <!-- KEY FIGURES -->
-    <section class="stats" aria-label="Key figures">
+    <section class="stats" id="key-figures" aria-label="Key figures">
       <div class="stat">
         <p class="stat__value">80%</p>
         <p class="stat__label">cut in manual reviews for a product I have designed</p>
@@ -98,7 +105,7 @@
         </ul>
 
         <!-- Two circles drawn directly in SVG: no image to load -->
-        <svg class="venn__circles" viewBox="0 0 210 130" fill="none" stroke="#fff" stroke-width="3" aria-hidden="true">
+        <svg class="venn__circles" viewBox="0 0 210 130" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
           <circle cx="70" cy="65" r="62"/>
           <circle cx="140" cy="65" r="62"/>
         </svg>
@@ -112,7 +119,7 @@
         </ul>
       </div>
 
-      <a class="btn btn--light" href="myskills.html">Discover my skills</a>
+      <a class="btn btn--primary" href="myskills.html">Discover my skills</a>
     </section>
 
     <!-- FEATURED PRODUCTS: the building facade -->
@@ -129,61 +136,62 @@
                link with its title, no need to also hear "View more". -->
           <li>
             <a class="window" href="fire_safety.html">
-              <span class="window__card">
-                <span class="window__top">
-                  <span class="window__year">2023</span>
-                  <span class="window__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              <span class="window__card project-card">
+                <span class="project-card__top">
+                  <span class="project-card__year">2023</span>
+                  <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
-                <span class="window__title">Fire &amp; Safety technicians stuck searching through 600+ pages</span>
+                <span class="project-card__title">Fire &amp; Safety technicians stuck searching through 600+ pages</span>
                 <span class="tags">
-                  <span class="tag tag--green">UX/UI Design</span>
-                  <span class="tag tag--blue">Global Energy &amp; Services Leader</span>
+                  <span class="tag tag--skill">UX/UI Design</span>
+                  <span class="tag tag--client">Global Energy &amp; Services Leader</span>
                 </span>
               </span>
             </a>
           </li>
           <li>
             <a class="window window--inspecting" href="data_tagging.html">
-              <span class="window__card">
-                <span class="window__top">
-                  <span class="window__year">2025</span>
-                  <span class="window__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              <span class="window__card project-card">
+                <span class="project-card__top">
+                  <span class="project-card__year">2025</span>
+                  <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
-                <span class="window__title">Compliance officers struggling with 100k+ docs to classify</span>
+                <span class="project-card__title">Compliance officers struggling with 100k+ docs to classify</span>
                 <span class="tags">
-                  <span class="tag tag--green">AI Experience Design</span>
-                  <span class="tag tag--blue">Leading Aerospace Manufacturer</span>
+                  <span class="tag tag--skill">AI Experience Design</span>
+                  <span class="tag tag--client">Leading Aerospace Manufacturer</span>
                 </span>
               </span>
             </a>
           </li>
           <li>
-            <!-- Work in progress: no page yet, so it's a <div>, not a link -->
-            <div class="window">
-              <span class="window__card">
-                <span class="window__top">
-                  <span class="window__year">2024</span>
-                  <span class="window__cta window__cta--soon">Coming soon</span>
+            <!-- Work in progress: no page yet, so it's a <div>, not a link.
+                 window--soon: the shutters stay closed, only "Coming soon" appears -->
+            <div class="window window--soon">
+              <span class="window__card project-card">
+                <span class="project-card__top">
+                  <span class="project-card__year">2024</span>
+                  <span class="project-card__cta project-card__cta--soon">Coming soon</span>
                 </span>
-                <span class="window__title">Inconsistent datasets slowing down decarbonation audits</span>
+                <span class="project-card__title">Inconsistent datasets slowing down decarbonation audits</span>
                 <span class="tags">
-                  <span class="tag tag--green">Product Strategy</span>
-                  <span class="tag tag--blue">Global Energy &amp; Services Leader</span>
+                  <span class="tag tag--skill">Product Strategy</span>
+                  <span class="tag tag--client">Global Energy &amp; Services Leader</span>
                 </span>
               </span>
             </div>
           </li>
           <li>
             <a class="window window--cooking" href="cookbook.html">
-              <span class="window__card">
-                <span class="window__top">
-                  <span class="window__year">2025</span>
-                  <span class="window__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+              <span class="window__card project-card">
+                <span class="project-card__top">
+                  <span class="project-card__year">2025</span>
+                  <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
-                <span class="window__title">Cookbook for my best friend's wedding</span>
+                <span class="project-card__title">Cookbook for my best friend's wedding</span>
                 <span class="tags">
-                  <span class="tag tag--green">Graphic Design &amp; Print</span>
-                  <span class="tag tag--purple">Personal</span>
+                  <span class="tag tag--skill">Graphic Design &amp; Print</span>
+                  <span class="tag tag--client">Personal</span>
                 </span>
               </span>
             </a>
@@ -195,7 +203,7 @@
     <!-- ABOUT TEASER -->
     <section class="teaser">
       <h2>Curious &amp; detail-oriented.</h2>
-      <a class="btn btn--gradient" href="about.html">Get to know me</a>
+      <a class="btn btn--primary" href="about.html">Get to know me</a>
     </section>
 
   </main>

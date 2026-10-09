@@ -13,34 +13,142 @@
 
 /* 1. DESIGN TOKENS ---------------------------------------------------------
    Every value reused across the site lives here. Change a color once
-   and it updates everywhere. */
-:root {
-  /* Colors */
-  --color-text: #000;
-  --color-text-strong: #1f1f1f;
-  --color-muted: #999;
-  --color-subtle: #777;
-  --color-faint: #5e5e5e;
-  --color-bg: #fff;
-  --color-bg-soft: #fafafa;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-accent: #b49572;        /* gold/beige: "Designing for Enterprise UX" */
-  --color-quote: #cd9979;         /* testimonial box */
-  --color-icon: #d9605a;          /* coral icons on Skills */
-  --color-pill: #eee;
+   and it updates everywhere.
 
-  /* Tag colors (background / text) */
-  --tag-green-bg: #e1ffdb;  --tag-green-text: #158229;
-  --tag-blue-bg: #e3edff;   --tag-blue-text: #1260e6;
-  --tag-purple-bg: #fbe6ff; --tag-purple-text: #c209e3;
+   Colors are in TWO layers (source: DESIGN-TOKENS.md):
+     a) Semantic tokens (--bg, --fg, --primary…): change with the theme.
+     b) Component aliases (--color-text…): point to the tokens. The rest of
+        the CSS only uses these aliases, so it doesn't need to know
+        which theme is active. */
+
+/* a) Light mode "A2 – Clean light" (default) */
+:root {
+  color-scheme: light;   /* also tells the browser: light scrollbars, fields… */
+  --bg: #f6efe3;            /* cream */
+  --surface: #efe5d3;       /* dark cream */
+  --fg: #2f3437;            /* charcoal (11:1 on cream) */
+  --fg-muted: #5a6066;      /* muted charcoal (5.1:1 on the cards) */
+  --heading: #2f4a3a;       /* forest */
+  --border: #dccfb8;
+  --border-strong: #2f4a3a;
+  --primary: #2f4a3a;
+  --on-primary: #f6efe3;
+  --accent: #a64b26;        /* rust: accent 1 = ACTIONS (buttons, CTA) */
+  --on-accent: #f6efe3;
+  --accent-2: #a8285f;      /* raspberry: accent 2 = HIGHLIGHTS (5.9:1 on cream) */
+  --on-accent-2: #f6efe3;
+  --accent-2-on-band: #f2a7c3; /* light pink for the forest band (5.1:1) */
+  --band: #2f4a3a;          /* dark section within light mode */
+  --on-band: #f6efe3;
+  /* Additions specific to our site (not in the file) */
+  --key-figure: var(--accent-2); /* key figures: accent 2 in both modes */
+  --logo-filter: none;           /* black logos: unchanged in light */
+  --facade-dim: 0;               /* facade (photos): not darkened in light */
+  --tag-darken: 20%;             /* tag text slightly darkened (contrast) */
+}
+
+/* Dark mode "B2 – Clean dark": follows the system setting, unless the button forced light.
+   The block is repeated below: CSS can't share the same rules between
+   a @media and a selector, so we duplicate (that's the standard approach). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1512;          /* green night */
+    --surface: #16201b;
+    --fg: #f2ede3;          /* cream */
+    --fg-muted: #a8b3ac;    /* green grey */
+    --heading: #f2ede3;
+    --border: #26332c;
+    --border-strong: #3a4a41;
+    --primary: #3df5c8;     /* mint: accent 1 = ACTIONS */
+    --on-primary: #0e1512;
+    --accent: #3df5c8;
+    --on-accent: #0e1512;
+    --accent-2: #ff3d81;    /* pink: accent 2 = HIGHLIGHTS (5.5:1 on the background) */
+    --on-accent-2: #0e1512;
+    --accent-2-on-band: #ff3d81;
+    --band: #16201b;
+    --on-band: #f2ede3;
+    --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
+    --facade-dim: 0.5;                           /* "no brown in dark": darkened facade */
+    --tag-darken: 0%;                            /* the dark-mode colors already pass */
+  }
+}
+
+/* Dark mode forced by the button (data-theme="dark" on <html>) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1512;
+  --surface: #16201b;
+  --fg: #f2ede3;
+  --fg-muted: #a8b3ac;
+  --heading: #f2ede3;
+  --border: #26332c;
+  --border-strong: #3a4a41;
+  --primary: #3df5c8;
+  --on-primary: #0e1512;
+  --accent: #3df5c8;
+  --on-accent: #0e1512;
+  --accent-2: #ff3d81;
+  --on-accent-2: #0e1512;
+  --accent-2-on-band: #ff3d81;
+  --band: #16201b;
+  --on-band: #f2ede3;
+  --logo-filter: invert(1) hue-rotate(180deg);
+  --facade-dim: 0.5;
+  --tag-darken: 0%;
+}
+
+/* b) Component aliases → tokens (the same for both themes) */
+:root {
+  --color-text: var(--fg);
+  --color-text-strong: var(--heading);
+  /* Subheadings (block titles, card titles): charcoal like the text;
+     the big titles keep --heading (forest) */
+  --color-subheading: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-subtle: var(--fg-muted);
+  --color-faint: var(--fg-muted);
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-quote: var(--band);
+  --color-icon: var(--accent);
+  --color-pill: var(--surface);
+
+  /* Spring easing: the curve goes above 1 → slight overshoot, like Framer's "bounce: 0.2".
+     Moved up to :root because the project cards use it outside the facade too */
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  /* Highlighted sections (key figures, page banners): 12% of accent 2 */
+  --tint-accent-2: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
 
   /* Typography */
-  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --tracking-tight: -0.015em;  /* headings and figures: tightened slightly (tuned for Jakarta) */
 
-  /* Spacing & layout */
+  /* Spacing scale: EVERY margin/padding/gap uses one of these steps.
+     A small set of values (multiples of 4/8 px) = a regular rhythm that the
+     eye picks up, and which makes the page easy to scan. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  /* Vertical padding of the sections: the same everywhere, 64 px on mobile → 128 px
+     on a large screen. clamp(min, ideal, max) with an ideal in vw (window width). */
+  --section-y: clamp(64px, 9vw, 128px);
+  /* Comfortable line length for reading (~65 characters) */
+  --measure: 65ch;
+
+  /* Layout */
   --nav-height: 64px;
   --container: 1044px;
-  --gutter: 20px;
+  --gutter: 24px;
   --radius-sm: 7px;
   --radius-md: 11px;
   --radius-lg: 19px;
@@ -48,7 +156,6 @@
 
   /* Textures */
   --grain: url("../assets/images/textures/grain.png");
-  --gradient: url("../assets/images/textures/gradient.png");
 }
 
 
@@ -62,11 +169,10 @@
 body {
   margin: 0;
   font-family: var(--font);
-  font-optical-sizing: auto;  /* Inter switches to its "Display" cut at large sizes */
   color: var(--color-text);
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
-  line-height: 1.2;
+  line-height: 1.6;   /* reading text: 1.5–1.6 is the standard (1.2 was cramped) */
 }
 
 h1, h2, h3, p, ul, dl, dd, figure, blockquote {
@@ -74,8 +180,18 @@ h1, h2, h3, p, ul, dl, dd, figure, blockquote {
 }
 
 h1, h2, h3 {
-  font-weight: 500;
-  letter-spacing: -0.04em;   /* tight letter-spacing, like on Framer */
+  color: var(--heading);
+  font-weight: 700;   /* bold headings: the structure of the page jumps out */
+  line-height: 1.15;  /* headings: tighter than text, they're read as one block */
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Subheadings (titles of content blocks): charcoal rather than forest */
+.about__text h2,
+.case__section h2,
+.skill h2,
+.traits h3 {
+  color: var(--color-subheading);
 }
 
 img {
@@ -122,7 +238,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: var(--space-4);
   padding-inline: var(--gutter);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
@@ -137,7 +253,7 @@ a {
 
 .site-nav__links {
   display: flex;
-  gap: 14px;
+  gap: var(--space-3);
   padding: 0;
   list-style: none;
   font-size: 14px;
@@ -145,17 +261,58 @@ a {
   letter-spacing: -0.01em;
 }
 
+/* Underline in accent 2: shown on the current page, appears on hover */
 .site-nav__links a {
-  transition: opacity 0.2s;
+  padding-block: var(--space-1);
+  background: linear-gradient(var(--accent-2), var(--accent-2)) left bottom / 0 2px no-repeat;
+  transition: background-size 0.25s ease;
 }
 
-.site-nav__links a:hover {
-  opacity: 0.6;
+.site-nav__links a:hover,
+.site-nav__links a[aria-current="page"] {
+  background-size: 100% 2px;
+}
+
+/* --- Light/dark toggle (created by js/theme.js) --- */
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-strong);
+  transform: rotate(-15deg);
+}
+
+.theme-toggle svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* Mobile: little room → we tighten up and the button takes the last spot */
+@media (max-width: 809px) {
+  .site-nav { gap: 10px; padding-inline: 12px; }
+  .site-nav__links { gap: 10px; font-size: 13px; }
 }
 
 @media (min-width: 810px) {
-  .site-nav { gap: 20px; }
-  .site-nav__links { gap: 20px; font-size: 15px; }
+  .site-nav { gap: var(--space-5); }
+  .site-nav__links { gap: var(--space-5); font-size: 15px; }
+  /* Desktop: the menu stays centered, the button goes to the top right */
+  .theme-toggle {
+    position: absolute;
+    right: var(--gutter);
+  }
 }
 
 /* --- Grain texture: added on top of a colored background --- */
@@ -174,95 +331,253 @@ a {
   pointer-events: none;
 }
 
-/* --- Pill-shaped buttons --- */
+/* --- Doodles: colored by CSS masks ---
+   The image (SVG/PNG) serves as a "stencil": only its shape is kept,
+   and the background-color shows through. Result: the doodle takes a theme
+   token and changes color in light/dark mode, without touching the files. */
+.doodle {
+  display: block;
+  background-color: var(--doodle-color, var(--accent));
+  -webkit-mask: var(--doodle-mask) center / contain no-repeat;  /* -webkit-: older Safari */
+  mask: var(--doodle-mask) center / contain no-repeat;
+}
+
+/* The url() values are written HERE (not in the HTML): a relative path in CSS
+   is resolved from the CSS file, so "../assets" is always right. */
+.doodle--star       { --doodle-mask: url("../assets/images/deco/stickman-left.svg");  aspect-ratio: 160 / 163; --doodle-color: var(--accent-2); }
+.doodle--sun        { --doodle-mask: url("../assets/images/deco/stickman-right.svg"); aspect-ratio: 142 / 140; --doodle-color: var(--accent); }
+.doodle--about-sun  { --doodle-mask: url("../assets/images/deco/sun.png");            aspect-ratio: 142 / 141; --doodle-color: var(--accent-2); }
+.doodle--about-star { --doodle-mask: url("../assets/images/deco/star.png");           aspect-ratio: 262 / 267; --doodle-color: var(--accent); }
+.doodle--a2         { --doodle-mask: url("../assets/images/deco/a-squared.svg");      aspect-ratio: 60 / 58;   --doodle-color: var(--fg); }
+
+/* --- Buttons: ONE shape, TWO variants ---
+   Same size, radius, font and hover effect everywhere. Only the role
+   changes the look:
+   - .btn--primary   = THE main action of a block (fill, accent 2)
+   - .btn--secondary = supporting action (outline)
+   The "View more" in the cards (.project-card__cta) is the compact version
+   of the primary: same color and shape, smaller to fit next to the year. */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-pill);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;   /* UI label, not reading text */
   white-space: nowrap;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  opacity: 0.85;
+  transform: translateY(-2px);
 }
 
-.btn--light { background: var(--color-bg); color: var(--color-text); }
-.btn--dark  { background: var(--color-text); color: var(--color-bg); }
-.btn--grey  { background: var(--color-pill); color: var(--color-text); }
-.btn--lg    { padding: 6px 14px; font-size: 16px; font-weight: 400; }
+.btn--primary {
+  background: var(--accent-2);
+  color: var(--on-accent-2);   /* 5.9:1 light, 5.5:1 dark */
+}
+
+.btn--primary:hover {
+  box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--accent-2) 70%, transparent);
+}
+
+/* Outline in --fg-muted (≥ 3:1 on the background in both modes:
+   the outline of an interactive element must be perceivable) */
+.btn--secondary {
+  background: transparent;
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1.5px var(--fg-muted);
+}
+
+.btn--secondary:hover {
+  color: var(--accent-2);
+  box-shadow: inset 0 0 0 1.5px var(--accent-2);
+}
+
+/* Very narrow screens: slightly tighter buttons so they stay side by side */
+@media (max-width: 400px) {
+  .btn { padding-inline: var(--space-4); font-size: 14px; }
+}
 
 .btn svg {
-  width: 1em;
-  height: 1em;
+  width: 1.1em;
+  height: 1.1em;
   flex-shrink: 0;
-}
-
-@media (min-width: 810px) {
-  .btn--lg { font-size: 22px; }
 }
 
 /* --- Tags (UX/UI Design, Personal…) --- */
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-2);
   padding: 0;
   list-style: none;
 }
 
 .tag {
-  padding: 8px 10px;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
   line-height: 1.2;
 }
 
-.tag--green  { background: var(--tag-green-bg);  color: var(--tag-green-text); }
-.tag--blue   { background: var(--tag-blue-bg);   color: var(--tag-blue-text); }
-.tag--purple { background: var(--tag-purple-bg); color: var(--tag-purple-text); }
+/* Tags without an outline: each one only declares its color (--tag-color),
+   and color-mix() derives the rest from it:
+   - background = 14% of the color blended into the page background → a tinted
+     pill, visible on cream, cards or white, and opaque over the facade photo;
+   - text = the color, darkened with a bit of --fg (--tag-darken) so it stays
+     ≥ 4.5:1 on that tinted background (not needed in dark mode). */
+.tag {
+  --tag-color: var(--fg);   /* neutral tag (client) */
+  background: color-mix(in srgb, var(--tag-color) 14%, var(--bg));
+  color: color-mix(in srgb, var(--tag-color), var(--fg) var(--tag-darken));
+}
+/* Two roles, two colors. The classes describe the ROLE (skill / client),
+   not the color: the colors can change without touching the HTML. */
+.tag--skill  { --tag-color: var(--accent); }  /* the skill: accent color */
+.tag--client { --tag-color: var(--fg); }      /* the client (or "Personal"): neutral */
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
   display: grid;
   place-content: center;
-  gap: 10px;
-  min-height: 260px;
-  padding: 40px var(--gutter);
+  gap: var(--space-3);
+  padding: var(--section-y) var(--gutter);   /* same rhythm as the other sections */
   text-align: center;
-  background: var(--gradient) center / cover;
+  /* Same tint as the home page's key figures:
+     title in accent 2 (like the figures), subtitle in the text color */
+  background: var(--tint-accent-2);
+  color: var(--fg);
 }
 
 .page-banner h1 {
   font-size: 32px;
-  color: #fff;
+  color: var(--accent-2);
 }
 
 .page-banner p {
   font-size: 20px;
   font-weight: 500;
-  color: #dedede;
-  letter-spacing: -0.04em;
+  color: var(--fg);
+  letter-spacing: var(--tracking-tight);
 }
 
 @media (min-width: 810px) {
-  .page-banner { min-height: 393px; }
   .page-banner h1 { font-size: 40px; }
   .page-banner p { font-size: 30px; }
 }
 
-/* --- Work card (My Work page) --- */
+/* --- Project card: ONE component, used in two places ---
+   - on the home page, inside each facade window (.window__card: placement)
+   - on the My Work page, in a grid (.work-card: placement)
+   The appearance lives here only: change the card once, both update. */
+.project-card {
+  /* Inside the cards, accent 1 (forest green/mint) is replaced by accent 2
+     (raspberry/pink), to match the rest of the page. Custom properties
+     are inherited: the pill and tags below follow without being changed. */
+  --primary: var(--accent-2);
+  --on-primary: var(--on-accent-2);
+  --accent: var(--accent-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+/* Lift on hover: the card itself (My Work) or its window (home page) */
+a.project-card:hover,
+a.window:hover .project-card {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 34px -14px rgba(0, 0, 0, 0.45);
+}
+
+/* Top row: year on the left, call to action on the right */
+.project-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 28px; /* reserves the pill's height: the card doesn't "jump" */
+  margin-bottom: var(--space-2);  /* gap with the title: the pill doesn't "stick" to the text */
+}
+
+.project-card__year {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--fg-muted);
+}
+
+/* "View more" pill (visible by default; the facade hides it until the window opens) */
+.project-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--accent-2);       /* same colors as .btn--primary */
+  color: var(--on-accent-2);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, translate 0.4s var(--ease-spring);
+}
+
+.project-card__cta svg {
+  width: 14px;
+  height: 14px;
+  transition: translate 0.2s ease;
+}
+
+/* Hover: the arrow nudges forward → "it's clickable" */
+a.project-card:hover .project-card__cta svg,
+a.window:hover .project-card__cta svg {
+  translate: 3px 0;
+}
+
+/* "Coming soon" variant: muted, it's not an action */
+.project-card__cta--soon {
+  background: color-mix(in srgb, var(--fg) 10%, var(--surface));
+  color: var(--fg);   /* --fg-muted only reached 4.3:1 on this background */
+}
+
+.project-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--color-subheading);
+}
+
+/* margin-top: auto pushes the tags to the bottom of the card:
+   year and title at the top, tags at the bottom, whatever the height */
+.project-card .tags {
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+
+@media (min-width: 810px) {
+  .project-card__title { font-size: 20px; }
+}
+
+/* --- My Work page: card grid --- */
 .work-grid {
   display: grid;
-  gap: 32px;
+  grid-auto-rows: 1fr;   /* all rows the height of the tallest → identical cards */
+  gap: var(--space-5);
   width: min(100% - 2 * var(--gutter), 929px);
-  margin: 60px auto 100px;
+  margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
 }
@@ -270,85 +585,92 @@ a {
 @media (min-width: 810px) {
   .work-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 60px 59px;
-    align-items: start;
+    gap: var(--space-6);
+    /* "stretch" (the default): the cards in the same row take the same
+       height, no JS needed here since they are siblings in the grid */
   }
 }
 
 .work-card {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  background: var(--color-bg);
-  border: 1px solid #f0d6d2;
-  border-radius: var(--radius-md);
-  transition: transform 0.25s, box-shadow 0.25s;
+  height: 100%;   /* fills the grid cell (stretched to the tallest one) */
 }
 
-a.work-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.18);
-}
+/* "View more" only on hover (or keyboard focus)… but only on devices
+   that CAN hover: on a touchscreen it stays visible, otherwise it would never
+   appear. "Coming soon" stays visible: it's information, not a button. */
+@media (hover: hover) {
+  .work-card .project-card__cta:not(.project-card__cta--soon) {
+    opacity: 0;
+    translate: -8px 0;
+  }
 
-.work-card__header {
-  height: 80px;
-  background: url("../assets/images/textures/card-header.png") center / cover;
-}
-
-.work-card__badge {
-  position: absolute;
-  top: 22px;
-  right: 22px;
-  display: grid;
-  place-items: center;
-  min-width: 35px;
-  height: 36px;
-  padding: 0 8px;
-  background: var(--color-bg);
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-faint);
-}
-
-.work-card__badge svg {
-  width: 18px;
-  height: 18px;
-}
-
-.work-card__body {
-  display: grid;
-  gap: 12px;
-  padding: 26px 22px 22px;
-}
-
-.work-card__year {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-faint);
-}
-
-.work-card__title {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--color-text-strong);
-  margin-bottom: 8px;
+  .work-card:is(:hover, :focus-within) .project-card__cta {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 
 
 /* 4. PAGES ================================================================= */
 
 /* ---------- HOME: hero ---------- */
+/* The hero fills the visible window (minus the menu).
+   svh = "small viewport height": on mobile, the height visible even when the
+   address bar is shown (vh would ignore it and hide the bottom).
+   The first line is a fallback for older browsers without svh. */
 .hero {
-  padding: 60px var(--gutter) 80px;
+  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100svh - var(--nav-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* vertically centers the content */
+  padding: 32px var(--gutter) 84px;   /* bottom: room for the arrow */
   background: var(--color-bg-soft);
   text-align: center;
 }
 
+/* "Scroll down" arrow: a real link to the next section */
+.scroll-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  translate: -50% 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--fg-muted);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.scroll-hint:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.scroll-hint svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* The bounce only plays for people who haven't asked to reduce motion.
+   "transform" (animation) and "translate" (centering) add up without conflict. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .scroll-hint { animation: nudge 2s ease-in-out infinite; }
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+
 .hero__title {
+  color: var(--fg);   /* charcoal (instead of the forest of the other headings) */
   font-size: 30px;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .hero__title span {
@@ -356,7 +678,8 @@ a.work-card:hover {
 }
 
 .hero__title .accent {
-  color: var(--color-accent);
+  margin-top: 0.3em;        /* in em: the gap follows the text size (mobile/desktop) */
+  color: var(--accent-2);   /* accent 2: highlight */
 }
 
 /* The doodles are positioned relative to the "I'm Alexia Carré." line */
@@ -373,18 +696,22 @@ a.work-card:hover {
   translate: 0 -50%;
 }
 
-.hero__doodle--left  { left: -32px; }
-.hero__doodle--right { right: -32px; }
+.hero__doodle--left  { left: -42px; }
+.hero__doodle--right { right: -42px; }
 
+/* The hero's spacing stays "out of the system" on purpose: it's tuned
+   (with svh) so the hero + the arrow fit in every window height. */
 .hero__stage {
   display: grid;
   gap: 40px;
   justify-items: center;
-  margin-top: 60px;
+  margin-top: clamp(24px, 5svh, 60px);
 }
 
+/* Photo size: limited by the width AND the height of the window,
+   so everything fits on screen, arrow included */
 .hero__portrait {
-  width: min(280px, 70vw);
+  width: min(280px, 70vw, 34svh);
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
@@ -413,6 +740,7 @@ a.work-card:hover {
   /* "translate" and "scale" are separate properties: JS drives the first
      (parallax), CSS drives the second (hover), without either overwriting the other. */
   translate: var(--px, 0) var(--py, 0);
+  filter: var(--logo-filter);   /* black logos would disappear on the dark background */
   transition: scale 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
@@ -421,23 +749,24 @@ a.work-card:hover {
 }
 
 @media (min-width: 810px) {
-  .hero { padding: 60px var(--gutter) 140px; }
+  .hero { padding: 40px var(--gutter) 96px; }
   .hero__title { font-size: 40px; }
   .hero__doodle { width: 35px; }
-  .hero__doodle--left  { left: -44px; }
-  .hero__doodle--right { right: -44px; }
+  .hero__doodle--left  { left: -62px; }
+  .hero__doodle--right { right: -62px; }
 
   /* Desktop: logos | portrait | logos */
   .hero__stage {
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     max-width: 1020px;
-    margin: 80px auto 0;
+    margin: clamp(28px, 6svh, 80px) auto 0;
   }
-  .hero__portrait { width: 399px; grid-column: 2; grid-row: 1; }
+  /* clamp(min, ideal, max): 399 px on a large screen, smaller if the window is short */
+  .hero__portrait { width: clamp(220px, 46svh, 399px); grid-column: 2; grid-row: 1; }
   .logo-grid {
     grid-template-columns: 1fr;
-    gap: 70px;
+    gap: clamp(24px, 7svh, 70px);
     max-width: none;
   }
   .logo-grid--left  { grid-column: 1; grid-row: 1; }
@@ -449,40 +778,65 @@ a.work-card:hover {
   .logo-grid--right li:nth-child(3) { transform: translateX(-40px); }
 }
 
+/* Short screens (small laptops): we tighten up so the hero AND the arrow
+   fit in the window. A media query can also target the HEIGHT. */
+@media (min-width: 810px) and (max-height: 720px) {
+  .hero { padding-block: 24px 76px; }
+  .hero__title { font-size: 34px; }
+  .logo-grid img { width: calc(var(--w) * 0.8); }
+}
+
+/* Same thing for small phones (e.g. iPhone SE, 667 px tall) */
+@media (max-width: 809px) and (max-height: 720px) {
+  .hero { padding-block: 20px 72px; }
+  .hero__title { font-size: 26px; }
+  .hero__stage { gap: 24px; }
+  .hero__portrait { width: min(280px, 70vw, 30svh); }
+  .logo-grid { row-gap: 14px; }
+  .logo-grid img { width: calc(var(--w) * 0.42); }
+}
+
 /* ---------- HOME: key figures ---------- */
+/* Key-figures band: a light wash of accent 2 (12%) as background,
+   figures in accent 2 → a dedicated section, without being flashy */
 .stats {
+  scroll-margin-top: var(--nav-height);  /* the sticky menu doesn't cover the top when you arrive */
   display: grid;
-  gap: 40px;
-  padding: 80px var(--gutter);
+  gap: var(--space-7);
+  padding: var(--section-y) var(--gutter);
+  background: var(--tint-accent-2);
   text-align: center;
 }
 
 .stat__value {
+  color: var(--accent-2);
   font-size: 52px;
-  letter-spacing: -0.04em;
+  line-height: 1;
+  letter-spacing: var(--tracking-tight);
 }
 
 .stat__label {
   max-width: 240px;
-  margin: 6px auto 0;
+  margin: var(--space-3) auto 0;
   font-size: 18px;
-  color: var(--color-muted);
+  line-height: 1.4;
+  color: var(--fg);
 }
 
 @media (min-width: 810px) {
   .stats {
     grid-template-columns: repeat(3, 240px);
     justify-content: center;
-    gap: 40px;
-    padding: 180px var(--gutter);
+    gap: var(--space-7);
   }
   .stat__value { font-size: 64px; }
 }
 
 /* ---------- HOME: Venn diagram ---------- */
 .venn-section {
-  padding: 80px var(--gutter);
-  background: var(--color-accent);
+  padding: var(--section-y) var(--gutter);
+  background: var(--band);
+  color: var(--on-band);   /* the SVG circles use "currentColor" → this color */
   text-align: center;
 }
 
@@ -490,30 +844,39 @@ a.work-card:hover {
   max-width: 820px;
   margin-inline: auto;
   font-size: 24px;
-  color: #fff;
+  color: var(--on-band);
 }
 
 .venn {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: var(--space-5);
   justify-items: center;
-  margin: 50px auto;
+  margin: var(--space-7) auto;
 }
 
 .venn__list {
   display: grid;
-  gap: 2px;
+  gap: var(--space-1);
   padding: 0;
   list-style: none;
   font-size: 18px;
   font-weight: 500;
+  line-height: 1.4;
   letter-spacing: -0.01em;
-  color: #fff;
+  color: var(--on-band);
 }
 
 .venn__list strong {
-  color: #292929;
+  font-weight: 700;
+}
+
+/* Second circle (UX Design) and its title in accent 2:
+   the two disciplines become visually distinct */
+.venn__circles circle:last-child,
+.venn__list--right strong {
+  stroke: var(--accent-2-on-band);
+  color: var(--accent-2-on-band);
 }
 
 .venn__circles {
@@ -521,14 +884,13 @@ a.work-card:hover {
 }
 
 @media (min-width: 810px) {
-  .venn-section { padding: 70px var(--gutter) 40px; }
   .venn-section h2 { font-size: 30px; }
   .venn {
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 20px;
+    gap: var(--space-5);
     max-width: 840px;
-    margin: 80px auto 90px;
+    margin: var(--space-8) auto;
   }
   .venn__list { font-size: 22px; }
   .venn__list--left  { justify-self: end;   text-align: right; }
@@ -542,7 +904,10 @@ a.work-card:hover {
   display: grid;
   place-items: center;
   height: 180px;
-  background: url("../assets/images/facade/cornice.png") center / cover;
+  /* A "green night" veil over the photo, transparent in light (--facade-dim: 0) */
+  background:
+    linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
+    url("../assets/images/facade/cornice.png") center / cover;
 }
 
 /* dark gradient over the cornice for text legibility */
@@ -560,14 +925,16 @@ a.work-card:hover {
 }
 
 .facade__wall {
-  padding: 60px var(--gutter) 120px;
-  background: url("../assets/images/facade/bricks.png") center bottom / cover;
+  padding: var(--section-y) var(--gutter);
+  background:
+    linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
+    url("../assets/images/facade/bricks.png") center bottom / cover;
 }
 
 .windows {
   display: grid;
   grid-template-columns: minmax(0, 453px); /* explicit column: avoids the collapse */
-  gap: 40px;
+  gap: var(--space-7);
   justify-content: center;
   padding: 0;
   list-style: none;
@@ -578,10 +945,11 @@ a.work-card:hover {
    On hover we fade one out and the other in. */
 .window {
   --window-open: url("../assets/images/facade/window-open-overwhelmed.png");
-  /* Spring easing: the curve goes above 1 → slight overshoot, like Framer's "bounce: 0.2" */
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
   position: relative;
-  display: block; /* an <a> is "inline" by default: it couldn't have a size */
+  /* flow-root (rather than block): a block that is "self-contained". Without it,
+     the card's margin-top would "collapse" outside the window and the card would
+     cover the illustration on mobile. (An <a> is inline by default.) */
+  display: flow-root;
   width: 100%;
 }
 
@@ -595,6 +963,8 @@ a.work-card:hover {
   inset: 0 0 auto;          /* pinned to the top… */
   aspect-ratio: 453 / 485;  /* …with the window's proportions */
   background: center / contain no-repeat;
+  /* Windows darkened a little less than the wall: the lit window stands out at night */
+  filter: brightness(calc(1 - var(--facade-dim) * 0.6));
   transition: opacity 0.3s ease, scale 0.4s var(--ease-spring);
 }
 
@@ -623,104 +993,58 @@ a.work-card:hover {
   scale: 1;
 }
 
-/* Frosted glass card: backdrop-filter blurs what is BEHIND it */
-/* Mobile: the card sits BELOW the window, only overlapping the ledge,
+/* Project not available yet: the shutters STAY closed.
+   (:is() raises the specificity above the rules just above.)
+   The "Coming soon" label appears anyway, via the CTA rule below. */
+.window--soon:is(:hover, :focus-within, .is-open)::before {
+  opacity: 1;
+}
+
+.window--soon:is(:hover, :focus-within, .is-open)::after {
+  opacity: 0;
+  scale: 0.92 1;
+}
+
+/* Placement of the project card (.project-card) in a window.
+   Mobile: the card sits BELOW the window, only overlapping the ledge,
    so the character stays visible. (A % margin is computed from the WIDTH.) */
 .window__card {
   z-index: 1;   /* above the window images */
   position: relative;
   margin: 85% 5% 0;
-  display: grid;
-  gap: 8px;
-  padding: 18px 20px 20px;
-  background: rgba(168, 141, 86, 0.09);
-  -webkit-backdrop-filter: blur(13px);
-  backdrop-filter: blur(13px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 14px;
-  text-align: left;
-  transition: transform 0.25s;
-}
-
-/* Only windows that are links (a.window) lift their card */
-a.window:hover .window__card {
-  transform: translateY(-4px);
-}
-
-/* Top row of the card: year on the left, call to action on the right */
-.window__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 28px; /* reserves the pill's height: the card doesn't "jump" */
-}
-
-/* "View more" pill: hidden while the window is closed */
-.window__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  background: #fff;
-  color: var(--color-text);
-  font-size: 13px;
-  font-weight: 700;
-  white-space: nowrap;
-  opacity: 0;
-  translate: -8px 0;
-  transition: opacity 0.3s ease, translate 0.4s var(--ease-spring);
-}
-
-.window__cta svg {
-  width: 14px;
-  height: 14px;
-  transition: translate 0.2s ease;
-}
-
-/* "Coming soon" variant: muted, it's not an action */
-.window__cta--soon {
-  background: rgba(255, 255, 255, 0.25);
-  color: #fff;
-}
-
-/* Shows up when the window opens (same 3 triggers as the shutters) */
-.window:is(:hover, :focus-within, .is-open) .window__cta {
-  opacity: 1;
-  translate: 0 0;
-}
-
-/* Hovering the window: the arrow nudges forward → "it's clickable" */
-a.window:hover .window__cta svg {
-  translate: 3px 0;
-}
-
-.window__year {
-  font-size: 13px;
-  font-weight: 700;
-  color: #e6e6e6;
-}
-
-.window__title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: #fff;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  /* Same height for all cards: js/main.js measures the tallest one and
+     sets --window-card-height. Without JS: natural height (auto). */
+  min-height: var(--window-card-height, auto);
+  /* Denser variant (one step smaller on the scale): on the facade the card must
+     leave the illustration visible above it */
+  gap: var(--space-2);
+  padding: var(--space-4);   /* the same on all 4 sides: the pill is as far from the top as from the right */
 }
 
 .window__card .tags {
-  margin-top: 4px;
+  padding-top: var(--space-2);
+}
+
+/* On the facade, the CTA stays hidden until the window opens
+   (same 3 triggers as the shutters: mouse, keyboard, scroll on mobile) */
+.window .project-card__cta {
+  opacity: 0;
+  translate: -8px 0;
+}
+
+.window:is(:hover, :focus-within, .is-open) .project-card__cta {
+  opacity: 1;
+  translate: 0 0;
 }
 
 @media (min-width: 810px) {
   .facade__cornice { height: 276px; }
   .facade__cornice h2 { font-size: 40px; }
-  .facade__wall { padding: 210px var(--gutter) 210px; }
+  /* A bit more wall above/below: the facade is an illustration, it needs room */
+  .facade__wall { padding: calc(var(--section-y) + var(--space-8)) var(--gutter); }
   .windows {
     grid-template-columns: repeat(2, 453px);
-    gap: 29px 30px;
+    gap: var(--space-6);
   }
   /* Desktop: the card overlaps the bottom of the window, like on Framer */
   .window { aspect-ratio: 453 / 485; }
@@ -728,19 +1052,17 @@ a.window:hover .window__cta svg {
     position: absolute;
     left: 5%;
     right: 5%;
-    bottom: 2%;
+    bottom: 0;
     margin: 0;
-    padding: 22px 30px 20px;
   }
-  .window__title { font-size: 20px; }
 }
 
 /* ---------- HOME: about teaser + credits ---------- */
 .teaser {
   display: grid;
-  gap: 24px;
+  gap: var(--space-5);
   justify-items: center;
-  padding: 80px var(--gutter) 50px;
+  padding: var(--section-y) var(--gutter) var(--space-7);
   text-align: center;
 }
 
@@ -748,17 +1070,12 @@ a.window:hover .window__cta svg {
   font-size: 28px;
 }
 
-.btn--gradient {
-  padding: 9px 80px;
-  background: var(--gradient) center / cover;
-  color: #fff;
-}
 
 .credits {
-  padding: 0 var(--gutter) 40px;
+  padding: 0 var(--gutter) var(--space-7);
   text-align: center;
   font-size: 14px;
-  color: #8c8c8c;
+  color: var(--fg-muted);
 }
 
 .credits a {
@@ -767,7 +1084,6 @@ a.window:hover .window__cta svg {
 }
 
 @media (min-width: 810px) {
-  .teaser { padding: 140px var(--gutter) 60px; }
   .teaser h2 { font-size: 32px; }
   .credits { font-size: 16px; }
 }
@@ -775,9 +1091,9 @@ a.window:hover .window__cta svg {
 /* ---------- MY SKILLS ---------- */
 .skills-grid {
   display: grid;
-  gap: 40px;
+  gap: var(--space-7);
   width: min(100% - 2 * var(--gutter), 960px);
-  margin: 80px auto;
+  margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
 }
@@ -789,29 +1105,31 @@ a.window:hover .window__cta svg {
   border-radius: 20px;
 }
 
+/* More space above the heading (24) than below (8):
+   the heading visibly "belongs" to the paragraph it introduces */
 .skill h2 {
-  margin: 20px 0 10px;
+  margin: var(--space-5) 0 var(--space-2);
   font-size: 22px;
 }
 
 .skill p {
   font-size: 17px;
-  line-height: 1.25;
   color: var(--color-muted);
-  letter-spacing: -0.01em;
 }
 
 @media (min-width: 810px) {
-  .skills-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .skills-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
 }
 
+/* Its top margin "collapses" with the bottom margin of .skills-grid:
+   the larger of the two wins → one single section rhythm */
 .testimonial {
   width: min(100% - 2 * var(--gutter), 1024px);
-  margin: 120px auto 0;
+  margin: var(--section-y) auto;
 }
 
 .testimonial h2 {
-  margin-bottom: 50px;
+  margin-bottom: var(--space-6);
   text-align: center;
   font-size: 26px;
   font-weight: 700;
@@ -819,34 +1137,34 @@ a.window:hover .window__cta svg {
 
 .testimonial blockquote {
   display: grid;
-  gap: 16px;
-  padding: 32px 24px;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-5);
   background: var(--color-quote);
+  border: 1px solid var(--border);   /* visible in dark, where band = surface */
   border-radius: 10px;
-  color: #fff;
+  color: var(--on-band);
   font-size: 16px;
   font-weight: 500;
-  line-height: 1.2;
 }
 
 .testimonial figcaption {
-  margin-top: 16px;
+  margin-top: var(--space-2);
   text-align: right;
   font-weight: 900;
 }
 
 @media (min-width: 810px) {
   .testimonial h2 { font-size: 32px; }
-  .testimonial blockquote { padding: 38px 40px; font-size: 18px; }
+  .testimonial blockquote { padding: var(--space-7); font-size: 18px; }
 }
 
 .traits {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 40px 20px;
+  gap: var(--space-7) var(--space-5);
   width: min(100% - 2 * var(--gutter), 960px);
-  margin: 80px auto 120px;
-  padding-top: 80px;
+  margin: var(--section-y) auto;
+  padding-top: var(--section-y);
   border-top: 1px solid var(--color-border);
   list-style: none;
   text-align: center;
@@ -855,7 +1173,7 @@ a.window:hover .window__cta svg {
 .traits svg {
   width: 30px;
   height: 30px;
-  margin: 0 auto 14px;
+  margin: 0 auto var(--space-3);
   stroke: var(--color-icon);
 }
 
@@ -872,7 +1190,7 @@ a.window:hover .window__cta svg {
 .about {
   position: relative;
   width: min(100% - 2 * var(--gutter), 840px);
-  margin: 60px auto 100px;
+  margin: var(--section-y) auto;
 }
 
 .about__name {
@@ -886,37 +1204,37 @@ a.window:hover .window__cta svg {
 
 .about__text {
   display: grid;
-  gap: 14px;
+  gap: var(--space-2);
   max-width: 600px;
-  margin-top: 40px;
+  margin-top: var(--space-7);
 }
 
 .about__text p {
-  font-size: 15px;
-  line-height: 1.3;
+  font-size: 16px;   /* 15 → 16: the comfortable minimum for reading */
   color: var(--color-subtle);
 }
 
+/* 24 px above (+ the 8 px gap) vs 8 px below: the heading belongs to its paragraph */
 .about__text h2 {
-  margin-top: 10px;
+  margin-top: var(--space-5);
   font-size: 21px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .about__links {
-  margin-top: 30px;
+  margin-top: var(--space-7);
 }
 
 .about__links p {
-  margin-bottom: 10px;
+  margin-bottom: var(--space-2);
   font-size: 13px;
   color: var(--color-subtle);
 }
 
 .about__links ul {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
   padding: 0;
   list-style: none;
 }
@@ -926,22 +1244,27 @@ a.window:hover .window__cta svg {
 }
 
 @media (min-width: 810px) {
-  .about { margin-top: 80px; }
   .about__name { font-size: 48px; }
   .about__role { font-size: 38px; }
   .about__sticker {
     display: block;
     position: absolute;
   }
-  .about__sticker--sun { width: 195px; top: 180px; right: -210px; }
-  .about__sticker--a2  { width: 83px;  top: 450px; right: -165px; }
+  /* INSIDE the column (right: 0), in the space left free by the text
+     (max 600 px wide). The width adapts if that space shrinks:
+     100% - 620px = what remains to the right of the text, minus a 20 px gap. */
+  .about__sticker--sun { width: min(195px, calc(100% - 620px)); top: 150px; right: 0; aspect-ratio: 460 / 267; }
+  .about__sticker--a2  { width: min(83px, calc((100% - 620px) / 2)); top: 360px; right: 50px; }
+  /* Sun + star rebuilt with the positions they had in the original image */
+  .doodle--about-sun  { position: absolute; left: 0;   top: 39%; width: 30.9%; }
+  .doodle--about-star { position: absolute; left: 43%; top: 0;   width: 57%; }
 }
 
 /* Carousel: works without JS (horizontal swipe/scroll),
    JS adds the arrows and dots. */
 .carousel {
   position: relative;
-  margin-top: 40px;
+  margin-top: var(--space-7);
 }
 
 .carousel__track {
@@ -993,8 +1316,8 @@ a.window:hover .window__cta svg {
   left: 50%;
   translate: -50% 0;
   display: flex;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
   background: rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -1016,7 +1339,7 @@ a.window:hover .window__cta svg {
 }
 
 .carousel__caption {
-  margin-top: 12px;
+  margin-top: var(--space-3);
   font-size: 12px;
   color: var(--color-subtle);
 }
@@ -1026,15 +1349,17 @@ a.window:hover .window__cta svg {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: var(--space-5);
   min-height: calc(100vh - var(--nav-height));
-  padding: 25px var(--gutter) 60px;
-  background: var(--gradient) center / cover;
+  padding: var(--space-7) var(--gutter) var(--section-y);
+  /* Same tint as the My Work / My Skills banners: the page fits the theme,
+     and the resume (image, unchanged) stands out like a document */
+  background: var(--tint-accent-2);
 }
 
 .resume-page__actions {
   display: flex;
-  gap: 10px;
+  gap: var(--space-2);
 }
 
 .resume-page__doc {
@@ -1053,37 +1378,38 @@ a.window:hover .window__cta svg {
 
 /* ---------- CASE STUDY ---------- */
 .case-page {
-  padding: 40px var(--gutter) 80px;
-  background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), var(--gradient) center / cover;
+  padding: var(--space-7) var(--gutter) var(--section-y);
+  background: var(--surface);
 }
 
 .case-nav {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
   width: min(100%, var(--container));
-  margin: 0 auto 20px;
+  margin: 0 auto var(--space-5);
 }
 
 .case {
   width: min(100%, var(--container));
   margin-inline: auto;
-  padding-bottom: 60px;
-  background: var(--color-bg);
+  padding-bottom: var(--space-8);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
 .case__inner {
-  width: min(100% - 40px, 783px);
+  width: min(100% - 2 * var(--space-5), 783px);
   margin-inline: auto;
 }
 
 .case__head {
   display: grid;
-  gap: 16px;
+  gap: var(--space-4);
   justify-items: center;
-  padding: 40px 0 24px;
+  padding: var(--space-7) 0 var(--space-6);
   text-align: center;
 }
 
@@ -1096,9 +1422,10 @@ a.window:hover .window__cta svg {
 }
 
 .case__head p {
+  max-width: var(--measure);
   font-size: 18px;
+  line-height: 1.45;
   color: var(--color-muted);
-  letter-spacing: -0.02em;
 }
 
 .case__head .tags {
@@ -1108,21 +1435,25 @@ a.window:hover .window__cta svg {
 .case__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding: 20px 0;
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
   border-top: 1px solid var(--color-border);
   text-align: center;
 }
 
 .case__stats strong {
   display: block;
+  margin-bottom: var(--space-1);
+  color: var(--key-figure);
   font-size: 28px;
   font-weight: 500;
-  letter-spacing: -0.04em;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-tight);
 }
 
 .case__stats span {
   font-size: 14px;
+  line-height: 1.4;
   color: var(--color-muted);
 }
 
@@ -1141,21 +1472,22 @@ a.window:hover .window__cta svg {
   top: 50%;
   left: 50%;
   translate: -50% -50%;
-  padding: 13px 20px;
+  padding: var(--space-3) var(--space-5);
   background: var(--color-bg);
   border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 700;
-  color: #ccc;
+  color: var(--fg-muted);
   white-space: nowrap;
 }
 
 .case__team {
   display: flex;
-  gap: 14px;
+  gap: var(--space-3);
   align-items: flex-start;
-  margin: 20px auto 40px;
+  margin: var(--space-5) auto var(--space-7);
   font-size: 15px;
+  line-height: 1.5;
   color: var(--color-muted);
 }
 
@@ -1165,38 +1497,41 @@ a.window:hover .window__cta svg {
   height: 26px;
 }
 
+/* Between two sections: 48 px. Between a heading and its text: 12 px.
+   That contrast is what makes the page easy to scan: you can see
+   where each block starts at a glance. */
 .case__section {
-  margin-bottom: 36px;
+  margin-bottom: var(--space-7);
 }
 
 .case__section h2 {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-3);
   font-size: 22px;
 }
 
 .case__section p,
 .case__section li {
+  max-width: var(--measure);
   font-size: 18px;
-  line-height: 1.2;
   color: var(--color-muted);
-  letter-spacing: -0.02em;
 }
 
 .case__section ul {
-  margin-top: 8px;
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
   padding-left: 1.2em;
 }
 
 @media (min-width: 810px) {
-  .case-page { padding-top: 80px; }
-  .case__head { padding: 50px 0 30px; }
+  .case-page { padding-top: var(--space-8); }
+  .case__head { padding: var(--space-8) 0 var(--space-6); }
   .case__head h1 { font-size: 30px; }
   .case__head p { font-size: 22px; }
-  .case__stats { padding: 30px 0; }
   .case__stats strong { font-size: 34px; }
   .case__stats span { font-size: 18px; }
   .case__cover img { height: 298px; }
-  .case__team { width: min(100% - 40px, 680px); font-size: 18px; }
+  .case__team { width: min(100% - 2 * var(--space-5), 680px); font-size: 18px; }
   .case__section h2 { font-size: 24px; }
   .case__section p,
   .case__section li { font-size: 22px; }
@@ -1206,7 +1541,7 @@ a.window:hover .window__cta svg {
 .not-found {
   display: grid;
   place-content: center;
-  gap: 20px;
+  gap: var(--space-5);
   min-height: calc(100vh - var(--nav-height));
   padding: var(--gutter);
   text-align: center;

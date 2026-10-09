@@ -12,8 +12,10 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <!-- No "defer": applies the saved theme before the page is displayed -->
+  <script src="js/theme.js"></script>
   <!-- "defer": the script runs once the HTML has been read -->
   <script src="js/main.js" defer></script>
 </head>
@@ -32,8 +34,12 @@
   </nav>
 
   <main class="about">
-    <img class="about__sticker about__sticker--sun" src="assets/images/deco/sun-star.png" alt="">
-    <img class="about__sticker about__sticker--a2" src="assets/images/deco/a-squared.svg" alt="">
+    <!-- Decorative doodles: drawn by CSS masks (see "Doodles" in style.css) -->
+    <div class="about__sticker about__sticker--sun" aria-hidden="true">
+      <span class="doodle doodle--about-sun"></span>
+      <span class="doodle doodle--about-star"></span>
+    </div>
+    <span class="about__sticker about__sticker--a2 doodle doodle--a2" aria-hidden="true"></span>
 
     <h1>
       <span class="about__name">Alexia Carré</span><br>
@@ -53,8 +59,8 @@
     <div class="about__links">
       <p>Find me on</p>
       <ul>
-        <li><a class="btn btn--grey" href="https://www.linkedin.com/in/alexia-carr%C3%A9-6aa138195/" target="_blank" rel="noopener">LinkedIn</a></li>
-        <li><a class="btn btn--grey" href="https://www.pixilart.com/sthy/gallery" target="_blank" rel="noopener">Pixilart</a></li>
+        <li><a class="btn btn--secondary" href="https://www.linkedin.com/in/alexia-carr%C3%A9-6aa138195/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a class="btn btn--secondary" href="https://www.pixilart.com/sthy/gallery" target="_blank" rel="noopener">Pixilart</a></li>
       </ul>
     </div>
 
