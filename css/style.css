@@ -902,7 +902,8 @@ a.window:hover .project-card__cta svg {
     width: calc(2 * var(--rx));
     height: calc(2 * var(--ry));
     translate: -50% -50%;
-    border: 1px dashed color-mix(in srgb, var(--fg) 14%, transparent);
+    rotate: var(--tilt);   /* tilted like a planet's ring */
+    border: 1px dashed color-mix(in srgb, var(--fg) 22%, transparent);
     border-radius: 50%;
     pointer-events: none;
   }
@@ -918,8 +919,12 @@ a.window:hover .project-card__cta svg {
   }
   .logo-grid li {
     position: absolute;
-    left: calc(50% + var(--rx) * var(--r, 1) * cos(var(--a)));
-    top: calc(50% + var(--ry) * var(--r, 1) * sin(var(--a)));
+    /* Point on the ellipse (x, y), then turned by --tilt (rotation formula):
+       x' = x·cos(tilt) − y·sin(tilt)    y' = x·sin(tilt) + y·cos(tilt) */
+    --x: calc(var(--rx) * var(--r, 1) * cos(var(--a)));
+    --y: calc(var(--ry) * var(--r, 1) * sin(var(--a)));
+    left: calc(50% + var(--x) * cos(var(--tilt)) - var(--y) * sin(var(--tilt)));
+    top: calc(50% + var(--x) * sin(var(--tilt)) + var(--y) * cos(var(--tilt)));
     translate: -50% -50%;   /* the logo's center sits on the orbit */
     width: max-content;     /* its own width, even close to the edge of the stage */
     line-height: 0;
@@ -931,6 +936,7 @@ a.window:hover .project-card__cta svg {
   .hero__stage::before {
     --rx: min(var(--size) / 2 + 230px, 50cqw - 110px);
     --ry: calc(var(--size) / 2 + 24px);
+    --tilt: -10deg;   /* the orbit leans: up on the right, down on the left */
   }
   .logo-grid img { width: var(--w); max-width: none; }
 
@@ -939,10 +945,10 @@ a.window:hover .project-card__cta svg {
   .logo-grid--left  li:nth-child(1) { --a: 205deg; }              /* TCS */
   .logo-grid--left  li:nth-child(2) { --a: 168deg; --r: 0.9; }    /* Airbus */
   .logo-grid--left  li:nth-child(3) { --a: 132deg; --r: 1.03; }   /* Addict Mobile */
-  .logo-grid--right li:nth-child(1) { --a: -44deg; --r: 0.95; }   /* Ubisoft */
-  .logo-grid--right li:nth-child(2) { --a: -15deg; --r: 1.04; }   /* Equans */
-  .logo-grid--right li:nth-child(3) { --a: 18deg;  --r: 0.92; }   /* Danone */
-  .logo-grid--right li:nth-child(4) { --a: 52deg; }               /* Holusion */
+  .logo-grid--right li:nth-child(1) { --a: -36deg; --r: 0.95; }   /* Ubisoft */
+  .logo-grid--right li:nth-child(2) { --a: -6deg;  --r: 1.04; }   /* Equans */
+  .logo-grid--right li:nth-child(3) { --a: 25deg;  --r: 0.92; }   /* Danone */
+  .logo-grid--right li:nth-child(4) { --a: 56deg; }               /* Holusion */
 }
 
 /* Short screens (small laptops): we tighten up so the hero AND the arrow
