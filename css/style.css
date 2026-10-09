@@ -529,7 +529,14 @@ a {
 }
 /* The class describes the ROLE (skill), not the color:
    the color can change without touching the HTML. */
-.tag--skill  { --tag-color: var(--accent-2); }  /* the skill: accent 2 (pink), the same on every page */
+/* --color-accent (resolved on :root) rather than --accent, which the project
+   cards redefine as pink: this way the tag has the same color everywhere */
+.tag--skill {
+  --tag-color: var(--color-accent);   /* the skill: teal (light) / mint (dark) */
+  /* Teal on cream needs a darker text to stay readable: twice the usual
+     darkening (light: 40%; dark: 0 × 2 = still 0) */
+  color: color-mix(in srgb, var(--tag-color), var(--fg) calc(var(--tag-darken) * 2));
+}
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
