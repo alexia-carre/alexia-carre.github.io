@@ -153,7 +153,7 @@ document.querySelectorAll("[data-bizcard]").forEach((card) => {
 
   setFlipped(false, false);
 
-  // --- Parallax: the card tilts toward the mouse, the doodles shift by depth ---
+  // --- Parallax: the card tilts toward the mouse (the doodles, "printed" on it, follow) ---
   // Same principle as the logo galaxy: we compute a target (-1 → 1), then
   // approach it a bit more on each frame (smoothing), and the loop
   // stops once the card has settled. Mouse only, and not with "reduce motion".
@@ -169,9 +169,6 @@ document.querySelectorAll("[data-bizcard]").forEach((card) => {
 
     card.style.setProperty("--tilt-y", `${(currentX * MAX_TILT).toFixed(2)}deg`);
     card.style.setProperty("--tilt-x", `${(-currentY * MAX_TILT).toFixed(2)}deg`);
-    // Doodles: inherited by all the doodles, each one multiplies it by its --depth
-    card.style.setProperty("--px", currentX.toFixed(3));
-    card.style.setProperty("--py", currentY.toFixed(3));
     // Sheen: position of the light, in % of the card
     card.style.setProperty("--gx", `${((currentX + 1) * 50).toFixed(1)}%`);
     card.style.setProperty("--gy", `${((currentY + 1) * 50).toFixed(1)}%`);
