@@ -36,27 +36,23 @@
   </nav>
 
   <main class="work-page">
-    <!-- Header: big title framed by the doodles, with the orbits of the
-         home page galaxy in the background (drawn in CSS) -->
-    <header class="work-hero">
-      <p class="work-hero__eyebrow">4 projects · 2023 → 2025</p>
-      <h1 class="work-hero__title">
-        <span class="work-hero__doodle work-hero__doodle--star doodle doodle--star" aria-hidden="true"></span>
-        My Work.
-        <span class="work-hero__doodle work-hero__doodle--sun doodle doodle--sun" aria-hidden="true"></span>
-      </h1>
-      <p class="work-hero__intro">Discover my products and my achievements.</p>
+    <header class="page-banner grain">
+      <h1>My Work.</h1>
+      <p>Discover my products and my achievements.</p>
     </header>
 
-    <!-- Same "project-card" component as the home page facade, plus a cover
-         image (.work-card__media). The image is decorative (alt=""): the link
-         is announced by its title. The "View more" pill is aria-hidden too. -->
+    <!-- Same "project-card" component as the home page facade, plus a doodle
+         cover (.work-card__media): a tinted background, a dashed orbit and
+         2 doodles, with colors and shapes mixed from one card to the next.
+         The cover is decorative (aria-hidden): the link is announced by its
+         title. The "View more" pill is aria-hidden too. -->
     <ul class="work-grid">
       <li>
         <a class="work-card project-card" href="fire_safety.html">
-          <span class="work-card__media">
-            <img src="assets/images/work/fire-safety.jpg" alt="" width="1044" height="298">
-            <span class="work-card__index" aria-hidden="true">01</span>
+          <span class="work-card__media work-card__media--teal" style="--tilt: -10deg" aria-hidden="true">
+            <span class="work-card__doodle work-card__doodle--pink doodle doodle--star"></span>
+            <span class="work-card__doodle work-card__doodle--small work-card__doodle--teal doodle doodle--a2"></span>
+            <span class="work-card__index">01</span>
           </span>
           <span class="work-card__body">
             <span class="project-card__top">
@@ -72,10 +68,10 @@
       </li>
       <li>
         <!-- Work in progress: no page yet, so it's a <div>, not a link -->
-        <div class="work-card project-card">
-          <!-- No visuals yet: a sun doodle on an orbit, like the home page -->
-          <span class="work-card__media work-card__media--soon" aria-hidden="true">
-            <span class="doodle doodle--sun"></span>
+        <div class="work-card work-card--soon project-card">
+          <span class="work-card__media work-card__media--pink" style="--tilt: 10deg" aria-hidden="true">
+            <span class="work-card__doodle work-card__doodle--teal doodle doodle--sun"></span>
+            <span class="work-card__doodle work-card__doodle--small work-card__doodle--pink doodle doodle--about-star"></span>
             <span class="work-card__index">02</span>
           </span>
           <span class="work-card__body">
@@ -92,9 +88,10 @@
       </li>
       <li>
         <a class="work-card project-card" href="data_tagging.html">
-          <span class="work-card__media">
-            <img src="assets/images/work/data-tagging.jpg" alt="" width="1044" height="298">
-            <span class="work-card__index" aria-hidden="true">03</span>
+          <span class="work-card__media work-card__media--pink" style="--tilt: -6deg" aria-hidden="true">
+            <span class="work-card__doodle work-card__doodle--teal doodle doodle--about-star"></span>
+            <span class="work-card__doodle work-card__doodle--small work-card__doodle--pink doodle doodle--sun"></span>
+            <span class="work-card__index">03</span>
           </span>
           <span class="work-card__body">
             <span class="project-card__top">
@@ -110,9 +107,10 @@
       </li>
       <li>
         <a class="work-card project-card" href="cookbook.html">
-          <span class="work-card__media">
-            <img src="assets/images/work/cookbook.png" alt="" width="1044" height="298">
-            <span class="work-card__index" aria-hidden="true">04</span>
+          <span class="work-card__media work-card__media--teal" style="--tilt: 8deg" aria-hidden="true">
+            <span class="work-card__doodle work-card__doodle--pink doodle doodle--about-sun"></span>
+            <span class="work-card__doodle work-card__doodle--small work-card__doodle--teal doodle doodle--star"></span>
+            <span class="work-card__index">04</span>
           </span>
           <span class="work-card__body">
             <span class="project-card__top">

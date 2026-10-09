@@ -126,6 +126,7 @@
 
   /* Highlighted sections (key figures, page banners): 12% of accent 2 */
   --tint-accent-2: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
+  --tint-accent-1: color-mix(in srgb, var(--accent) 14%, var(--bg));   /* same idea, in teal/mint (My Work covers) */
 
   /* Typography */
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -670,78 +671,13 @@ a.window:hover .project-card__cta svg {
 
 /* --- My Work page --- */
 
-/* Header: centered, the title framed by the 2 doodles (like the home hero),
-   on top of 2 dashed orbits that cross in an X (like the logo galaxy) */
-.work-hero {
-  position: relative;
-  isolation: isolate;          /* the orbits (z-index: -1) stay behind the text */
-  display: grid;
-  justify-items: center;
-  gap: var(--space-4);
-  padding: var(--section-y) var(--gutter) var(--space-7);
-  overflow: hidden;            /* the orbits are cut at the edges, never cause a scroll */
-  text-align: center;
-}
-
-.work-hero::before,
-.work-hero::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 50%;
-  left: 50%;
-  width: min(760px, 120%);
-  aspect-ratio: 3 / 1;
-  translate: -50% -50%;
-  border: 1px dashed color-mix(in srgb, var(--fg) 20%, transparent);
-  border-radius: 50%;
-  outline: 1px dashed color-mix(in srgb, var(--fg) 10%, transparent);
-  outline-offset: 16px;
-}
-.work-hero::before { rotate: -10deg; }
-.work-hero::after  { rotate: 10deg; }
-
-/* Small line above the title, like the year on the case studies */
-.work-hero__eyebrow {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--fg-muted);
-}
-
-.work-hero__title {
-  position: relative;
-  font-size: clamp(44px, 7vw, 72px);
-  line-height: 1;
-  letter-spacing: var(--tracking-tight);
-  color: var(--accent-2);
-}
-
-/* The doodles hang on each side of the title */
-.work-hero__doodle {
-  position: absolute;
-  top: 50%;
-  width: clamp(28px, 4vw, 40px);
-  translate: 0 -50%;
-}
-.work-hero__doodle--star { right: calc(100% + var(--space-4)); rotate: -12deg; }
-.work-hero__doodle--sun  { left: calc(100% + var(--space-4)); }
-
-.work-hero__intro {
-  max-width: 28ch;
-  font-size: var(--text-subheading);
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--fg);
-}
-
 /* Card grid */
 .work-grid {
   display: grid;
   grid-auto-rows: 1fr;   /* all rows the height of the tallest → identical cards */
   gap: var(--space-5);
   width: min(100% - 2 * var(--gutter), var(--container));
-  margin: var(--space-7) auto var(--section-y);
+  margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
 }
@@ -770,24 +706,58 @@ a.window:hover .project-card__cta svg {
   padding: var(--space-5);
 }
 
+/* Doodle cover: a tinted background (teal or pink), a dashed orbit tilted
+   by --tilt, a big doodle in the middle and a small one on the orbit.
+   Colors and shapes change from one card to the next (see mywork.html). */
 .work-card__media {
   position: relative;
-  display: block;
+  display: grid;
+  place-items: center;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  background: var(--tint-accent-2);
 }
 
-.work-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: scale 0.6s var(--ease-spring);
+.work-card__media--teal { background: var(--tint-accent-1); }
+.work-card__media--pink { background: var(--tint-accent-2); }
+
+/* The orbit + its lighter twin alongside (outline), like the home galaxy */
+.work-card__media::before {
+  content: "";
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 3 / 1;
+  border: 1px dashed color-mix(in srgb, var(--fg) 25%, transparent);
+  border-radius: 50%;
+  outline: 1px dashed color-mix(in srgb, var(--fg) 12%, transparent);
+  outline-offset: 10px;
+  rotate: var(--tilt, -10deg);
 }
 
-/* Hover: the image zooms in slightly inside its frame */
-a.work-card:hover .work-card__media img {
-  scale: 1.06;
+.work-card__doodle {
+  grid-area: 1 / 1;
+  width: 64px;
+  transition: rotate 0.6s var(--ease-spring), scale 0.6s var(--ease-spring);
+}
+
+/* The small doodle sits on the orbit, toward the top right.
+   In % of the cover → same spot whatever the card width. */
+.work-card__doodle--small {
+  position: absolute;
+  left: 76%;
+  top: 35%;
+  width: 24px;
+  translate: -50% -50%;
+}
+
+/* Colors: set here rather than by the doodle itself (the cards switch
+   --accent to pink, so the teal comes from --color-accent) */
+.work-card__doodle--pink { --doodle-color: var(--accent-2); }
+.work-card__doodle--teal { --doodle-color: var(--color-accent); }
+
+/* Hover: the big doodle turns and grows a little */
+a.work-card:hover .work-card__doodle:not(.work-card__doodle--small) {
+  rotate: 18deg;
+  scale: 1.12;
 }
 
 /* Project number in the corner, like the steps of the case studies (01, 02…) */
@@ -803,34 +773,17 @@ a.work-card:hover .work-card__media img {
   color: var(--fg);
 }
 
-/* Project without visuals yet: a sun doodle turning slowly on a dashed orbit */
-.work-card__media--soon {
-  display: grid;
-  place-items: center;
+/* Project still in progress: its big doodle turns slowly, on its own */
+.work-card--soon .work-card__doodle:not(.work-card__doodle--small) {
+  animation: work-doodle-spin 14s linear infinite;
 }
 
-.work-card__media--soon::before {
-  content: "";
-  position: absolute;
-  width: 70%;
-  aspect-ratio: 3 / 1;
-  border: 1px dashed color-mix(in srgb, var(--fg) 25%, transparent);
-  border-radius: 50%;
-  rotate: -10deg;
-}
-
-.work-card__media--soon .doodle {
-  --doodle-color: var(--color-accent);   /* teal/mint like the home sun (the cards switch --accent to pink) */
-  width: 56px;
-  animation: work-sun-spin 14s linear infinite;
-}
-
-@keyframes work-sun-spin {
+@keyframes work-doodle-spin {
   to { rotate: 360deg; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .work-card__media--soon .doodle { animation: none; }
+  .work-card--soon .work-card__doodle { animation: none; }
 }
 
 /* "View more" only on hover (or keyboard focus)… but only on devices
