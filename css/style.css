@@ -247,6 +247,23 @@ a {
    free space and pushes the links + the light/dark button to the right edge */
 .site-nav__avatar {
   margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Name next to the photo. Hidden on phones: the menu already uses
+   the whole width there, the photo is enough. */
+.site-nav__name {
+  display: none;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  white-space: nowrap;
+}
+
+@media (min-width: 810px) {
+  .site-nav__name { display: inline; }
 }
 
 .site-nav__avatar img {
