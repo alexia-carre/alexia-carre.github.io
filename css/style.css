@@ -332,8 +332,15 @@ a {
 
 /* Mobile: little room → we tighten up */
 @media (max-width: 809px) {
-  .site-nav { gap: 10px; padding-inline: 12px; }
+  .site-nav { gap: 10px; }
   .site-nav__links { gap: 10px; font-size: 13px; }
+  .site-nav__links a { white-space: nowrap; }   /* "My Work" never on 2 lines */
+}
+
+/* Very small phones: same 24 px margins as the content, so the menu tightens */
+@media (max-width: 400px) {
+  .site-nav { gap: 6px; }
+  .site-nav__links { gap: 6px; font-size: 12px; }
 }
 
 @media (min-width: 810px) {
@@ -657,7 +664,7 @@ a.window:hover .project-card__cta svg {
   display: grid;
   grid-auto-rows: 1fr;   /* all rows the height of the tallest → identical cards */
   gap: var(--space-5);
-  width: min(100% - 2 * var(--gutter), 929px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
@@ -1393,7 +1400,7 @@ a.window:hover .project-card__cta svg {
 .skills-grid {
   display: grid;
   gap: var(--space-7);
-  width: min(100% - 2 * var(--gutter), 960px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
@@ -1425,7 +1432,7 @@ a.window:hover .project-card__cta svg {
 /* Its top margin "collapses" with the bottom margin of .skills-grid:
    the larger of the two wins → one single section rhythm */
 .testimonial {
-  width: min(100% - 2 * var(--gutter), 1024px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
 }
 
@@ -1463,7 +1470,7 @@ a.window:hover .project-card__cta svg {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-7) var(--space-5);
-  width: min(100% - 2 * var(--gutter), 960px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
   padding-top: var(--section-y);
   border-top: 1px solid var(--color-border);
@@ -1490,7 +1497,7 @@ a.window:hover .project-card__cta svg {
 /* ---------- ABOUT ---------- */
 .about {
   position: relative;
-  width: min(100% - 2 * var(--gutter), 840px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
 }
 
