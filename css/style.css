@@ -128,6 +128,13 @@
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --tracking-tight: -0.015em;  /* headings and figures: tightened slightly (tuned for Jakarta) */
 
+  /* Type scale of the case studies: 3 tiers only.
+     Clear jumps (≈ ×1.4 and ×1.8) so the hierarchy reads at a glance.
+     clamp(min mobile, fluid value, max desktop). */
+  --text-header: clamp(32px, 4vw, 48px);       /* 1. page title */
+  --text-subheading: clamp(22px, 2.2vw, 26px); /* 2. section headings, key figures */
+  --text-body: clamp(17px, 1.4vw, 18px);       /* 3. all the reading text */
+
   /* Spacing scale: EVERY margin/padding/gap uses one of these steps.
      A small set of values (multiples of 4/8 px) = a regular rhythm that the
      eye picks up, and which makes the page easy to scan. */
@@ -142,8 +149,10 @@
   /* Vertical padding of the sections: the same everywhere, 64 px on mobile → 128 px
      on a large screen. clamp(min, ideal, max) with an ideal in vw (window width). */
   --section-y: clamp(64px, 9vw, 128px);
-  /* Comfortable line length for reading (~65 characters) */
-  --measure: 65ch;
+  /* Comfortable line length for reading (~65–70 characters).
+     In em rather than ch: "ch" = the width of the "0", very wide in Plus Jakarta Sans
+     (65ch at 22 px = 1046 px, so no limit at all). 34em ≈ 65–70 average characters. */
+  --measure: 34em;
 
   /* Layout */
   --nav-height: 64px;
@@ -366,6 +375,52 @@ a {
 .doodle--about-sun  { --doodle-mask: url("../assets/images/deco/sun.png");            aspect-ratio: 142 / 141; --doodle-color: var(--accent-2); }
 .doodle--about-star { --doodle-mask: url("../assets/images/deco/star.png");           aspect-ratio: 262 / 267; --doodle-color: var(--accent); }
 .doodle--a2         { --doodle-mask: url("../assets/images/deco/a-squared.svg");      aspect-ratio: 60 / 58;   --doodle-color: var(--fg); }
+
+/* --- Rolling numbers (odometer), built by js/main.js ---
+   Each digit is a "window" 1em tall (overflow hidden) through which
+   a strip of digits scrolls (0→9). JS shifts the strip up
+   to the target digit. */
+.odo {
+  display: inline-flex;
+  font-variant-numeric: tabular-nums;   /* same-width digits: the number doesn't wobble */
+}
+
+.odo__digit,
+.odo__char {
+  display: inline-block;
+  height: 1em;
+  line-height: 1em;
+}
+
+.odo__digit {
+  overflow: hidden;
+}
+
+.odo__char {
+  white-space: pre;   /* keeps the space in "50M+ €" */
+}
+
+.odo__strip {
+  display: flex;
+  flex-direction: column;
+  /* easeOutQuint: slows down very gradually → soft stop */
+  transition: transform 2.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The number fades in as it rolls (no "pop" at the start) */
+.odo {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.odo.is-rolled {
+  opacity: 1;
+}
+
+.odo__strip > span {
+  height: 1em;
+  line-height: 1em;
+}
 
 /* --- Buttons: ONE shape, TWO variants ---
    Same size, radius, font and hover effect everywhere. Only the role
@@ -1640,59 +1695,98 @@ a.window:hover .project-card__cta svg {
   margin-inline: auto;
 }
 
+/* Text column = same width as the cover image: the text blocks start
+   at the image's left edge. The paragraphs keep their max length
+   (--measure), so they leave free space on the right. */
 .case__inner {
-  width: min(100% - 2 * var(--space-5), 783px);
-  margin-inline: auto;
+  width: 100%;
+}
+
+/* Case study header: the story (title, intro, tags) + the figures.
+   Mobile: stacked. Desktop: 2 columns (see the media query below).
+   Everything is left-aligned: each line starts at the same spot,
+   aligned with the image's left edge → easy to read and to scan. */
+.case__intro {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-7) 0;
 }
 
 .case__head {
   display: grid;
   gap: var(--space-4);
-  justify-items: center;
-  padding: var(--space-7) 0 var(--space-6);
-  text-align: center;
+  justify-items: start;
 }
 
+/* Tier 1: header */
 .case__head h1 {
-  font-size: 24px;
+  font-size: var(--text-header);
+  line-height: 1.1;
 }
 
-.case__head h1 span {
-  color: var(--color-muted);
+/* Left column in 3 blocks: title → intro → metadata.
+   The metadata (year + skill + client) form a single line of "labels",
+   set a little further apart (24 px vs 16 px) to separate the context
+   from the story. */
+/* The tags (skill + client): 24 px below the intro (vs 16 px between the
+   blocks above), to separate the context from the story */
+.case__meta {
+  margin-top: var(--space-2);
 }
 
+/* Year above the title, styled like the year on the project cards
+   (14 px, bold, gray). Negative margin: 8 px from the title instead of 16,
+   so it visually "belongs" to the title.
+   (.case__head .case__year: more specific than .case__head p, which is meant for the intro) */
+.case__head .case__year {
+  max-width: none;
+  margin-bottom: calc(var(--space-2) * -1);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--fg-muted);
+}
+
+/* Tier 3: body (the intro is reading text, not a heading) */
 .case__head p {
   max-width: var(--measure);
-  font-size: 18px;
-  line-height: 1.45;
+  font-size: var(--text-body);
   color: var(--color-muted);
 }
 
-.case__head .tags {
-  justify-content: center;
+/* min-width: 0: a grid column can shrink below the width of its longest
+   word (otherwise a long word like "Stakeholders" pushes the column off the screen) */
+.case__intro > * {
+  min-width: 0;
 }
 
+/* The figures: in a row on mobile, in a column on desktop */
 .case__stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-3);
-  padding: var(--space-6) 0;
-  border-top: 1px solid var(--color-border);
-  text-align: center;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+/* Very narrow screens: one figure per line (3 columns would be too cramped) */
+@media (max-width: 420px) {
+  .case__stats { grid-template-columns: 1fr; gap: var(--space-3); }
 }
 
 .case__stats strong {
   display: block;
   margin-bottom: var(--space-1);
   color: var(--key-figure);
-  font-size: 28px;
-  font-weight: 500;
+  font-size: var(--text-subheading);   /* tier 2: no longer bigger than the title */
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: var(--tracking-tight);
 }
 
-.case__stats span {
-  font-size: 14px;
+/* "dd > span": ONLY the labels (direct children), not the spans
+   the odometer creates inside the figures */
+.case__stats dd > span {
+  display: block;
+  font-size: var(--text-body);   /* tier 3 */
   line-height: 1.4;
   color: var(--color-muted);
 }
@@ -1730,8 +1824,7 @@ a.window:hover .project-card__cta svg {
   gap: var(--space-3);
   align-items: flex-start;
   margin: var(--space-5) auto var(--space-7);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: var(--text-body);   /* tier 3 */
   color: var(--color-muted);
 }
 
@@ -1748,15 +1841,18 @@ a.window:hover .project-card__cta svg {
   margin-bottom: var(--space-7);
 }
 
+/* Tier 2: subheading */
 .case__section h2 {
   margin-bottom: var(--space-3);
-  font-size: 22px;
+  font-size: var(--text-subheading);
+  line-height: 1.25;
 }
 
+/* Tier 3: body */
 .case__section p,
 .case__section li {
   max-width: var(--measure);
-  font-size: 18px;
+  font-size: var(--text-body);
   color: var(--color-muted);
 }
 
@@ -1769,17 +1865,27 @@ a.window:hover .project-card__cta svg {
 
 @media (min-width: 810px) {
   .case-page { padding-top: var(--space-8); }
-  .case__head { padding: var(--space-7) 0 var(--space-6); }
-  .case__head h1 { font-size: 30px; }
-  .case__head p { font-size: 22px; }
-  .case__stats strong { font-size: 34px; }
-  .case__stats span { font-size: 18px; }
+  /* Header in 2 columns: the story takes the space, the figures stack up
+     on the right, separated by a thin rule, aligned with the image's right edge */
+  /* stretch: both columns take the height of the taller one. */
+  .case__intro {
+    grid-template-columns: 1fr auto;
+    align-items: stretch;
+    gap: var(--space-8);
+    padding: var(--space-8) 0 var(--space-7);
+  }
+  /* space-between: the 3 figures spread over the full height → the 1st aligns
+     with the year (top), the last with the tags (bottom). The rule runs the whole height. */
+  .case__stats {
+    grid-template-columns: 1fr;
+    align-content: space-between;
+    gap: var(--space-5);
+    min-width: 200px;
+    padding-left: var(--space-6);
+    border-left: 1px solid var(--border);
+  }
+  /* (Text sizes: no override here, the 3 clamp() tokens adapt on their own) */
   .case__cover img { height: 298px; }
-  /* Same width as the sections (inherited from .case__inner): aligned on the left */
-  .case__team { font-size: 18px; }
-  .case__section h2 { font-size: 24px; }
-  .case__section p,
-  .case__section li { font-size: 22px; }
 }
 
 /* ---------- 404 ---------- */

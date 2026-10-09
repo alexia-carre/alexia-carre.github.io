@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/style.css">
   <!-- No "defer": applies the saved theme before the page is displayed -->
   <script src="js/theme.js"></script>
+  <script src="js/main.js" defer></script>
 </head>
 <body>
 
@@ -45,20 +46,27 @@
     </nav>
 
     <article class="case">
-      <header class="case__inner case__head">
-        <h1>Data Tagging for Compliance Officers <span>·&nbsp;2025</span></h1>
+      <!-- Header in 2 columns: the story on the left, the figures on the right -->
+      <div class="case__inner case__intro">
+      <header class="case__head">
+        <p class="case__year"><time datetime="2025">2025</time></p>
+        <h1>Data Tagging for Compliance Officers</h1>
         <p>Streamline the classification of hundred thousands of technical documents that needed to be classified manually by compliance officers.</p>
-        <ul class="tags">
-          <li class="tag tag--skill">AI Experience Design</li>
-          <li class="tag tag--client">Leading Aerospace Manufacturer</li>
-        </ul>
+        <!-- Skill + client -->
+        <div class="case__meta">
+          <ul class="tags">
+            <li class="tag tag--skill">AI Experience Design</li>
+            <li class="tag tag--client">Leading Aerospace Manufacturer</li>
+          </ul>
+        </div>
       </header>
 
-      <dl class="case__inner case__stats">
+      <dl class="case__stats">
         <div><dt class="visually-hidden">Reduction in manual reviews</dt><dd><strong>80%</strong><span>Less manual reviews.</span></dd></div>
         <div><dt class="visually-hidden">Stakeholders</dt><dd><strong>+3</strong><span>Stakeholders on board.</span></dd></div>
         <div><dt class="visually-hidden">Documents</dt><dd><strong>500</strong><span>Documents for PoC</span></dd></div>
       </dl>
+      </div>
 
       <figure class="case__cover">
         <img src="assets/images/work/data-tagging.jpg" alt="Technical documents illustration" width="1044" height="298">
