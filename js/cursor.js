@@ -1,27 +1,25 @@
 // ===========================================================================
 // Cursor light (all pages)
 // ---------------------------------------------------------------------------
-// A soft halo in the accent color follows the mouse, like a flashlight
-// on the page. Same principle as the logo galaxy: the halo covers a share
-// of the remaining distance on each frame (smoothing), and the loop stops
-// once it has caught up with the mouse.
+// A small accent-colored light "shines" on the page backgrounds under the mouse,
+// like a flashlight: the text, images and cards stay in front of it.
+// The JS only gives the mouse position (--mx, --my on <html>); the CSS
+// draws the light inside the section backgrounds (see "Cursor light" in style.css).
+// Same smoothing as the logo galaxy: the light covers a share of the remaining
+// distance on each frame, and the loop stops once it has caught up.
 // Mouse/trackpad only (no cursor on a touchscreen), and not with "reduce motion".
-// pointer-events: none (CSS) → the halo never blocks a click.
 // ===========================================================================
 
 if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  const glow = document.createElement("div");
-  glow.className = "cursor-glow";
-  glow.setAttribute("aria-hidden", "true");
-  document.body.append(glow);
-
+  const root = document.documentElement;
   const SMOOTHING = 0.18;
   let targetX = 0, targetY = 0, currentX = 0, currentY = 0, running = false;
 
   const render = () => {
     currentX += (targetX - currentX) * SMOOTHING;
     currentY += (targetY - currentY) * SMOOTHING;
-    glow.style.translate = `${currentX.toFixed(1)}px ${currentY.toFixed(1)}px`;
+    root.style.setProperty("--mx", `${currentX.toFixed(1)}px`);
+    root.style.setProperty("--my", `${currentY.toFixed(1)}px`);
 
     if (Math.abs(targetX - currentX) < 0.1 && Math.abs(targetY - currentY) < 0.1) {
       running = false;
@@ -34,11 +32,11 @@ if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion
     if (event.pointerType !== "mouse") return;
     targetX = event.clientX;
     targetY = event.clientY;
-    // First movement: the halo appears directly under the mouse (no slide from the corner)
-    if (!glow.classList.contains("is-visible")) {
+    // First movement: the light appears directly under the mouse (no slide from the corner)
+    if (!root.classList.contains("has-cursor-light")) {
       currentX = targetX;
       currentY = targetY;
-      glow.classList.add("is-visible");
+      root.classList.add("has-cursor-light");
     }
     if (!running) {
       running = true;
@@ -46,8 +44,8 @@ if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion
     }
   }, { passive: true });
 
-  // The mouse leaves the window: the halo fades out
-  document.documentElement.addEventListener("pointerleave", () => {
-    glow.classList.remove("is-visible");
+  // The mouse leaves the window: the light fades out
+  root.addEventListener("pointerleave", () => {
+    root.classList.remove("has-cursor-light");
   });
 }
