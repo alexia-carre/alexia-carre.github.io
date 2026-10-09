@@ -20,12 +20,12 @@ if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion
   document.body.append(canvas);
   const ctx = canvas.getContext("2d");
 
-  const LIFETIME = 380;       // ms before a point of the line disappears (= line length)
-  const MAX_WIDTH = 4.6;      // thickness of the line at the tip (px)
-  const SOFTNESS = 6;         // blur of the halo around the line and stars (px)
-  const ROUNDING = 0.45;      // 0–1: the lower, the more the line rounds off the corners
-  const STAR_EVERY = 70;      // a star every ~70 px traveled
-  const STAR_LIFETIME = 750;  // stars stay a bit longer than the line
+  const LIFETIME = 320;       // ms before a point of the line disappears (= line length)
+  const MAX_WIDTH = 3.2;      // thickness of the line at the tip (px)
+  const SOFTNESS = 3;         // blur of the halo around the line and stars (px)
+  const ROUNDING = 0.35;      // 0–1: the lower, the more the line rounds off the corners
+  const STAR_EVERY = 160;     // a star every ~160 px traveled (rare = discreet)
+  const STAR_LIFETIME = 600;  // stars stay a bit longer than the line
 
   let points = [];   // [{ x, y, t }]
   let stars = [];    // [{ x, y, t, size, angle, spin, dx, dy }]
@@ -93,7 +93,7 @@ if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion
       const a = points[i - 1], b = points[i], c = points[i + 1];
       ctx.strokeStyle = mix(tail, head, life);
       ctx.shadowColor = ctx.strokeStyle;     // soft halo of the same color
-      ctx.globalAlpha = 0.15 + 0.55 * life;  // never fully opaque: a soft line, not a marker
+      ctx.globalAlpha = 0.1 + 0.45 * life;   // never fully opaque: a discreet line, not a marker
       ctx.lineWidth = MAX_WIDTH * (0.3 + 0.7 * life);
       ctx.beginPath();
       ctx.moveTo((a.x + b.x) / 2, (a.y + b.y) / 2);
@@ -105,7 +105,7 @@ if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion
     stars.forEach((s) => {
       const age = (now - s.t) / STAR_LIFETIME;            // 0 → 1
       const pop = Math.min(1, age * 5);                   // reaches full size at 20%
-      ctx.globalAlpha = (1 - age) * 0.8;
+      ctx.globalAlpha = (1 - age) * 0.6;
       ctx.shadowColor = ctx.fillStyle;
       drawStar(s.x + s.dx * age, s.y + s.dy * age, s.size * pop, s.angle + s.spin * age);
       ctx.fill();
@@ -145,11 +145,11 @@ if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion
         x: smoothX + side * (6 + Math.random() * 8),
         y: smoothY + (Math.random() - 0.5) * 16,
         t: now,
-        size: 5.5 + Math.random() * 4,              // 5.5 to 9.5 px
+        size: 4 + Math.random() * 2,                // 4 to 6 px
         angle: Math.random() * Math.PI,
-        spin: (Math.random() - 0.5) * 2,            // turns a bit, one way or the other
-        dx: side * (4 + Math.random() * 6),         // drifts away from the line
-        dy: -4 - Math.random() * 6,                 // and rises slightly
+        spin: (Math.random() - 0.5) * 0.6,          // turns very slightly
+        dx: side * (2 + Math.random() * 3),         // drifts slightly away from the line
+        dy: -2 - Math.random() * 3,                 // and rises a little
       });
     }
 
