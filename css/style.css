@@ -939,7 +939,7 @@ a.window:hover .project-card__cta svg {
   .logo-grid--left  li:nth-child(1) { --a: 205deg; }              /* TCS */
   .logo-grid--left  li:nth-child(2) { --a: 168deg; --r: 0.9; }    /* Airbus */
   .logo-grid--left  li:nth-child(3) { --a: 132deg; --r: 1.03; }   /* Addict Mobile */
-  .logo-grid--right li:nth-child(1) { --a: -50deg; --r: 0.95; }   /* Ubisoft */
+  .logo-grid--right li:nth-child(1) { --a: -44deg; --r: 0.95; }   /* Ubisoft */
   .logo-grid--right li:nth-child(2) { --a: -15deg; --r: 1.04; }   /* Equans */
   .logo-grid--right li:nth-child(3) { --a: 18deg;  --r: 0.92; }   /* Danone */
   .logo-grid--right li:nth-child(4) { --a: 52deg; }               /* Holusion */
