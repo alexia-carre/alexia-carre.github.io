@@ -1724,11 +1724,24 @@ a.window:hover .project-card__cta svg {
   line-height: 1.1;
 }
 
-/* Year above the title, like on the project cards. Body size (tier 3),
-   bold and gray; 8 px from the title (instead of 16) so it belongs to it. */
-.case__year {
-  margin-bottom: calc(var(--space-2) * -1);
-  font-size: var(--text-body);
+/* Left column in 3 blocks: title → intro → metadata.
+   The metadata (year + skill + client) form a single line of "labels",
+   set a little further apart (24 px vs 16 px) to separate the context
+   from the story. */
+.case__meta {
+  display: flex;
+  align-items: flex-start;   /* the year lines up with the 1st row of tags, even if they wrap */
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* The year at the same size as the tags: they read as one row of labels.
+   (.case__head .case__year: more specific than .case__head p, which is meant for the intro) */
+.case__head .case__year {
+  flex-shrink: 0;
+  max-width: none;
+  padding-block: var(--space-2);   /* same vertical padding as a tag → same text line */
+  font-size: 13px;
   font-weight: 700;
   line-height: 1.2;
   color: var(--fg-muted);
