@@ -1251,10 +1251,33 @@ a.work-card:hover .work-card__doodle {
 }
 
 .facade__wall {
+  position: relative;   /* reference for the credits, at the bottom of the wall */
   padding: var(--section-y) var(--gutter);
+  padding-bottom: calc(var(--section-y) + var(--space-7));   /* room for the credits */
   background:
     linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
     url("../assets/images/facade/bricks.png") center bottom / cover;
+}
+
+/* Credits written on the wall: small, at the bottom, on a dark translucent
+   pill so they stay readable over the bricks (light or dark mode) */
+.facade__credits {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  translate: -50% 0;
+  width: max-content;
+  max-width: calc(100% - 2 * var(--gutter));
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: rgb(0 0 0 / 0.6);
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+}
+
+.facade__credits a {
+  text-decoration: underline;
 }
 
 .windows {
@@ -1597,22 +1620,6 @@ a.work-card:hover .work-card__doodle {
   .bizcard__face { padding: var(--space-5); min-height: 280px; }
 }
 
-
-.credits {
-  padding: 0 var(--gutter) var(--space-7);
-  text-align: center;
-  font-size: 14px;
-  color: var(--fg-muted);
-}
-
-.credits a {
-  color: var(--color-text);
-  text-decoration: underline;
-}
-
-@media (min-width: 810px) {
-  .credits { font-size: 16px; }
-}
 
 /* ---------- MY SKILLS ---------- */
 .skills-grid {
