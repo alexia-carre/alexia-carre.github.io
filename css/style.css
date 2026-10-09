@@ -1937,7 +1937,7 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
-/* Same format on every case study: "Role · Team" → the role stands out */
+/* Same format on every case study: "Role, working with…" → the role stands out */
 .case__team strong {
   color: var(--fg);
 }
