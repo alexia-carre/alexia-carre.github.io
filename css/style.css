@@ -707,7 +707,7 @@ a.window:hover .project-card__cta svg {
 }
 
 /* Doodle cover: a tinted background (teal or pink), a dashed orbit tilted
-   by --tilt, a big doodle in the middle and a small one on the orbit.
+   by --tilt, and one doodle in the middle.
    Colors and shapes change from one card to the next (see mywork.html). */
 .work-card__media {
   position: relative;
@@ -739,23 +739,13 @@ a.window:hover .project-card__cta svg {
   transition: rotate 0.6s var(--ease-spring), scale 0.6s var(--ease-spring);
 }
 
-/* The small doodle sits on the orbit, toward the top right.
-   In % of the cover → same spot whatever the card width. */
-.work-card__doodle--small {
-  position: absolute;
-  left: 76%;
-  top: 35%;
-  width: 24px;
-  translate: -50% -50%;
-}
-
 /* Colors: set here rather than by the doodle itself (the cards switch
    --accent to pink, so the teal comes from --color-accent) */
 .work-card__doodle--pink { --doodle-color: var(--accent-2); }
 .work-card__doodle--teal { --doodle-color: var(--color-accent); }
 
-/* Hover: the big doodle turns and grows a little */
-a.work-card:hover .work-card__doodle:not(.work-card__doodle--small) {
+/* Hover: the doodle turns and grows a little */
+a.work-card:hover .work-card__doodle {
   rotate: 18deg;
   scale: 1.12;
 }
@@ -773,8 +763,8 @@ a.work-card:hover .work-card__doodle:not(.work-card__doodle--small) {
   color: var(--fg);
 }
 
-/* Project still in progress: its big doodle turns slowly, on its own */
-.work-card--soon .work-card__doodle:not(.work-card__doodle--small) {
+/* Project still in progress: its doodle turns slowly, on its own */
+.work-card--soon .work-card__doodle {
   animation: work-doodle-spin 14s linear infinite;
 }
 
