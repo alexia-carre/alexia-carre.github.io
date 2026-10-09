@@ -894,13 +894,12 @@ a.window:hover .project-card__cta svg {
   /* clamp(min, ideal, max): 399 px on a large screen, smaller if the window is short */
   .hero__portrait { width: var(--size); grid-area: 1 / 1; }
 
-  /* The orbits: thin dashed ellipses, drawn by 2 pseudo-elements
-     (::before and ::after, "free" boxes that CSS adds without extra HTML).
-     - ::before = the main orbit, on which the logos sit, plus a lighter
-       twin alongside it, drawn with its "outline" 16 px further out
-       (outline follows the rounded shape, like a border)
-     - ::after = a second, even lighter orbit, tilted the other way,
-       which crosses the first one
+  /* The orbits: 2 identical dashed ellipses, drawn by 2 pseudo-elements
+     (::before and ::after, "free" boxes that CSS adds without extra HTML),
+     tilted in mirror (−tilt / +tilt) → they cross in an X, symmetric
+     on each side of the photo.
+     Each one has a lighter twin alongside it, drawn with its "outline"
+     16 px further out (outline follows the rounded shape, like a border).
      z-index: -1 → behind the photo and the logos */
   .hero__stage::before,
   .hero__stage::after {
@@ -916,19 +915,15 @@ a.window:hover .project-card__cta svg {
     pointer-events: none;
   }
 
-  .hero__stage::before {
-    rotate: var(--tilt);   /* tilted like a planet's ring */
-    border: 1px dashed color-mix(in srgb, var(--fg) 22%, transparent);
-    outline: 1px dashed color-mix(in srgb, var(--fg) 14%, transparent);
+  .hero__stage::before,
+  .hero__stage::after {
+    border: 1px dashed color-mix(in srgb, var(--fg) 20%, transparent);
+    outline: 1px dashed color-mix(in srgb, var(--fg) 10%, transparent);
     outline-offset: 16px;
   }
 
-  .hero__stage::after {
-    width: calc(2 * var(--rx) * 0.9);
-    height: calc(2 * var(--ry) * 1.12);
-    rotate: 14deg;         /* leans the other way → the two orbits cross */
-    border: 1px dashed color-mix(in srgb, var(--fg) 14%, transparent);
-  }
+  .hero__stage::before { rotate: calc(var(--tilt) * -1); }   /* leans one way… */
+  .hero__stage::after  { rotate: var(--tilt); }              /* …and the other, in mirror */
 
   /* The two lists cover the whole stage; their logos are placed inside */
   .logo-grid {
@@ -941,12 +936,9 @@ a.window:hover .project-card__cta svg {
   }
   .logo-grid li {
     position: absolute;
-    /* Point on the ellipse (x, y), then turned by --tilt (rotation formula):
-       x' = x·cos(tilt) − y·sin(tilt)    y' = x·sin(tilt) + y·cos(tilt) */
-    --x: calc(var(--rx) * var(--r, 1) * cos(var(--a)));
-    --y: calc(var(--ry) * var(--r, 1) * sin(var(--a)));
-    left: calc(50% + var(--x) * cos(var(--tilt)) - var(--y) * sin(var(--tilt)));
-    top: calc(50% + var(--x) * sin(var(--tilt)) + var(--y) * cos(var(--tilt)));
+    /* The logos sit on a straight (untilted) ellipse, between the two orbits */
+    left: calc(50% + var(--rx) * cos(var(--a)));
+    top: calc(50% + var(--ry) * sin(var(--a)));
     translate: -50% -50%;   /* the logo's center sits on the orbit */
     width: max-content;     /* its own width, even close to the edge of the stage */
     line-height: 0;
@@ -959,19 +951,20 @@ a.window:hover .project-card__cta svg {
   .hero__stage::after {
     --rx: min(var(--size) / 2 + 230px, 50cqw - 110px);
     --ry: calc(var(--size) / 2 + 24px);
-    --tilt: -10deg;   /* the orbit leans: up on the right, down on the left */
+    --tilt: 10deg;    /* how much the two orbits lean (in mirror) */
   }
   .logo-grid img { width: var(--w); max-width: none; }
 
-  /* Each logo's spot: an angle, and a radius slightly off (--r)
-     so they don't look lined up on a rail → more "organic" */
-  .logo-grid--left  li:nth-child(1) { --a: 205deg; }              /* TCS */
-  .logo-grid--left  li:nth-child(2) { --a: 168deg; --r: 0.9; }    /* Airbus */
-  .logo-grid--left  li:nth-child(3) { --a: 132deg; --r: 1.03; }   /* Addict Mobile */
-  .logo-grid--right li:nth-child(1) { --a: -36deg; --r: 0.95; }   /* Ubisoft */
-  .logo-grid--right li:nth-child(2) { --a: -6deg;  --r: 1.04; }   /* Equans */
-  .logo-grid--right li:nth-child(3) { --a: 25deg;  --r: 0.92; }   /* Danone */
-  .logo-grid--right li:nth-child(4) { --a: 56deg; }               /* Holusion */
+  /* Each logo's spot: an angle. Each side is symmetric top/bottom, with
+     the same 36° step between logos:
+     right (4 logos): −54°, −18°, 18°, 54° · left (3 logos): 144°, 180°, 216° */
+  .logo-grid--left  li:nth-child(1) { --a: 216deg; }   /* TCS */
+  .logo-grid--left  li:nth-child(2) { --a: 180deg; }   /* Airbus */
+  .logo-grid--left  li:nth-child(3) { --a: 144deg; }   /* Addict Mobile */
+  .logo-grid--right li:nth-child(1) { --a: -54deg; }   /* Ubisoft */
+  .logo-grid--right li:nth-child(2) { --a: -18deg; }   /* Equans */
+  .logo-grid--right li:nth-child(3) { --a: 18deg; }    /* Danone */
+  .logo-grid--right li:nth-child(4) { --a: 54deg; }    /* Holusion */
 }
 
 /* Short screens (small laptops): we tighten up so the hero AND the arrow
