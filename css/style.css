@@ -38,6 +38,7 @@
   --accent-2: #a8285f;      /* raspberry: accent 2 = HIGHLIGHTS (5.9:1 on cream) */
   --on-accent-2: #f6efe3;
   --accent-2-on-band: #f2a7c3; /* light pink for the forest band (5.1:1) */
+  --portrait-glow: #a8285f;     /* neon around the hero photo: raspberry (accent 2) */
   --band: #2f4a3a;          /* dark section within light mode */
   --on-band: #f6efe3;
   /* Additions specific to our site (not in the file) */
@@ -67,6 +68,7 @@
     --accent-2: #ff3d81;    /* pink: accent 2 = HIGHLIGHTS (5.5:1 on the background) */
     --on-accent-2: #0e1512;
     --accent-2-on-band: #ff3d81;
+    --portrait-glow: #3df5c8;   /* mint (accent 1), like the sun doodle */
     --band: #16201b;
     --on-band: #f2ede3;
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
@@ -92,6 +94,7 @@
   --accent-2: #ff3d81;
   --on-accent-2: #0e1512;
   --accent-2-on-band: #ff3d81;
+  --portrait-glow: #3df5c8;   /* mint (accent 1), like the sun doodle */
   --band: #16201b;
   --on-band: #f2ede3;
   --logo-filter: invert(1) hue-rotate(180deg);
@@ -811,7 +814,8 @@ a.window:hover .project-card__cta svg {
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
-  /* Neon halo in the accent color, like the sun doodle next to the title.
+  /* Neon halo (--portrait-glow: mint in dark mode, like the sun doodle;
+     raspberry pink in light mode).
      Several shadows stacked (separated by commas), from the inside out:
      1. a thin, bright ring right against the photo (the "neon tube")
      2. a tight glow
@@ -820,9 +824,9 @@ a.window:hover .project-card__cta svg {
         cyberpunk duo of colors, without a large radius
      No offset on 1–3 (0 0): they spread evenly around the circle. */
   box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--accent) 75%, transparent),
-    0 0 14px 2px color-mix(in srgb, var(--accent) 50%, transparent),
-    0 0 40px 4px color-mix(in srgb, var(--accent) 25%, transparent),
+    0 0 0 2px color-mix(in srgb, var(--portrait-glow) 75%, transparent),
+    0 0 14px 2px color-mix(in srgb, var(--portrait-glow) 50%, transparent),
+    0 0 40px 4px color-mix(in srgb, var(--portrait-glow) 25%, transparent),
     8px 10px 32px color-mix(in srgb, var(--accent-2) 30%, transparent);
 }
 
