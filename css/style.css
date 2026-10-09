@@ -237,11 +237,33 @@ a {
   height: var(--nav-height);
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--space-4);
   padding-inline: var(--gutter);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
+}
+
+/* Photo on the left, the rest on the right: an "auto" margin absorbs all the
+   free space and pushes the links + the light/dark button to the right edge */
+.site-nav__avatar {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Name next to the photo. Hidden on phones: the menu already uses
+   the whole width there, the photo is enough. */
+.site-nav__name {
+  display: none;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  white-space: nowrap;
+}
+
+@media (min-width: 810px) {
+  .site-nav__name { display: inline; }
 }
 
 .site-nav__avatar img {
@@ -299,20 +321,15 @@ a {
   height: 17px;
 }
 
-/* Mobile: little room → we tighten up and the button takes the last spot */
+/* Mobile: little room → we tighten up */
 @media (max-width: 809px) {
   .site-nav { gap: 10px; padding-inline: 12px; }
   .site-nav__links { gap: 10px; font-size: 13px; }
 }
 
 @media (min-width: 810px) {
-  .site-nav { gap: var(--space-5); }
-  .site-nav__links { gap: var(--space-5); font-size: 15px; }
-  /* Desktop: the menu stays centered, the button goes to the top right */
-  .theme-toggle {
-    position: absolute;
-    right: var(--gutter);
-  }
+  .site-nav { gap: var(--space-6); padding-inline: var(--space-6); }
+  .site-nav__links { gap: var(--space-6); font-size: 15px; }
 }
 
 /* --- Grain texture: added on top of a colored background --- */
