@@ -1728,20 +1728,20 @@ a.window:hover .project-card__cta svg {
    The metadata (year + skill + client) form a single line of "labels",
    set a little further apart (24 px vs 16 px) to separate the context
    from the story. */
-/* The year on its own line, the tags underneath (they wrap freely,
-   with no step) */
+/* The tags (skill + client): 24 px below the intro (vs 16 px between the
+   blocks above), to separate the context from the story */
 .case__meta {
-  display: grid;
-  justify-items: start;
-  gap: var(--space-2);
   margin-top: var(--space-2);
 }
 
-/* The year at the same size as the tags: a small gray label.
+/* Year above the title, styled like the year on the project cards
+   (14 px, bold, gray). Negative margin: 8 px from the title instead of 16,
+   so it visually "belongs" to the title.
    (.case__head .case__year: more specific than .case__head p, which is meant for the intro) */
 .case__head .case__year {
   max-width: none;
-  font-size: 13px;
+  margin-bottom: calc(var(--space-2) * -1);
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
   color: var(--fg-muted);
