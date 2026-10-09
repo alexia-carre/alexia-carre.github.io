@@ -1134,6 +1134,31 @@ a.work-card:hover .work-card__doodle {
 }
 
 /* ---------- HOME: Venn diagram ---------- */
+/* Computer: key figures + Venn = exactly one screen (minus the menu).
+   The arrow of the hero lands on the key figures (#key-figures): the green
+   section then fills the rest of the window, down to its bottom edge.
+   - min-height: at least the window height → the green stretches on tall screens
+   - paddings in svh (% of the window height) → they shrink on short screens
+     so that everything fits */
+@media (min-width: 810px) {
+  .screen-fit {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--nav-height));
+    min-height: calc(100svh - var(--nav-height));
+  }
+  .screen-fit .stats { padding-block: clamp(28px, 6svh, 72px); }
+  .screen-fit .venn-section {
+    flex: 1;                       /* takes all the remaining height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;       /* content centered vertically in the green */
+    align-items: center;
+    padding-block: clamp(28px, 5svh, 72px);
+  }
+  .screen-fit .venn { width: 100%; margin-block: clamp(16px, 4svh, 48px); }
+}
+
 .venn-section {
   padding: var(--section-y) var(--gutter);
   background: var(--band);
