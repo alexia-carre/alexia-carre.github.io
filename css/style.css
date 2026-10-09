@@ -1708,9 +1708,8 @@ a.window:hover .project-card__cta svg {
   margin-inline: auto;
 }
 
-/* Text column = same width as the cover image: the text blocks start
-   at the image's left edge. The paragraphs keep their max length
-   (--measure), so they leave free space on the right. */
+/* Text column = same width as the cover image: the text starts at the
+   image's left edge and ends at its right edge (full width, like the menu) */
 .case__inner {
   width: 100%;
 }
@@ -1752,7 +1751,6 @@ a.window:hover .project-card__cta svg {
    so it visually "belongs" to the title.
    (.case__head .case__year: more specific than .case__head p, which is meant for the intro) */
 .case__head .case__year {
-  max-width: none;
   margin-bottom: calc(var(--space-2) * -1);
   font-size: 14px;
   font-weight: 700;
@@ -1762,7 +1760,6 @@ a.window:hover .project-card__cta svg {
 
 /* Tier 3: body (the intro is reading text, not a heading) */
 .case__head p {
-  max-width: var(--measure);
   font-size: var(--text-body);
   color: var(--color-muted);
 }
@@ -1864,7 +1861,6 @@ a.window:hover .project-card__cta svg {
 /* Tier 3: body */
 .case__section p,
 .case__section li {
-  max-width: var(--measure);
   font-size: var(--text-body);
   color: var(--color-muted);
 }
