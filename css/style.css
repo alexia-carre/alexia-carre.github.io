@@ -703,6 +703,32 @@ a.window:hover .project-card__cta svg {
   }
 }
 
+/* Featured project (the latest): spans the full width of the grid.
+   Computer: cover on the left, text on the right, with a bigger title. */
+.work-grid__featured {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 810px) {
+  .work-card--featured {
+    flex-direction: row;
+  }
+  .work-card--featured .work-card__media {
+    flex: 0 0 55%;
+    aspect-ratio: auto;    /* takes the full height of the card */
+  }
+  .work-card--featured .work-card__body {
+    justify-content: center;
+    padding: var(--space-7);
+  }
+  .work-card--featured .project-card__title {
+    font-size: var(--text-subheading);
+  }
+  .work-card--featured .work-card__doodle {
+    width: 88px;
+  }
+}
+
 /* "Personal project": a separate section under the professional work,
    introduced by a thin rule and a subheading */
 .work-grid:has(+ .work-personal) {
