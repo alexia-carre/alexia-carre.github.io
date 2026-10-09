@@ -124,6 +124,9 @@
   /* Highlighted sections (key figures, page banners): 12% of accent 2 */
   --tint-accent-2: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
 
+  /* Cursor light: the accent, very transparent (the text stays readable underneath) */
+  --cursor-glow: color-mix(in srgb, var(--accent) 16%, transparent);
+
   /* Typography */
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --tracking-tight: -0.015em;  /* headings and figures: tightened slightly (tuned for Jakarta) */
@@ -1916,6 +1919,29 @@ a.window:hover .project-card__cta svg {
 }
 
 /* Respect the system's "reduce motion" setting (accessibility) */
+/* --- Cursor light (created by js/cursor.js) ---
+   A large, very transparent accent-colored circle that follows the mouse.
+   Fixed at 0,0 then moved with "translate" (the GPU handles it, no reflow).
+   Above the content (z-index 9) but below the menu (10), and never clickable. */
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  width: 560px;
+  height: 560px;
+  margin: -280px 0 0 -280px;   /* centered on the cursor */
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--cursor-glow), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.cursor-glow.is-visible {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
