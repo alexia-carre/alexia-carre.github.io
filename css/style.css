@@ -1986,6 +1986,10 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
+.case__body p + p {
+  margin-top: var(--space-3);   /* 2 paragraphs in the same step */
+}
+
 .case__section ul {
   display: grid;
   gap: var(--space-1);
