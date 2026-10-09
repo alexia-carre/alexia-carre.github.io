@@ -1702,12 +1702,20 @@ a.window:hover .project-card__cta svg {
   width: 100%;
 }
 
+/* Case study header: the story (title, intro, tags) + the figures.
+   Mobile: stacked. Desktop: 2 columns (see the media query below).
+   Everything is left-aligned: each line starts at the same spot,
+   aligned with the image's left edge → easy to read and to scan. */
+.case__intro {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-7) 0;
+}
+
 .case__head {
   display: grid;
   gap: var(--space-4);
-  justify-items: center;
-  padding: var(--space-7) 0 var(--space-6);
-  text-align: center;
+  justify-items: start;
 }
 
 /* Tier 1: header */
@@ -1727,16 +1735,22 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
-.case__head .tags {
-  justify-content: center;
+/* min-width: 0: a grid column can shrink below the width of its longest
+   word (otherwise a long word like "Stakeholders" pushes the column off the screen) */
+.case__intro > * {
+  min-width: 0;
 }
 
+/* The figures: in a row on mobile, in a column on desktop */
 .case__stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-3);
-  padding: var(--space-6) 0;
-  text-align: center;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+/* Very narrow screens: one figure per line (3 columns would be too cramped) */
+@media (max-width: 420px) {
+  .case__stats { grid-template-columns: 1fr; gap: var(--space-3); }
 }
 
 .case__stats strong {
@@ -1832,7 +1846,21 @@ a.window:hover .project-card__cta svg {
 
 @media (min-width: 810px) {
   .case-page { padding-top: var(--space-8); }
-  .case__head { padding: var(--space-7) 0 var(--space-6); }
+  /* Header in 2 columns: the story takes the space, the figures stack up
+     on the right, separated by a thin rule, aligned with the image's right edge */
+  .case__intro {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: var(--space-8);
+    padding: var(--space-8) 0 var(--space-7);
+  }
+  .case__stats {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    min-width: 200px;
+    padding-left: var(--space-6);
+    border-left: 1px solid var(--border);
+  }
   /* (Text sizes: no override here, the 3 clamp() tokens adapt on their own) */
   .case__cover img { height: 298px; }
 }
