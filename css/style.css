@@ -1915,19 +1915,6 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
-/* --- Pencil trace (drawn by js/cursor.js) ---
-   A transparent canvas covering the window, on which the mouse leaves
-   a thin pink line that fades away. Above everything, but
-   pointer-events: none → clicks go through it. */
-.cursor-trace {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
 /* Respect the system's "reduce motion" setting (accessibility) */
 @media (prefers-reduced-motion: reduce) {
   *,
