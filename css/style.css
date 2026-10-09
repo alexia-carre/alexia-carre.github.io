@@ -1918,13 +1918,19 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
-/* Respect the system's "reduce motion" setting (accessibility) */
 /* --- Cursor light (position given by js/cursor.js) ---
-   The light is drawn INSIDE the backgrounds of the page's surfaces, as an
-   extra layer on top of their color: the text, images and cards stay in
-   front of it, as if a small lamp were lighting the wall behind them.
-   "fixed": the gradient is placed relative to the window (where the mouse is),
-   not to the section → the light continues smoothly from one section to the next. */
+   The background itself reacts to the mouse: a grid of small dots in the
+   accent color is printed on the page's surfaces, and only lights up around
+   the cursor. It's not a layer on top: the dots are part of each section's
+   background, so the text, images and cards always stay in front.
+
+   How: 3 background layers, from top to bottom
+     1. a "cover" in the section's own color, with a transparent hole
+        around the mouse (transparent at the center → solid beyond 110 px)
+     2. the dot grid
+     3. the section's color (already set by each section)
+   "fixed": positioned relative to the window (where the mouse is), so the
+   grid and the hole continue seamlessly from one section to the next. */
 @property --cursor-strength {   /* registered so it can be animated (fade in/out) */
   syntax: "<percentage>";
   inherits: true;
@@ -1932,14 +1938,21 @@ a.window:hover .project-card__cta svg {
 }
 
 :root {
-  --cursor-light: radial-gradient(circle 150px at var(--mx, -999px) var(--my, -999px),
-                                  var(--cursor-glow), transparent);
   transition: --cursor-strength 0.4s ease;
 }
 
 :root.has-cursor-light {
-  --cursor-strength: 22%;
+  --cursor-strength: 90%;
 }
+
+/* Each surface gives its own color to the "cover" */
+body          { --section-bg: var(--color-bg); }
+.hero         { --section-bg: var(--color-bg-soft); }
+.page-banner,
+.stats,
+.resume-page  { --section-bg: var(--tint-accent-2); }
+.venn-section { --section-bg: var(--band); }
+.case-page    { --section-bg: var(--bg); }
 
 body,
 .hero,
@@ -1948,10 +1961,15 @@ body,
 .venn-section,
 .case-page,
 .resume-page {
-  background-image: var(--cursor-light);
+  background-image:
+    radial-gradient(circle 110px at var(--mx, -999px) var(--my, -999px),
+                    transparent, var(--section-bg)),
+    radial-gradient(circle, var(--cursor-glow) 1.6px, transparent 2.2px);
+  background-size: auto, 16px 16px;
   background-attachment: fixed;
 }
 
+/* Respect the system's "reduce motion" setting (accessibility) */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
