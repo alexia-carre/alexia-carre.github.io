@@ -736,7 +736,7 @@ a.window:hover .project-card__cta svg {
 .work-card__doodle {
   grid-area: 1 / 1;
   width: 64px;
-  transition: rotate 0.6s var(--ease-spring), scale 0.6s var(--ease-spring);
+  transition: scale 0.6s var(--ease-spring);
 }
 
 /* Colors: set here rather than by the doodle itself (the cards switch
@@ -744,9 +744,8 @@ a.window:hover .project-card__cta svg {
 .work-card__doodle--pink { --doodle-color: var(--accent-2); }
 .work-card__doodle--teal { --doodle-color: var(--color-accent); }
 
-/* Hover: the doodle turns and grows a little */
+/* Hover: the doodle grows a little (it already turns on its own, see below) */
 a.work-card:hover .work-card__doodle {
-  rotate: 18deg;
   scale: 1.12;
 }
 
@@ -763,17 +762,21 @@ a.work-card:hover .work-card__doodle {
   color: var(--fg);
 }
 
-/* Project still in progress: its doodle turns slowly, on its own */
-.work-card--soon .work-card__doodle {
+/* Every doodle turns slowly, on its own. The negative delays start each one
+   at a different point of its turn → they don't all move in sync. */
+.work-card__doodle {
   animation: work-doodle-spin 14s linear infinite;
 }
+.work-grid li:nth-child(2) .work-card__doodle { animation-delay: -3.5s; }
+.work-grid li:nth-child(3) .work-card__doodle { animation-delay: -7s; }
+.work-grid li:nth-child(4) .work-card__doodle { animation-delay: -10.5s; }
 
 @keyframes work-doodle-spin {
   to { rotate: 360deg; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .work-card--soon .work-card__doodle { animation: none; }
+  .work-card__doodle { animation: none; }
 }
 
 /* "View more" only on hover (or keyboard focus)… but only on devices
