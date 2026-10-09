@@ -1,10 +1,10 @@
 // ===========================================================================
 // Cursor light (all pages)
 // ---------------------------------------------------------------------------
-// A small accent-colored light "shines" on the page backgrounds under the mouse,
-// like a flashlight: the text, images and cards stay in front of it.
+// The page background reacts to the mouse: a grid of accent-colored dots
+// lights up around the cursor (the text, images and cards stay in front).
 // The JS only gives the mouse position (--mx, --my on <html>); the CSS
-// draws the light inside the section backgrounds (see "Cursor light" in style.css).
+// draws the dots inside the section backgrounds (see "Cursor light" in style.css).
 // Same smoothing as the logo galaxy: the light covers a share of the remaining
 // distance on each frame, and the loop stops once it has caught up.
 // Mouse/trackpad only (no cursor on a touchscreen), and not with "reduce motion".
