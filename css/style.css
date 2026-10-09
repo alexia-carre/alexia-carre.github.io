@@ -1724,8 +1724,14 @@ a.window:hover .project-card__cta svg {
   line-height: 1.1;
 }
 
-.case__head h1 span {
-  color: var(--color-muted);
+/* Year above the title, like on the project cards. Body size (tier 3),
+   bold and gray; 8 px from the title (instead of 16) so it belongs to it. */
+.case__year {
+  margin-bottom: calc(var(--space-2) * -1);
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--fg-muted);
 }
 
 /* Tier 3: body (the intro is reading text, not a heading) */
