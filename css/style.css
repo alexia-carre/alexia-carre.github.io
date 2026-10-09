@@ -33,7 +33,7 @@
   --border-strong: #2f4a3a;
   --primary: #2f4a3a;
   --on-primary: #f6efe3;
-  --accent: #a64b26;        /* rust: accent 1 = ACTIONS (buttons, CTA) */
+  --accent: #0d8a70;        /* deep teal: the light-mode twin of the dark mint (3.8:1 on cream, for icons/doodles) */
   --on-accent: #f6efe3;
   --accent-2: #a8285f;      /* raspberry: accent 2 = HIGHLIGHTS (5.9:1 on cream) */
   --on-accent-2: #f6efe3;
