@@ -201,9 +201,52 @@
     </section>
 
     <!-- ABOUT TEASER -->
-    <section class="teaser">
-      <h2>Curious &amp; detail-oriented.</h2>
-      <a class="btn btn--primary" href="about.html">Get to know me</a>
+    <!-- BUSINESS CARD that flips over (js/main.js).
+         Without JS: the two faces are shown one below the other. -->
+    <section class="teaser" aria-labelledby="card-title">
+      <h2 id="card-title" class="visually-hidden">Business card</h2>
+
+      <div class="bizcard" data-bizcard>
+        <div class="bizcard__inner">
+
+          <!-- FRONT -->
+          <div class="bizcard__face bizcard__face--front">
+            <span class="bizcard__doodle bizcard__doodle--star doodle doodle--star" aria-hidden="true"></span>
+            <span class="bizcard__doodle bizcard__doodle--sun doodle doodle--sun" aria-hidden="true"></span>
+            <span class="bizcard__doodle bizcard__doodle--a2 doodle doodle--a2" aria-hidden="true"></span>
+
+            <img class="bizcard__photo" src="assets/images/portrait.jpg" alt="" width="88" height="88" loading="lazy">
+            <div class="bizcard__id">
+              <p class="bizcard__name">Alexia Carré</p>
+              <p class="bizcard__role">Product Manager &amp; Designer</p>
+              <p class="bizcard__meta">Enterprise UX · Paris</p>
+            </div>
+
+            <button class="bizcard__flip" type="button" hidden>
+              Click to flip
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>
+            </button>
+          </div>
+
+          <!-- BACK -->
+          <div class="bizcard__face bizcard__face--back">
+            <span class="bizcard__doodle bizcard__doodle--about-sun doodle doodle--about-sun" aria-hidden="true"></span>
+
+            <p class="bizcard__headline">Curious &amp; detail-oriented.</p>
+            <p class="bizcard__meta">Product Strategy × UX Design</p>
+            <div class="bizcard__actions">
+              <a class="btn btn--primary" href="about.html">Get to know me</a>
+              <a class="btn btn--secondary" href="https://www.linkedin.com/in/alexia-carr%C3%A9-6aa138195/" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+
+            <button class="bizcard__flip" type="button" hidden>
+              Flip back
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
     </section>
 
   </main>

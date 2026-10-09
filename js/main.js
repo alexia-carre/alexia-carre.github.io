@@ -119,6 +119,43 @@ if (windowList && windowCards.length) {
 
 
 // ===========================================================================
+// Business card that flips over (home page)
+// ---------------------------------------------------------------------------
+// - Without JS, both faces are shown one below the other (see CSS).
+// - With JS, we enable the .is-interactive mode (faces superimposed, 3D).
+// - Click ANYWHERE on the card = flip it… except on a link
+//   ("Get to know me", LinkedIn), which must keep working.
+// - "inert" makes the hidden face unreachable: neither Tab nor screen readers
+//   land on links you can't see.
+// ===========================================================================
+
+document.querySelectorAll("[data-bizcard]").forEach((card) => {
+  const front = card.querySelector(".bizcard__face--front");
+  const back = card.querySelector(".bizcard__face--back");
+  const buttons = card.querySelectorAll(".bizcard__flip");
+
+  card.classList.add("is-interactive");
+  buttons.forEach((button) => { button.hidden = false; });
+
+  const setFlipped = (flipped, moveFocus) => {
+    card.classList.toggle("is-flipped", flipped);
+    front.inert = flipped;
+    back.inert = !flipped;
+    // Keyboard: focus follows onto the visible face
+    if (moveFocus) (flipped ? back : front).querySelector(".bizcard__flip").focus();
+  };
+
+  card.addEventListener("click", (event) => {
+    if (event.target.closest("a")) return;            // a link: let it work
+    const fromKeyboard = event.detail === 0;          // Enter/Space on the button
+    setFlipped(!card.classList.contains("is-flipped"), fromKeyboard);
+  });
+
+  setFlipped(false, false);
+});
+
+
+// ===========================================================================
 // Photo carousel (About page)
 // ---------------------------------------------------------------------------
 // "Progressive enhancement" principle: the HTML/CSS already work without
