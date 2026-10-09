@@ -400,6 +400,9 @@ a {
 /* Very narrow screens: slightly tighter buttons so they stay side by side */
 @media (max-width: 400px) {
   .btn { padding-inline: var(--space-4); font-size: 14px; }
+  /* Case studies: "All my Work" + "Next product" side by side → we drop the
+     arrows to make room (the text alone is enough) */
+  .case-nav .btn svg { display: none; }
 }
 
 .btn svg {
@@ -1377,9 +1380,11 @@ a.window:hover .project-card__cta svg {
 }
 
 /* ---------- CASE STUDY ---------- */
+/* The case study sits directly on the page background, like About and My Skills
+   (no more "box" on a colored background) */
 .case-page {
   padding: var(--space-7) var(--gutter) var(--section-y);
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .case-nav {
@@ -1393,11 +1398,6 @@ a.window:hover .project-card__cta svg {
 .case {
   width: min(100%, var(--container));
   margin-inline: auto;
-  padding-bottom: var(--space-8);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
 }
 
 .case__inner {
@@ -1457,8 +1457,12 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
+/* Without the box around it, the image gets its own rounded corners
+   (like the photos on My Skills) */
 .case__cover {
   position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
 }
 
 .case__cover img {
@@ -1525,7 +1529,7 @@ a.window:hover .project-card__cta svg {
 
 @media (min-width: 810px) {
   .case-page { padding-top: var(--space-8); }
-  .case__head { padding: var(--space-8) 0 var(--space-6); }
+  .case__head { padding: var(--space-7) 0 var(--space-6); }
   .case__head h1 { font-size: 30px; }
   .case__head p { font-size: 22px; }
   .case__stats strong { font-size: 34px; }
