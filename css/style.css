@@ -861,6 +861,12 @@ a.window:hover .project-card__cta svg {
   scale: 1.08;
 }
 
+/* Mobile (3 per row): the right list has 4 logos, the 4th one would sit alone
+   on the left of its row → we place it in the middle column */
+@media (max-width: 809px) {
+  .logo-grid--right li:nth-child(4) { grid-column: 2; }
+}
+
 @media (min-width: 810px) {
   .hero { padding: 40px var(--gutter) 96px; }
   .hero__title { font-size: 40px; }
@@ -889,6 +895,7 @@ a.window:hover .project-card__cta svg {
   .logo-grid--left  li:nth-child(2) { transform: translateX(-30px); }
   .logo-grid--left  li:nth-child(3) { transform: translateX(30px); }
   .logo-grid--right li:nth-child(3) { transform: translateX(-40px); }
+  .logo-grid--right li:nth-child(4) { transform: translateX(24px); }
 }
 
 /* Short screens (small laptops): we tighten up so the hero AND the arrow
