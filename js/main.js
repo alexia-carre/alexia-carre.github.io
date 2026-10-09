@@ -80,6 +80,77 @@ if (windows.length && !canHover) {
 
 
 // ===========================================================================
+// Rolling numbers, odometer-style (key figures + case studies)
+// ---------------------------------------------------------------------------
+// The number stays written in the HTML (e.g. "80%"): without JS or with
+// "reduce motion", it's displayed as is. Otherwise we replace each digit
+// with a strip 0→9 (twice) that scrolls behind a window 1em tall, and we
+// shift it to the target digit when the number becomes visible.
+// Screen readers read a hidden copy of the final value, not the animation.
+// ===========================================================================
+
+const rollingNumbers = [...document.querySelectorAll(".stat__value, .case__stats strong")]
+  .filter((el) => /\d/.test(el.textContent));   // "∞" has no digit: we leave it alone
+
+if (rollingNumbers.length && !reduceMotion) {
+  const roll = (el) => {
+    el.querySelectorAll(".odo__strip").forEach((strip, i) => {
+      strip.style.transitionDelay = `${i * 90}ms`;               // digits stop one after the other
+      strip.style.transform = `translateY(-${10 + Number(strip.dataset.digit)}em)`;
+    });
+  };
+
+  rollingNumbers.forEach((el) => {
+    const finalText = el.textContent.trim();
+    el.textContent = "";
+
+    // Final value for screen readers
+    const readable = document.createElement("span");
+    readable.className = "visually-hidden";
+    readable.textContent = finalText;
+
+    // Visual version: one span per character
+    const odo = document.createElement("span");
+    odo.className = "odo";
+    odo.setAttribute("aria-hidden", "true");
+    for (const char of finalText) {
+      if (/\d/.test(char)) {
+        const digit = document.createElement("span");
+        digit.className = "odo__digit";
+        const strip = document.createElement("span");
+        strip.className = "odo__strip";
+        strip.dataset.digit = char;
+        for (let n = 0; n < 20; n++) {                            // 0→9, twice
+          const s = document.createElement("span");
+          s.textContent = n % 10;
+          strip.append(s);
+        }
+        digit.append(strip);
+        odo.append(digit);
+      } else {
+        const c = document.createElement("span");
+        c.className = "odo__char";
+        c.textContent = char;
+        odo.append(c);
+      }
+    }
+    el.append(readable, odo);
+  });
+
+  // Starts once the number is at least half visible, then we stop watching it
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      roll(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.5 });
+
+  rollingNumbers.forEach((el) => observer.observe(el));
+}
+
+
+// ===========================================================================
 // Facade cards: same height (home page)
 // ---------------------------------------------------------------------------
 // Each card sits inside ITS OWN window: CSS can't align them with one
