@@ -84,7 +84,7 @@ if (windows.length && !canHover) {
 // ---------------------------------------------------------------------------
 // The number stays written in the HTML (e.g. "80%"): without JS or with
 // "reduce motion", it's displayed as is. Otherwise we replace each digit
-// with a strip 0→9 (twice) that scrolls behind a window 1em tall, and we
+// with a strip 0→9 that scrolls behind a window 1em tall, and we
 // shift it to the target digit when the number becomes visible.
 // Screen readers read a hidden copy of the final value, not the animation.
 // ===========================================================================
@@ -94,9 +94,11 @@ const rollingNumbers = [...document.querySelectorAll(".stat__value, .case__stats
 
 if (rollingNumbers.length && !reduceMotion) {
   const roll = (el) => {
+    el.querySelector(".odo").classList.add("is-rolled");        // soft fade-in
     el.querySelectorAll(".odo__strip").forEach((strip, i) => {
-      strip.style.transitionDelay = `${i * 90}ms`;               // digits stop one after the other
-      strip.style.transform = `translateY(-${10 + Number(strip.dataset.digit)}em)`;
+      strip.style.transitionDelay = `${i * 140}ms`;              // digits stop one after the other
+      // A single turn: from 0 to the target digit (softer than two turns)
+      strip.style.transform = `translateY(-${Number(strip.dataset.digit)}em)`;
     });
   };
 
@@ -120,9 +122,9 @@ if (rollingNumbers.length && !reduceMotion) {
         const strip = document.createElement("span");
         strip.className = "odo__strip";
         strip.dataset.digit = char;
-        for (let n = 0; n < 20; n++) {                            // 0→9, twice
+        for (let n = 0; n < 10; n++) {                            // 0→9
           const s = document.createElement("span");
-          s.textContent = n % 10;
+          s.textContent = n;
           strip.append(s);
         }
         digit.append(strip);
