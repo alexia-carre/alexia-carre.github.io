@@ -116,8 +116,6 @@
   --color-bg-soft: var(--bg);
   --color-border: var(--border);
   --color-accent: var(--accent);
-  --color-quote: var(--band);
-  --color-icon: var(--accent);
   --color-pill: var(--surface);
 
   /* Spring easing: the curve goes above 1 → slight overshoot, like Framer's "bounce: 0.2".
@@ -202,8 +200,7 @@ h1, h2, h3 {
 /* Subheadings (titles of content blocks): charcoal rather than forest */
 .about__text h2,
 .case__section h2,
-.skill h2,
-.traits h3 {
+.skill h2 {
   color: var(--color-subheading);
 }
 
@@ -1613,31 +1610,63 @@ a.work-card:hover .work-card__doodle {
   list-style: none;
 }
 
-.skill img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 20px;
-}
-
-/* More space above the heading (24) than below (8):
-   the heading visibly "belongs" to the paragraph it introduces */
-.skill h2 {
-  margin: var(--space-5) 0 var(--space-2);
-  font-size: 22px;
-}
-
-.skill p {
-  font-size: 17px;
-  color: var(--color-muted);
-}
-
 @media (min-width: 810px) {
   .skills-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
 }
 
-/* Its top margin "collapses" with the bottom margin of .skills-grid:
-   the larger of the two wins → one single section rhythm */
+/* Photo + a doodle "sticker" stuck on its top right corner */
+.skill__media {
+  position: relative;
+}
+
+.skill__media img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+/* The sticker overflows the corner a little (like a sticker half on the photo)
+   and turns slowly, like the doodles of the My Work cards */
+.skill__sticker {
+  position: absolute;
+  top: -18px;
+  right: -14px;
+  width: 52px;
+  animation: work-doodle-spin 14s linear infinite;
+}
+.skill:nth-child(2) .skill__sticker { animation-delay: -4.6s; }
+.skill:nth-child(3) .skill__sticker { animation-delay: -9.3s; }
+
+.skill__sticker--pink { --doodle-color: var(--accent-2); }
+.skill__sticker--teal { --doodle-color: var(--color-accent); }
+
+/* Number above the title, like the steps of the case studies (01, 02, 03) */
+.skill__index {
+  margin-top: var(--space-5);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--color-accent), var(--fg) calc(var(--tag-darken) * 2));
+}
+
+/* More space above the heading than below:
+   the heading visibly "belongs" to the paragraph it introduces */
+.skill h2 {
+  margin: var(--space-2) 0 var(--space-3);
+  font-size: var(--text-subheading);
+}
+
+.skill p:not(.skill__index) {
+  font-size: var(--text-body);
+  color: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill__sticker { animation: none; }
+}
+
+/* Testimonial */
 .testimonial {
   width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
@@ -1646,59 +1675,85 @@ a.work-card:hover .work-card__doodle {
 .testimonial h2 {
   margin-bottom: var(--space-6);
   text-align: center;
-  font-size: 26px;
-  font-weight: 700;
+  font-size: var(--text-header);
+}
+
+/* The card: on the "surface" color like the project cards, with the two
+   dashed orbits of the home galaxy crossing behind the text */
+.testimonial__card {
+  position: relative;
+  isolation: isolate;          /* the orbits (z-index: -1) stay behind the text */
+  overflow: hidden;
+  /* Top: room for the quote mark and the sun (they sit in the corners, above the text) */
+  padding: calc(var(--space-8) + var(--space-5)) var(--space-5) var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.testimonial__card::before,
+.testimonial__card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 110%;
+  aspect-ratio: 3 / 1;
+  translate: -50% -50%;
+  border: 1px dashed color-mix(in srgb, var(--fg) 14%, transparent);
+  border-radius: 50%;
+}
+.testimonial__card::before { rotate: -8deg; }
+.testimonial__card::after  { rotate: 8deg; }
+
+/* Big pink opening quote mark, top left */
+.testimonial__mark {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-5);
+  font-size: 96px;
+  font-weight: 800;
+  line-height: 0.75;   /* the box hugs the glyph: it doesn't spill onto the text */
+  color: var(--accent-2);
+}
+
+/* Sun doodle, top right (opposite the quote mark), turning slowly */
+.testimonial__doodle {
+  --doodle-color: var(--color-accent);
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  width: 40px;
+  animation: work-doodle-spin 14s linear infinite;
 }
 
 .testimonial blockquote {
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-6) var(--space-5);
-  background: var(--color-quote);
-  border: 1px solid var(--border);   /* visible in dark, where band = surface */
-  border-radius: 10px;
-  color: var(--on-band);
-  font-size: 16px;
+  max-width: 46em;
+  font-size: var(--text-body);
   font-weight: 500;
+  color: var(--fg);
 }
 
 .testimonial figcaption {
-  margin-top: var(--space-2);
-  text-align: right;
-  font-weight: 900;
+  margin-top: var(--space-6);
+  color: var(--fg-muted);
+}
+
+.testimonial figcaption strong {
+  color: var(--fg);
 }
 
 @media (min-width: 810px) {
-  .testimonial h2 { font-size: 32px; }
-  .testimonial blockquote { padding: var(--space-7); font-size: 18px; }
+  .testimonial__card { padding: calc(var(--space-8) + var(--space-5)) var(--space-8) var(--space-7); }
+  .testimonial__mark { left: var(--space-7); }
+  .testimonial__doodle { right: var(--space-7); }
 }
 
-.traits {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-7) var(--space-5);
-  width: min(100% - 2 * var(--gutter), var(--container));
-  margin: var(--section-y) auto;
-  padding-top: var(--section-y);
-  border-top: 1px solid var(--color-border);
-  list-style: none;
-  text-align: center;
-}
-
-.traits svg {
-  width: 30px;
-  height: 30px;
-  margin: 0 auto var(--space-3);
-  stroke: var(--color-icon);
-}
-
-.traits h3 {
-  font-size: 20px;
-}
-
-@media (min-width: 810px) {
-  .traits { grid-template-columns: repeat(4, 1fr); }
-  .traits h3 { font-size: 22px; }
+@media (prefers-reduced-motion: reduce) {
+  .testimonial__doodle { animation: none; }
 }
 
 /* ---------- ABOUT ---------- */
