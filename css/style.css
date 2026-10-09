@@ -1867,14 +1867,18 @@ a.window:hover .project-card__cta svg {
   .case-page { padding-top: var(--space-8); }
   /* Header in 2 columns: the story takes the space, the figures stack up
      on the right, separated by a thin rule, aligned with the image's right edge */
+  /* stretch: both columns take the height of the taller one. */
   .case__intro {
     grid-template-columns: 1fr auto;
-    align-items: start;
+    align-items: stretch;
     gap: var(--space-8);
     padding: var(--space-8) 0 var(--space-7);
   }
+  /* space-between: the 3 figures spread over the full height → the 1st aligns
+     with the year (top), the last with the tags (bottom). The rule runs the whole height. */
   .case__stats {
     grid-template-columns: 1fr;
+    align-content: space-between;
     gap: var(--space-5);
     min-width: 200px;
     padding-left: var(--space-6);
