@@ -124,8 +124,8 @@
   /* Highlighted sections (key figures, page banners): 12% of accent 2 */
   --tint-accent-2: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
 
-  /* Cursor light: the accent, transparent (strength animated, see "Cursor light") */
-  --cursor-glow: color-mix(in srgb, var(--accent) var(--cursor-strength), transparent);
+  /* Cursor light: dots in accent 2 (pink/raspberry), see "Cursor light" */
+  --cursor-dot: var(--accent-2);
 
   /* Typography */
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -1919,15 +1919,17 @@ a.window:hover .project-card__cta svg {
 }
 
 /* --- Cursor light (position given by js/cursor.js) ---
-   The background itself reacts to the mouse: a grid of small dots in the
-   accent color is printed on the page's surfaces, and only lights up around
-   the cursor. It's not a layer on top: the dots are part of each section's
+   The background itself reacts to the mouse: small dots in accent 2
+   (pink/raspberry) are printed on the page's surfaces, and only light up
+   around the cursor. It's not a layer on top: the dots are part of each section's
    background, so the text, images and cards always stay in front.
 
    How: 3 background layers, from top to bottom
      1. a "cover" in the section's own color, with a transparent hole
-        around the mouse (transparent at the center → solid beyond 110 px)
-     2. the dot grid
+        around the mouse (transparent at the center → solid beyond 70 px)
+     2. three dot grids of different sizes and spacings (11, 17 and 29 px,
+        numbers that don't divide each other): they overlap without
+        ever lining up → a scattered, "organic" texture instead of a grid
      3. the section's color (already set by each section)
    "fixed": positioned relative to the window (where the mouse is), so the
    grid and the hole continue seamlessly from one section to the next. */
@@ -1951,7 +1953,7 @@ body          { --section-bg: var(--color-bg); }
 .page-banner,
 .stats,
 .resume-page  { --section-bg: var(--tint-accent-2); }
-.venn-section { --section-bg: var(--band); }
+.venn-section { --section-bg: var(--band); --cursor-dot: var(--accent-2-on-band); }
 .case-page    { --section-bg: var(--bg); }
 
 body,
@@ -1961,11 +1963,15 @@ body,
 .venn-section,
 .case-page,
 .resume-page {
+  --dot: color-mix(in srgb, var(--cursor-dot) var(--cursor-strength), transparent);
   background-image:
-    radial-gradient(circle 110px at var(--mx, -999px) var(--my, -999px),
-                    transparent, var(--section-bg)),
-    radial-gradient(circle, var(--cursor-glow) 1.6px, transparent 2.2px);
-  background-size: auto, 16px 16px;
+    radial-gradient(circle 70px at var(--mx, -999px) var(--my, -999px),
+                    transparent 10%, var(--section-bg)),
+    radial-gradient(circle, var(--dot) 1px,   transparent 1.6px),
+    radial-gradient(circle, var(--dot) 1.6px, transparent 2.2px),
+    radial-gradient(circle, var(--dot) 1.2px, transparent 1.8px);
+  background-size: auto, 11px 11px, 17px 17px, 29px 29px;
+  background-position: 0 0, 0 0, 5px 9px, 13px 4px;
   background-attachment: fixed;
 }
 
