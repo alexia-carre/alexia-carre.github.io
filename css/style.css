@@ -369,6 +369,41 @@ a {
 .doodle--about-star { --doodle-mask: url("../assets/images/deco/star.png");           aspect-ratio: 262 / 267; --doodle-color: var(--accent); }
 .doodle--a2         { --doodle-mask: url("../assets/images/deco/a-squared.svg");      aspect-ratio: 60 / 58;   --doodle-color: var(--fg); }
 
+/* --- Rolling numbers (odometer), built by js/main.js ---
+   Each digit is a "window" 1em tall (overflow hidden) through which
+   a strip of digits scrolls (0→9, twice, for a longer spin).
+   JS shifts the strip up to the target digit. */
+.odo {
+  display: inline-flex;
+  font-variant-numeric: tabular-nums;   /* same-width digits: the number doesn't wobble */
+}
+
+.odo__digit,
+.odo__char {
+  display: inline-block;
+  height: 1em;
+  line-height: 1em;
+}
+
+.odo__digit {
+  overflow: hidden;
+}
+
+.odo__char {
+  white-space: pre;   /* keeps the space in "50M+ €" */
+}
+
+.odo__strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);   /* fast, then slows to a stop */
+}
+
+.odo__strip > span {
+  height: 1em;
+  line-height: 1em;
+}
+
 /* --- Buttons: ONE shape, TWO variants ---
    Same size, radius, font and hover effect everywhere. Only the role
    changes the look:
@@ -1681,7 +1716,6 @@ a.window:hover .project-card__cta svg {
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-3);
   padding: var(--space-6) 0;
-  border-top: 1px solid var(--color-border);
   text-align: center;
 }
 
@@ -1695,7 +1729,10 @@ a.window:hover .project-card__cta svg {
   letter-spacing: var(--tracking-tight);
 }
 
-.case__stats span {
+/* "dd > span": ONLY the labels (direct children), not the spans
+   the odometer creates inside the figures */
+.case__stats dd > span {
+  display: block;
   font-size: 14px;
   line-height: 1.4;
   color: var(--color-muted);
@@ -1777,7 +1814,7 @@ a.window:hover .project-card__cta svg {
   .case__head h1 { font-size: 30px; }
   .case__head p { font-size: 22px; }
   .case__stats strong { font-size: 34px; }
-  .case__stats span { font-size: 18px; }
+  .case__stats dd > span { font-size: 18px; }
   .case__cover img { height: 298px; }
   /* Same width as the sections (inherited from .case__inner): aligned on the left */
   .case__team { font-size: 18px; }
