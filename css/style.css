@@ -882,14 +882,14 @@ a.window:hover .project-card__cta svg {
        y = center + vertical radius   × sin(angle)
      (0deg = right, 90deg = bottom, 180deg = left, 270deg / -90deg = top) */
   .hero__stage {
-    --size: clamp(220px, 46svh, 399px);   /* photo diameter */
+    --size: clamp(200px, 40svh, 350px);   /* photo diameter */
     position: relative;
     container-type: inline-size;          /* lets the logos use the stage width (cqw) */
     isolation: isolate;                   /* lets the orbits go BEHIND the photo (z-index: -1) */
     place-items: center;
     width: 100%;
     max-width: 1020px;
-    margin: clamp(28px, 6svh, 80px) auto 0;
+    margin: clamp(48px, 9svh, 110px) auto 0;   /* room between the heading and the galaxy */
   }
   /* clamp(min, ideal, max): 399 px on a large screen, smaller if the window is short */
   .hero__portrait { width: var(--size); grid-area: 1 / 1; }
