@@ -529,7 +529,7 @@ a {
 }
 /* The class describes the ROLE (skill), not the color:
    the color can change without touching the HTML. */
-.tag--skill  { --tag-color: var(--accent); }  /* the skill: accent color */
+.tag--skill  { --tag-color: var(--accent-2); }  /* the skill: accent 2 (pink), the same on every page */
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
