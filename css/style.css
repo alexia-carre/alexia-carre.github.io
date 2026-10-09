@@ -523,14 +523,13 @@ a {
    - text = the color, darkened with a bit of --fg (--tag-darken) so it stays
      ≥ 4.5:1 on that tinted background (not needed in dark mode). */
 .tag {
-  --tag-color: var(--fg);   /* neutral tag (client) */
+  --tag-color: var(--fg);   /* default: neutral */
   background: color-mix(in srgb, var(--tag-color) 14%, var(--bg));
   color: color-mix(in srgb, var(--tag-color), var(--fg) var(--tag-darken));
 }
-/* Two roles, two colors. The classes describe the ROLE (skill / client),
-   not the color: the colors can change without touching the HTML. */
+/* The class describes the ROLE (skill), not the color:
+   the color can change without touching the HTML. */
 .tag--skill  { --tag-color: var(--accent); }  /* the skill: accent color */
-.tag--client { --tag-color: var(--fg); }      /* the client (or "Personal"): neutral */
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
@@ -1830,10 +1829,10 @@ a.window:hover .project-card__cta svg {
 }
 
 /* Left column in 3 blocks: title → intro → metadata.
-   The metadata (year + skill + client) form a single line of "labels",
+   The metadata (year + skill) form a single line of "labels",
    set a little further apart (24 px vs 16 px) to separate the context
    from the story. */
-/* The tags (skill + client): 24 px below the intro (vs 16 px between the
+/* The tag (skill): 24 px below the intro (vs 16 px between the
    blocks above), to separate the context from the story */
 .case__meta {
   margin-top: var(--space-2);
