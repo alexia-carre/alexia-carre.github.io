@@ -142,8 +142,10 @@
   /* Vertical padding of the sections: the same everywhere, 64 px on mobile → 128 px
      on a large screen. clamp(min, ideal, max) with an ideal in vw (window width). */
   --section-y: clamp(64px, 9vw, 128px);
-  /* Comfortable line length for reading (~65 characters) */
-  --measure: 65ch;
+  /* Comfortable line length for reading (~65–70 characters).
+     In em rather than ch: "ch" = the width of the "0", very wide in Plus Jakarta Sans
+     (65ch at 22 px = 1046 px, so no limit at all). 34em ≈ 65–70 average characters. */
+  --measure: 34em;
 
   /* Layout */
   --nav-height: 64px;
@@ -1640,9 +1642,11 @@ a.window:hover .project-card__cta svg {
   margin-inline: auto;
 }
 
+/* Text column = same width as the cover image: the text blocks start
+   at the image's left edge. The paragraphs keep their max length
+   (--measure), so they leave free space on the right. */
 .case__inner {
-  width: min(100% - 2 * var(--space-5), 783px);
-  margin-inline: auto;
+  width: 100%;
 }
 
 .case__head {
