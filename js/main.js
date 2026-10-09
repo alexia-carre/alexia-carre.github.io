@@ -119,6 +119,90 @@ if (windowList && windowCards.length) {
 
 
 // ===========================================================================
+// Business card that flips over (home page)
+// ---------------------------------------------------------------------------
+// - Without JS, both faces are shown one below the other (see CSS).
+// - With JS, we enable the .is-interactive mode (faces superimposed, 3D).
+// - Click ANYWHERE on the card = flip it… except on a link
+//   ("Get to know me", LinkedIn), which must keep working.
+// - "inert" makes the hidden face unreachable: neither Tab nor screen readers
+//   land on links you can't see.
+// ===========================================================================
+
+document.querySelectorAll("[data-bizcard]").forEach((card) => {
+  const front = card.querySelector(".bizcard__face--front");
+  const back = card.querySelector(".bizcard__face--back");
+  const buttons = card.querySelectorAll(".bizcard__flip");
+
+  card.classList.add("is-interactive");
+  buttons.forEach((button) => { button.hidden = false; });
+
+  const setFlipped = (flipped, moveFocus) => {
+    card.classList.toggle("is-flipped", flipped);
+    front.inert = flipped;
+    back.inert = !flipped;
+    // Keyboard: focus follows onto the visible face
+    if (moveFocus) (flipped ? back : front).querySelector(".bizcard__flip").focus();
+  };
+
+  card.addEventListener("click", (event) => {
+    if (event.target.closest("a")) return;            // a link: let it work
+    const fromKeyboard = event.detail === 0;          // Enter/Space on the button
+    setFlipped(!card.classList.contains("is-flipped"), fromKeyboard);
+  });
+
+  setFlipped(false, false);
+
+  // --- Parallax: the card tilts toward the mouse (the doodles, "printed" on it, follow) ---
+  // Same principle as the logo galaxy: we compute a target (-1 → 1), then
+  // approach it a bit more on each frame (smoothing), and the loop
+  // stops once the card has settled. Mouse only, and not with "reduce motion".
+  if (!canHover || reduceMotion) return;
+
+  const MAX_TILT = 8;        // max tilt, in degrees
+  const SMOOTHING = 0.12;
+  let targetX = 0, targetY = 0, currentX = 0, currentY = 0, running = false;
+
+  const render = () => {
+    currentX += (targetX - currentX) * SMOOTHING;
+    currentY += (targetY - currentY) * SMOOTHING;
+
+    card.style.setProperty("--tilt-y", `${(currentX * MAX_TILT).toFixed(2)}deg`);
+    card.style.setProperty("--tilt-x", `${(-currentY * MAX_TILT).toFixed(2)}deg`);
+    // Sheen: position of the light, in % of the card
+    card.style.setProperty("--gx", `${((currentX + 1) * 50).toFixed(1)}%`);
+    card.style.setProperty("--gy", `${((currentY + 1) * 50).toFixed(1)}%`);
+
+    if (Math.abs(targetX - currentX) < 0.001 && Math.abs(targetY - currentY) < 0.001) {
+      running = false;
+      return;
+    }
+    requestAnimationFrame(render);
+  };
+
+  const start = () => {
+    if (!running) { running = true; requestAnimationFrame(render); }
+  };
+
+  card.addEventListener("pointermove", (event) => {
+    const box = card.getBoundingClientRect();
+    targetX = ((event.clientX - box.left) / box.width) * 2 - 1;
+    targetY = ((event.clientY - box.top) / box.height) * 2 - 1;
+    card.classList.add("is-tilting");
+    start();
+  });
+
+  // Mouse leaves the card: it gently returns to flat
+  card.addEventListener("pointerleave", () => {
+    targetX = 0;
+    targetY = 0;
+    card.classList.remove("is-tilting");
+    start();
+  });
+});
+
+
+// ===========================================================================
 // Photo carousel (About page)
 // ---------------------------------------------------------------------------
 // "Progressive enhancement" principle: the HTML/CSS already work without
