@@ -1915,43 +1915,17 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
-/* --- Cursor companion (created by js/cursor.js) ---
-   A small pink star-molecule that follows the mouse with a little delay.
-   Fixed at 0,0 then moved with "translate" (handled by the GPU, no reflow).
-   Above everything, but pointer-events: none → it never blocks a click. */
-.cursor-star {
+/* --- Pencil trace (drawn by js/cursor.js) ---
+   A transparent canvas covering the window, on which the mouse leaves
+   a thin pink line that fades away. Above everything, but
+   pointer-events: none → clicks go through it. */
+.cursor-trace {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: 100;
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;   /* centered on its position */
-  color: var(--accent-2);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.cursor-star.is-visible {
-  opacity: 1;
-}
-
-/* The drawing itself: turns slowly on itself, and grows over a link/button */
-.cursor-star svg {
   width: 100%;
   height: 100%;
-  overflow: visible;
-  animation: cursor-star-spin 9s linear infinite;
-  transition: scale 0.3s var(--ease-spring);
-}
-
-.cursor-star.is-over-link svg {
-  scale: 1.5;
-}
-
-@keyframes cursor-star-spin {
-  to { rotate: 360deg; }
+  pointer-events: none;
 }
 
 /* Respect the system's "reduce motion" setting (accessibility) */
