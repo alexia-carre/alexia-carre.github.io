@@ -1610,6 +1610,14 @@ a.work-card:hover .work-card__doodle {
   transform: rotateY(180deg);
 }
 
+/* The face we can't see must not catch the mouse: in 3D, the browser can
+   still "hit" the hidden face lying on top, and the click then flips the card
+   instead of following the link ("Get to know me", LinkedIn) */
+.bizcard.is-interactive:not(.is-flipped) .bizcard__face--back,
+.bizcard.is-flipped .bizcard__face--front {
+  pointer-events: none;
+}
+
 /* Very narrow screens: the front goes vertical (photo above the name) */
 @media (max-width: 420px) {
   .bizcard__face--front {
