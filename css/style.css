@@ -1775,7 +1775,8 @@ a.window:hover .project-card__cta svg {
   .case__stats strong { font-size: 34px; }
   .case__stats span { font-size: 18px; }
   .case__cover img { height: 298px; }
-  .case__team { width: min(100% - 2 * var(--space-5), 680px); font-size: 18px; }
+  /* Same width as the sections (inherited from .case__inner): aligned on the left */
+  .case__team { font-size: 18px; }
   .case__section h2 { font-size: 24px; }
   .case__section p,
   .case__section li { font-size: 22px; }
