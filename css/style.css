@@ -124,8 +124,8 @@
   /* Highlighted sections (key figures, page banners): 12% of accent 2 */
   --tint-accent-2: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
 
-  /* Cursor light: the accent, very transparent (the text stays readable underneath) */
-  --cursor-glow: color-mix(in srgb, var(--accent) 16%, transparent);
+  /* Cursor light: the accent, transparent (strength animated, see "Cursor light") */
+  --cursor-glow: color-mix(in srgb, var(--accent) var(--cursor-strength), transparent);
 
   /* Typography */
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -1919,27 +1919,37 @@ a.window:hover .project-card__cta svg {
 }
 
 /* Respect the system's "reduce motion" setting (accessibility) */
-/* --- Cursor light (created by js/cursor.js) ---
-   A large, very transparent accent-colored circle that follows the mouse.
-   Fixed at 0,0 then moved with "translate" (the GPU handles it, no reflow).
-   Above the content (z-index 9) but below the menu (10), and never clickable. */
-.cursor-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9;
-  width: 560px;
-  height: 560px;
-  margin: -280px 0 0 -280px;   /* centered on the cursor */
-  border-radius: 50%;
-  background: radial-gradient(closest-side, var(--cursor-glow), transparent);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
+/* --- Cursor light (position given by js/cursor.js) ---
+   The light is drawn INSIDE the backgrounds of the page's surfaces, as an
+   extra layer on top of their color: the text, images and cards stay in
+   front of it, as if a small lamp were lighting the wall behind them.
+   "fixed": the gradient is placed relative to the window (where the mouse is),
+   not to the section → the light continues smoothly from one section to the next. */
+@property --cursor-strength {   /* registered so it can be animated (fade in/out) */
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
 }
 
-.cursor-glow.is-visible {
-  opacity: 1;
+:root {
+  --cursor-light: radial-gradient(circle 150px at var(--mx, -999px) var(--my, -999px),
+                                  var(--cursor-glow), transparent);
+  transition: --cursor-strength 0.4s ease;
+}
+
+:root.has-cursor-light {
+  --cursor-strength: 22%;
+}
+
+body,
+.hero,
+.page-banner,
+.stats,
+.venn-section,
+.case-page,
+.resume-page {
+  background-image: var(--cursor-light);
+  background-attachment: fixed;
 }
 
 @media (prefers-reduced-motion: reduce) {
