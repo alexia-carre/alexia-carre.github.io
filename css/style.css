@@ -874,28 +874,75 @@ a.window:hover .project-card__cta svg {
   .hero__doodle--left  { left: -62px; }
   .hero__doodle--right { right: -62px; }
 
-  /* Desktop: logos | portrait | logos */
+  /* Desktop: the logos orbit around the photo, like a galaxy.
+     The photo sits in the middle of the stage; each logo is placed on an
+     ellipse around it, at an angle (--a) given below.
+     Trigonometry in CSS: cos() and sin() turn an angle into a position
+       x = center + horizontal radius × cos(angle)
+       y = center + vertical radius   × sin(angle)
+     (0deg = right, 90deg = bottom, 180deg = left, 270deg / -90deg = top) */
   .hero__stage {
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
+    --size: clamp(220px, 46svh, 399px);   /* photo diameter */
+    position: relative;
+    container-type: inline-size;          /* lets the logos use the stage width (cqw) */
+    place-items: center;
+    width: 100%;
     max-width: 1020px;
     margin: clamp(28px, 6svh, 80px) auto 0;
   }
   /* clamp(min, ideal, max): 399 px on a large screen, smaller if the window is short */
-  .hero__portrait { width: clamp(220px, 46svh, 399px); grid-column: 2; grid-row: 1; }
-  .logo-grid {
-    grid-template-columns: 1fr;
-    gap: clamp(24px, 7svh, 70px);
-    max-width: none;
+  .hero__portrait { width: var(--size); grid-area: 1 / 1; }
+
+  /* The orbit: a thin dashed ellipse, very discreet, on which the logos sit */
+  .hero__stage::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(2 * var(--rx));
+    height: calc(2 * var(--ry));
+    translate: -50% -50%;
+    border: 1px dashed color-mix(in srgb, var(--fg) 14%, transparent);
+    border-radius: 50%;
+    pointer-events: none;
   }
-  .logo-grid--left  { grid-column: 1; grid-row: 1; }
-  .logo-grid--right { grid-column: 3; grid-row: 1; }
-  .logo-grid img { width: var(--w); }
-  /* Shifts that recreate the Framer layout's "scattered" feel */
-  .logo-grid--left  li:nth-child(2) { transform: translateX(-30px); }
-  .logo-grid--left  li:nth-child(3) { transform: translateX(30px); }
-  .logo-grid--right li:nth-child(3) { transform: translateX(-40px); }
-  .logo-grid--right li:nth-child(4) { transform: translateX(24px); }
+
+  /* The two lists cover the whole stage; their logos are placed inside */
+  .logo-grid {
+    position: absolute;
+    inset: 0;
+    display: block;
+    max-width: none;
+    margin: 0;
+    pointer-events: none;   /* the empty area doesn't catch the mouse… */
+  }
+  .logo-grid li {
+    position: absolute;
+    left: calc(50% + var(--rx) * var(--r, 1) * cos(var(--a)));
+    top: calc(50% + var(--ry) * var(--r, 1) * sin(var(--a)));
+    translate: -50% -50%;   /* the logo's center sits on the orbit */
+    width: max-content;     /* its own width, even close to the edge of the stage */
+    line-height: 0;
+    pointer-events: auto;   /* …but the logos do (hover) */
+  }
+  /* Orbit radii: the photo's radius + a margin. Horizontal: limited by
+     the stage width (50cqw = half of it) so the logos never leave it. */
+  .hero__stage,
+  .hero__stage::before {
+    --rx: min(var(--size) / 2 + 230px, 50cqw - 110px);
+    --ry: calc(var(--size) / 2 + 24px);
+  }
+  .logo-grid img { width: var(--w); max-width: none; }
+
+  /* Each logo's spot: an angle, and a radius slightly off (--r)
+     so they don't look lined up on a rail → more "organic" */
+  .logo-grid--left  li:nth-child(1) { --a: 205deg; }              /* TCS */
+  .logo-grid--left  li:nth-child(2) { --a: 168deg; --r: 0.9; }    /* Airbus */
+  .logo-grid--left  li:nth-child(3) { --a: 132deg; --r: 1.03; }   /* Addict Mobile */
+  .logo-grid--right li:nth-child(1) { --a: -50deg; --r: 0.95; }   /* Ubisoft */
+  .logo-grid--right li:nth-child(2) { --a: -15deg; --r: 1.04; }   /* Equans */
+  .logo-grid--right li:nth-child(3) { --a: 18deg;  --r: 0.92; }   /* Danone */
+  .logo-grid--right li:nth-child(4) { --a: 52deg; }               /* Holusion */
 }
 
 /* Short screens (small laptops): we tighten up so the hero AND the arrow
