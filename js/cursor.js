@@ -1,7 +1,8 @@
 // ===========================================================================
 // Pencil trace (all pages)
 // ---------------------------------------------------------------------------
-// The mouse leaves a short pink line behind it, like a pencil stroke,
+// The mouse leaves a short line behind it, like a pencil stroke (pink at
+// the tip, fading into accent 1 at the tail),
 // sprinkled with little doodle stars, all fading away after a moment.
 // - A <canvas> covers the window: it's a surface you can draw on in JS.
 // - We remember the last positions of the mouse, each with its time.
@@ -56,16 +57,30 @@ if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion
     ctx.restore();   // the path stays drawn; fill() is called afterwards
   };
 
+  // "#ff3d81" → [255, 61, 129]. Trick: the canvas converts any CSS color
+  // into "#rrggbb" when you assign it to fillStyle.
+  const toRGB = (color) => {
+    ctx.fillStyle = color.trim();
+    const hex = ctx.fillStyle.slice(1);
+    return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  };
+
+  // Color between "from" (amount 0) and "to" (amount 1)
+  const mix = (from, to, amount) =>
+    `rgb(${from.map((v, i) => Math.round(v + (to[i] - v) * amount)).join(",")})`;
+
   const draw = () => {
     const now = performance.now();
     points = points.filter((p) => now - p.t < LIFETIME);
     stars = stars.filter((s) => now - s.t < STAR_LIFETIME);
     ctx.clearRect(0, 0, innerWidth, innerHeight);
 
-    // The color comes from the CSS (accent 2): follows the light/dark theme
-    const color = getComputedStyle(document.documentElement).getPropertyValue("--accent-2");
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
+    // The colors come from the CSS: follow the light/dark theme.
+    // Gradient along the line: accent 2 (pink) at the tip → accent 1 at the tail
+    const css = getComputedStyle(document.documentElement);
+    const head = toRGB(css.getPropertyValue("--accent-2"));
+    const tail = toRGB(css.getPropertyValue("--accent"));
+    ctx.fillStyle = `rgb(${head.join(",")})`;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
 
@@ -74,7 +89,8 @@ if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion
     for (let i = 1; i < points.length - 1; i++) {
       const life = 1 - (now - points[i].t) / LIFETIME;   // 1 = fresh, 0 = gone
       const a = points[i - 1], b = points[i], c = points[i + 1];
-      ctx.globalAlpha = life * 0.9;
+      ctx.strokeStyle = mix(tail, head, life);
+      ctx.globalAlpha = 0.2 + 0.75 * life;   // the tail stays visible enough to show its color
       ctx.lineWidth = MAX_WIDTH * (0.3 + 0.7 * life);
       ctx.beginPath();
       ctx.moveTo((a.x + b.x) / 2, (a.y + b.y) / 2);
