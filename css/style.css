@@ -702,6 +702,14 @@ a.window:hover .project-card__cta svg {
 .hero__doodle--left  { left: -42px; }
 .hero__doodle--right { right: -42px; }
 
+/* Very narrow screens (≤ 400 px, e.g. 320 px phones): smaller doodles that sit
+   closer to the name, otherwise the sun sticks out of the screen */
+@media (max-width: 400px) {
+  .hero__doodle { width: 18px; }
+  .hero__doodle--left  { left: -30px; }
+  .hero__doodle--right { right: -30px; }
+}
+
 /* The hero's spacing stays "out of the system" on purpose: it's tuned
    (with svh) so the hero + the arrow fit in every window height. */
 .hero__stage {
@@ -789,14 +797,25 @@ a.window:hover .project-card__cta svg {
   .logo-grid img { width: calc(var(--w) * 0.8); }
 }
 
-/* Same thing for small phones (e.g. iPhone SE, 667 px tall) */
-@media (max-width: 809px) and (max-height: 720px) {
+/* Same thing for phones up to 820 px tall (iPhone SE, and lots of Androids
+   at 740–800 px, where the normal layout overflowed) */
+@media (max-width: 809px) and (max-height: 820px) {
   .hero { padding-block: 20px 72px; }
   .hero__title { font-size: 26px; }
   .hero__stage { gap: 24px; }
   .hero__portrait { width: min(280px, 70vw, 30svh); }
   .logo-grid { row-gap: 14px; }
   .logo-grid img { width: calc(var(--w) * 0.42); }
+}
+
+/* Very short phones (iPhone 5 / 1st-gen SE: 568 px tall) */
+@media (max-width: 809px) and (max-height: 600px) {
+  .hero { padding-block: var(--space-3) 64px; }
+  .hero__title { font-size: 22px; }
+  .hero__stage { gap: var(--space-4); margin-top: var(--space-4); }
+  .hero__portrait { width: min(280px, 70vw, 27svh); }
+  .logo-grid { row-gap: var(--space-2); }
+  .logo-grid img { width: calc(var(--w) * 0.36); }
 }
 
 /* ---------- HOME: key figures ---------- */
