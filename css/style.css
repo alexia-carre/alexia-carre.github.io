@@ -1937,6 +1937,11 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
+/* Same format on every case study: "Role · Team" → the role stands out */
+.case__team strong {
+  color: var(--fg);
+}
+
 .case__team svg {
   flex-shrink: 0;
   width: 26px;
