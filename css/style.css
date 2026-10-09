@@ -1181,15 +1181,44 @@ a.window:hover .project-card__cta svg {
   margin-top: var(--space-2);
 }
 
-/* The doodles, scattered as if drawn by hand around the edges */
+/* The doodles, scattered as if drawn by hand around the edges.
+   Parallax: each one moves by --depth × the mouse position (--px, --py,
+   from -1 to 1, set by JS). The "deeper" a doodle is, the more it moves. */
 .bizcard__doodle {
   position: absolute;
   pointer-events: none;
+  translate: calc(var(--px, 0) * var(--depth)) calc(var(--py, 0) * var(--depth));
 }
-.bizcard__doodle--star      { width: 34px; top: 18px;    right: 22px;  rotate: 14deg; }
-.bizcard__doodle--sun       { width: 30px; bottom: 16px; left: 20px;   rotate: -10deg; }
-.bizcard__doodle--a2        { width: 30px; top: 22px;    right: 74px;  rotate: -6deg; opacity: 0.8; }
-.bizcard__doodle--about-sun { width: 44px; top: 18px;    right: 22px;  rotate: 12deg; }
+.bizcard__doodle--star      { --depth: 14px; width: 34px; top: 18px;    right: 22px;  rotate: 14deg; }
+.bizcard__doodle--sun       { --depth: 10px; width: 30px; bottom: 16px; left: 20px;   rotate: -10deg; }
+.bizcard__doodle--a2        { --depth: 6px;  width: 30px; top: 22px;    right: 74px;  rotate: -6deg; opacity: 0.8; }
+.bizcard__doodle--about-sun { --depth: 12px; width: 44px; top: 18px;    right: 22px;  rotate: 12deg; }
+
+/* Sheen: a soft light that follows the mouse (--gx, --gy as %), visible on hover */
+.bizcard__face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.28), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bizcard.is-tilting .bizcard__face::after {
+  opacity: 1;
+}
+
+/* The back is rotated 180°: its horizontal axis is mirrored.
+   We flip the horizontal direction so the doodles and the sheen
+   follow the mouse on the back too. */
+.bizcard__face--back .bizcard__doodle {
+  translate: calc(var(--px, 0) * var(--depth) * -1) calc(var(--py, 0) * var(--depth));
+}
+
+.bizcard__face--back::after {
+  background: radial-gradient(circle at calc(100% - var(--gx, 50%)) var(--gy, 50%), rgba(255, 255, 255, 0.28), transparent 55%);
+}
 
 /* "Click to flip" button: discreet, bottom right */
 .bizcard__flip {
@@ -1237,8 +1266,13 @@ a.window:hover .project-card__cta svg {
   transform: rotateY(180deg);    /* the back starts out "turned over" */
 }
 
+/* Parallax tilt: the OUTER card tilts toward the mouse (--tilt-x / --tilt-y,
+   set by JS), while the INNER card handles the flip. Two different elements
+   → the two rotations add up without overwriting each other. */
 .bizcard.is-interactive {
   cursor: pointer;
+  transform: perspective(1200px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
 }
 
 /* Hover: the card lifts slightly and the arrows turn → "it's interactive" */

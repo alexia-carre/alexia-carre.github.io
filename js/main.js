@@ -152,6 +152,56 @@ document.querySelectorAll("[data-bizcard]").forEach((card) => {
   });
 
   setFlipped(false, false);
+
+  // --- Parallax: the card tilts toward the mouse, the doodles shift by depth ---
+  // Same principle as the logo galaxy: we compute a target (-1 → 1), then
+  // approach it a bit more on each frame (smoothing), and the loop
+  // stops once the card has settled. Mouse only, and not with "reduce motion".
+  if (!canHover || reduceMotion) return;
+
+  const MAX_TILT = 8;        // max tilt, in degrees
+  const SMOOTHING = 0.12;
+  let targetX = 0, targetY = 0, currentX = 0, currentY = 0, running = false;
+
+  const render = () => {
+    currentX += (targetX - currentX) * SMOOTHING;
+    currentY += (targetY - currentY) * SMOOTHING;
+
+    card.style.setProperty("--tilt-y", `${(currentX * MAX_TILT).toFixed(2)}deg`);
+    card.style.setProperty("--tilt-x", `${(-currentY * MAX_TILT).toFixed(2)}deg`);
+    // Doodles: inherited by all the doodles, each one multiplies it by its --depth
+    card.style.setProperty("--px", currentX.toFixed(3));
+    card.style.setProperty("--py", currentY.toFixed(3));
+    // Sheen: position of the light, in % of the card
+    card.style.setProperty("--gx", `${((currentX + 1) * 50).toFixed(1)}%`);
+    card.style.setProperty("--gy", `${((currentY + 1) * 50).toFixed(1)}%`);
+
+    if (Math.abs(targetX - currentX) < 0.001 && Math.abs(targetY - currentY) < 0.001) {
+      running = false;
+      return;
+    }
+    requestAnimationFrame(render);
+  };
+
+  const start = () => {
+    if (!running) { running = true; requestAnimationFrame(render); }
+  };
+
+  card.addEventListener("pointermove", (event) => {
+    const box = card.getBoundingClientRect();
+    targetX = ((event.clientX - box.left) / box.width) * 2 - 1;
+    targetY = ((event.clientY - box.top) / box.height) * 2 - 1;
+    card.classList.add("is-tilting");
+    start();
+  });
+
+  // Mouse leaves the card: it gently returns to flat
+  card.addEventListener("pointerleave", () => {
+    targetX = 0;
+    targetY = 0;
+    card.classList.remove("is-tilting");
+    start();
+  });
 });
 
 
