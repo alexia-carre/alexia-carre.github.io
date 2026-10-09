@@ -703,6 +703,56 @@ a.window:hover .project-card__cta svg {
   }
 }
 
+/* Featured project (the latest): spans the full width of the grid.
+   Computer: cover on the left, text on the right, with a bigger title. */
+.work-grid__featured {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 810px) {
+  .work-card--featured {
+    flex-direction: row;
+  }
+  .work-card--featured .work-card__media {
+    flex: 0 0 55%;
+    aspect-ratio: auto;    /* takes the full height of the card */
+  }
+  .work-card--featured .work-card__body {
+    justify-content: center;
+    padding: var(--space-7);
+  }
+  .work-card--featured .project-card__title {
+    font-size: var(--text-subheading);
+  }
+  .work-card--featured .work-card__doodle {
+    width: 88px;
+  }
+}
+
+/* "Personal project": a separate section under the professional work,
+   introduced by a thin rule and a subheading */
+.work-grid:has(+ .work-personal) {
+  margin-bottom: var(--space-7);
+}
+
+.work-personal {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin: 0 auto var(--section-y);
+  padding-top: var(--space-7);
+  border-top: 1px solid var(--border);
+}
+
+.work-personal__title {
+  margin-bottom: var(--space-5);
+  font-size: var(--text-subheading);
+  color: var(--color-subheading);
+}
+
+.work-personal .work-grid {
+  width: 100%;
+  margin: 0;
+}
+
 /* The card: cover image on top (edge to edge), text below */
 .work-card {
   height: 100%;          /* fills the grid cell (stretched to the tallest one) */
@@ -2116,6 +2166,21 @@ a.work-card:hover .work-card__doodle {
   object-fit: cover;
 }
 
+/* Case study without screenshots yet: the doodle cover of the My Work cards,
+   at the same height as a cover photo */
+.case__cover .work-card__media {
+  height: 220px;
+  aspect-ratio: auto;
+}
+
+/* On a doodle cover, the "coming soon" caption goes to the bottom
+   so it doesn't hide the doodle in the middle */
+.case__cover .work-card__media + .case__soon {
+  top: auto;
+  bottom: var(--space-4);
+  translate: -50% 0;
+}
+
 .case__soon {
   position: absolute;
   top: 50%;
@@ -2233,7 +2298,8 @@ a.work-card:hover .work-card__doodle {
     border-left: 1px solid var(--border);
   }
   /* (Text sizes: no override here, the 3 clamp() tokens adapt on their own) */
-  .case__cover img { height: 298px; }
+  .case__cover img,
+  .case__cover .work-card__media { height: 298px; }
 }
 
 /* ---------- 404 ---------- */
