@@ -885,6 +885,7 @@ a.window:hover .project-card__cta svg {
     --size: clamp(220px, 46svh, 399px);   /* photo diameter */
     position: relative;
     container-type: inline-size;          /* lets the logos use the stage width (cqw) */
+    isolation: isolate;                   /* lets the orbits go BEHIND the photo (z-index: -1) */
     place-items: center;
     width: 100%;
     max-width: 1020px;
@@ -893,19 +894,40 @@ a.window:hover .project-card__cta svg {
   /* clamp(min, ideal, max): 399 px on a large screen, smaller if the window is short */
   .hero__portrait { width: var(--size); grid-area: 1 / 1; }
 
-  /* The orbit: a thin dashed ellipse, very discreet, on which the logos sit */
-  .hero__stage::before {
+  /* The orbits: thin dashed ellipses, drawn by 2 pseudo-elements
+     (::before and ::after, "free" boxes that CSS adds without extra HTML).
+     - ::before = the main orbit, on which the logos sit, plus a lighter
+       twin alongside it, drawn with its "outline" 16 px further out
+       (outline follows the rounded shape, like a border)
+     - ::after = a second, even lighter orbit, tilted the other way,
+       which crosses the first one
+     z-index: -1 → behind the photo and the logos */
+  .hero__stage::before,
+  .hero__stage::after {
     content: "";
     position: absolute;
+    z-index: -1;
     top: 50%;
     left: 50%;
     width: calc(2 * var(--rx));
     height: calc(2 * var(--ry));
     translate: -50% -50%;
-    rotate: var(--tilt);   /* tilted like a planet's ring */
-    border: 1px dashed color-mix(in srgb, var(--fg) 22%, transparent);
     border-radius: 50%;
     pointer-events: none;
+  }
+
+  .hero__stage::before {
+    rotate: var(--tilt);   /* tilted like a planet's ring */
+    border: 1px dashed color-mix(in srgb, var(--fg) 22%, transparent);
+    outline: 1px dashed color-mix(in srgb, var(--fg) 14%, transparent);
+    outline-offset: 16px;
+  }
+
+  .hero__stage::after {
+    width: calc(2 * var(--rx) * 0.9);
+    height: calc(2 * var(--ry) * 1.12);
+    rotate: 14deg;         /* leans the other way → the two orbits cross */
+    border: 1px dashed color-mix(in srgb, var(--fg) 14%, transparent);
   }
 
   /* The two lists cover the whole stage; their logos are placed inside */
@@ -933,7 +955,8 @@ a.window:hover .project-card__cta svg {
   /* Orbit radii: the photo's radius + a margin. Horizontal: limited by
      the stage width (50cqw = half of it) so the logos never leave it. */
   .hero__stage,
-  .hero__stage::before {
+  .hero__stage::before,
+  .hero__stage::after {
     --rx: min(var(--size) / 2 + 230px, 50cqw - 110px);
     --ry: calc(var(--size) / 2 + 24px);
     --tilt: -10deg;   /* the orbit leans: up on the right, down on the left */
