@@ -218,8 +218,26 @@ document.querySelectorAll("[data-bizcard]").forEach((card) => {
     if (moveFocus) (flipped ? back : front).querySelector(".bizcard__flip").focus();
   };
 
+  // Where the mouse was PRESSED. A "click" only lands on a link if the mouse
+  // is pressed AND released on it; with the tilt, the button can move a few
+  // pixels in between, and the browser then sends the click to the card
+  // instead → it would flip instead of following the link. So we remember
+  // where the press happened, and that decides.
+  let pressedOnAction = false;
+  let pressing = false;
+  card.addEventListener("pointerdown", (event) => {
+    pressing = true;
+    pressedOnAction = !!event.target.closest("a, .bizcard__actions");
+  });
+  window.addEventListener("pointerup", () => { pressing = false; });
+  window.addEventListener("pointercancel", () => { pressing = false; });
+
   card.addEventListener("click", (event) => {
-    if (event.target.closest("a")) return;            // a link: let it work
+    // A link, the buttons area, or a press that started there: never flip
+    if (event.target.closest("a, .bizcard__actions") || pressedOnAction) {
+      pressedOnAction = false;
+      return;
+    }
     const fromKeyboard = event.detail === 0;          // Enter/Space on the button
     setFlipped(!card.classList.contains("is-flipped"), fromKeyboard);
   });
@@ -258,6 +276,9 @@ document.querySelectorAll("[data-bizcard]").forEach((card) => {
   };
 
   card.addEventListener("pointermove", (event) => {
+    // Mouse button held down: the card stays still, so the button being
+    // clicked doesn't slide away from under the cursor
+    if (pressing) return;
     const box = card.getBoundingClientRect();
     targetX = ((event.clientX - box.left) / box.width) * 2 - 1;
     targetY = ((event.clientY - box.top) / box.height) * 2 - 1;
