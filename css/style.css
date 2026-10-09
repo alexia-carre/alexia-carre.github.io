@@ -811,6 +811,10 @@ a.window:hover .project-card__cta svg {
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
+  /* A soft halo in the accent color, like the sun doodle next to the title.
+     No offset (0 0): the shadow spreads evenly around the circle → a glow.
+     Small blur (36 px) and very transparent: an aura, not a spotlight. */
+  box-shadow: 0 0 36px 2px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 .hero__logos {
