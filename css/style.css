@@ -224,6 +224,26 @@ a {
   outline-offset: 3px;
 }
 
+/* "Skip to content" link: off screen until a keyboard user reaches it
+   with Tab, then it appears at the top left, above the menu */
+.skip-link {
+  position: absolute;
+  z-index: 200;
+  top: var(--space-2);
+  left: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--accent-2);
+  color: var(--on-accent-2);
+  font-size: 15px;
+  font-weight: 700;
+  translate: 0 -200%;
+}
+
+.skip-link:focus {
+  translate: 0 0;
+}
+
 /* Hidden visually but read by screen readers */
 .visually-hidden {
   position: absolute;
@@ -843,7 +863,8 @@ a.work-card:hover .work-card__doodle {
    "transform" (animation) and "translate" (centering) add up without conflict. */
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  .scroll-hint { animation: nudge 2s ease-in-out infinite; }
+  /* 2 bounces, then it stops: no endless motion (accessibility: WCAG 2.2.2) */
+  .scroll-hint { animation: nudge 2s ease-in-out 2; }
 }
 
 @keyframes nudge {
@@ -1487,7 +1508,7 @@ a.work-card:hover .work-card__doodle {
   background: radial-gradient(circle at calc(100% - var(--gx, 50%)) var(--gy, 50%), rgba(255, 255, 255, 0.28), transparent 55%);
 }
 
-/* "Click to flip" button: discreet, bottom right */
+/* "Flip the card" button: discreet, bottom right */
 .bizcard__flip {
   position: absolute;
   right: var(--space-4);
@@ -1812,25 +1833,35 @@ a.work-card:hover .work-card__doodle {
   left: 50%;
   translate: -50% 0;
   display: flex;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
+  padding: 0 var(--space-1);
   background: rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-radius: var(--radius-pill);
 }
 
+/* The button is 24 × 24 px (minimum size to tap comfortably, WCAG 2.5.8);
+   the visible dot (::before) stays 10 px in the middle */
 .carousel__dot {
-  width: 10px;
-  height: 10px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: none;
   cursor: pointer;
 }
 
-.carousel__dot[aria-current="true"] {
+.carousel__dot::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.carousel__dot[aria-current="true"]::before {
   background: #fff;
 }
 

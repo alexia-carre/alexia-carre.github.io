@@ -22,6 +22,9 @@
 </head>
 <body>
 
+  <!-- First thing the Tab key reaches: jumps over the menu, straight to the content (hidden until focused) -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <nav class="site-nav" aria-label="Main navigation">
     <a class="site-nav__avatar" href="index.html" aria-label="Alexia Carré, home">
       <img src="assets/images/portrait.jpg" alt="" width="31" height="31">
@@ -35,7 +38,7 @@
     </ul>
   </nav>
 
-  <main class="resume-page">
+  <main id="main" class="resume-page">
     <h1 class="visually-hidden">Resume</h1>
 
     <div class="resume-page__actions">
