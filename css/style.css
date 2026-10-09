@@ -1943,11 +1943,33 @@ a.window:hover .project-card__cta svg {
   height: 26px;
 }
 
-/* Between two sections: 48 px. Between a heading and its text: 12 px.
-   That contrast is what makes the page easy to scan: you can see
-   where each block starts at a glance. */
+/* The story in 3 steps (Context → What I did → Results).
+   Each step starts with a thin rule + its label: you can see where each
+   block starts at a glance. Between a heading and its text: 12 px. */
 .case__section {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
   margin-bottom: var(--space-7);
+  border-top: 1px solid var(--border);
+}
+
+/* Step label: small, bold, in the accent (like the skill tags).
+   The accent is darkened a little with the text color so it stays readable
+   at 14 px (in dark mode, --tag-darken is 0: the mint is already readable).
+   ".case__section .case__label" beats ".case__section p" below. */
+.case__section .case__label {
+  display: flex;
+  gap: var(--space-2);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--color-accent), var(--fg) calc(var(--tag-darken) * 2));
+}
+
+.case__label span {
+  color: var(--fg-muted);   /* the step number, more discreet */
 }
 
 /* Tier 2: subheading */
@@ -1973,6 +1995,13 @@ a.window:hover .project-card__cta svg {
 
 @media (min-width: 810px) {
   .case-page { padding-top: var(--space-8); }
+  /* Steps: label in its own column on the left, content on the right.
+     padding-top on the label: lines it up with the heading's first line. */
+  .case__section {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+  .case__section .case__label { padding-top: 0.35em; }
   /* Header in 2 columns: the story takes the space, the figures stack up
      on the right, separated by a thin rule, aligned with the image's right edge */
   /* stretch: both columns take the height of the taller one. */
