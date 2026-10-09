@@ -337,7 +337,13 @@ a {
 }
 
 @media (min-width: 810px) {
-  .site-nav { gap: var(--space-6); padding-inline: var(--space-6); }
+  /* The bar stays full width (background + border), but its content lines up
+     with the page content: on wide screens, the side padding is the empty
+     space left on each side of the --container (never less than the gutter) */
+  .site-nav {
+    gap: var(--space-6);
+    padding-inline: max(var(--gutter), (100% - var(--container)) / 2);
+  }
   .site-nav__links { gap: var(--space-6); font-size: 15px; }
 }
 
