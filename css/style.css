@@ -38,6 +38,7 @@
   --accent-2: #a8285f;      /* raspberry: accent 2 = HIGHLIGHTS (5.9:1 on cream) */
   --on-accent-2: #f6efe3;
   --accent-2-on-band: #f2a7c3; /* light pink for the forest band (5.1:1) */
+  --portrait-glow: #a8285f;     /* neon around the hero photo: raspberry (accent 2) */
   --band: #2f4a3a;          /* dark section within light mode */
   --on-band: #f6efe3;
   /* Additions specific to our site (not in the file) */
@@ -67,6 +68,7 @@
     --accent-2: #ff3d81;    /* pink: accent 2 = HIGHLIGHTS (5.5:1 on the background) */
     --on-accent-2: #0e1512;
     --accent-2-on-band: #ff3d81;
+    --portrait-glow: #3df5c8;   /* mint (accent 1), like the sun doodle */
     --band: #16201b;
     --on-band: #f2ede3;
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
@@ -92,6 +94,7 @@
   --accent-2: #ff3d81;
   --on-accent-2: #0e1512;
   --accent-2-on-band: #ff3d81;
+  --portrait-glow: #3df5c8;   /* mint (accent 1), like the sun doodle */
   --band: #16201b;
   --on-band: #f2ede3;
   --logo-filter: invert(1) hue-rotate(180deg);
@@ -332,12 +335,25 @@ a {
 
 /* Mobile: little room → we tighten up */
 @media (max-width: 809px) {
-  .site-nav { gap: 10px; padding-inline: 12px; }
+  .site-nav { gap: 10px; }
   .site-nav__links { gap: 10px; font-size: 13px; }
+  .site-nav__links a { white-space: nowrap; }   /* "My Work" never on 2 lines */
+}
+
+/* Very small phones: same 24 px margins as the content, so the menu tightens */
+@media (max-width: 400px) {
+  .site-nav { gap: 6px; }
+  .site-nav__links { gap: 6px; font-size: 12px; }
 }
 
 @media (min-width: 810px) {
-  .site-nav { gap: var(--space-6); padding-inline: var(--space-6); }
+  /* The bar stays full width (background + border), but its content lines up
+     with the page content: on wide screens, the side padding is the empty
+     space left on each side of the --container (never less than the gutter) */
+  .site-nav {
+    gap: var(--space-6);
+    padding-inline: max(var(--gutter), (100% - var(--container)) / 2);
+  }
   .site-nav__links { gap: var(--space-6); font-size: 15px; }
 }
 
@@ -507,14 +523,13 @@ a {
    - text = the color, darkened with a bit of --fg (--tag-darken) so it stays
      ≥ 4.5:1 on that tinted background (not needed in dark mode). */
 .tag {
-  --tag-color: var(--fg);   /* neutral tag (client) */
+  --tag-color: var(--fg);   /* default: neutral */
   background: color-mix(in srgb, var(--tag-color) 14%, var(--bg));
   color: color-mix(in srgb, var(--tag-color), var(--fg) var(--tag-darken));
 }
-/* Two roles, two colors. The classes describe the ROLE (skill / client),
-   not the color: the colors can change without touching the HTML. */
+/* The class describes the ROLE (skill), not the color:
+   the color can change without touching the HTML. */
 .tag--skill  { --tag-color: var(--accent); }  /* the skill: accent color */
-.tag--client { --tag-color: var(--fg); }      /* the client (or "Personal"): neutral */
 
 /* --- Page banner (My Work, My Skills) --- */
 .page-banner {
@@ -651,7 +666,7 @@ a.window:hover .project-card__cta svg {
   display: grid;
   grid-auto-rows: 1fr;   /* all rows the height of the tallest → identical cards */
   gap: var(--space-5);
-  width: min(100% - 2 * var(--gutter), 929px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
@@ -798,6 +813,20 @@ a.window:hover .project-card__cta svg {
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
+  /* Neon halo (--portrait-glow: mint in dark mode, like the sun doodle;
+     raspberry pink in light mode).
+     Several shadows stacked (separated by commas), from the inside out:
+     1. a thin, bright ring right against the photo (the "neon tube")
+     2. a tight glow
+     3. a wider, fainter aura
+     4. a touch of accent 2 (pink), shifted to the bottom right → the
+        cyberpunk duo of colors, without a large radius
+     No offset on 1–3 (0 0): they spread evenly around the circle. */
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--portrait-glow) 75%, transparent),
+    0 0 14px 2px color-mix(in srgb, var(--portrait-glow) 50%, transparent),
+    0 0 40px 4px color-mix(in srgb, var(--portrait-glow) 25%, transparent),
+    8px 10px 32px color-mix(in srgb, var(--accent-2) 30%, transparent);
 }
 
 .hero__logos {
@@ -831,6 +860,12 @@ a.window:hover .project-card__cta svg {
   scale: 1.08;
 }
 
+/* Mobile (3 per row): the right list has 4 logos, the 4th one would sit alone
+   on the left of its row → we place it in the middle column */
+@media (max-width: 809px) {
+  .logo-grid--right li:nth-child(4) { grid-column: 2; }
+}
+
 @media (min-width: 810px) {
   .hero { padding: 40px var(--gutter) 96px; }
   .hero__title { font-size: 40px; }
@@ -838,27 +873,97 @@ a.window:hover .project-card__cta svg {
   .hero__doodle--left  { left: -62px; }
   .hero__doodle--right { right: -62px; }
 
-  /* Desktop: logos | portrait | logos */
+  /* Desktop: the logos orbit around the photo, like a galaxy.
+     The photo sits in the middle of the stage; each logo is placed on an
+     ellipse around it, at an angle (--a) given below.
+     Trigonometry in CSS: cos() and sin() turn an angle into a position
+       x = center + horizontal radius × cos(angle)
+       y = center + vertical radius   × sin(angle)
+     (0deg = right, 90deg = bottom, 180deg = left, 270deg / -90deg = top) */
   .hero__stage {
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
+    --size: clamp(200px, 40svh, 350px);   /* photo diameter */
+    position: relative;
+    container-type: inline-size;          /* lets the logos use the stage width (cqw) */
+    isolation: isolate;                   /* lets the orbits go BEHIND the photo (z-index: -1) */
+    place-items: center;
+    width: 100%;
     max-width: 1020px;
-    margin: clamp(28px, 6svh, 80px) auto 0;
+    margin: clamp(48px, 9svh, 110px) auto 0;   /* room between the heading and the galaxy */
   }
   /* clamp(min, ideal, max): 399 px on a large screen, smaller if the window is short */
-  .hero__portrait { width: clamp(220px, 46svh, 399px); grid-column: 2; grid-row: 1; }
-  .logo-grid {
-    grid-template-columns: 1fr;
-    gap: clamp(24px, 7svh, 70px);
-    max-width: none;
+  .hero__portrait { width: var(--size); grid-area: 1 / 1; }
+
+  /* The orbits: 2 identical dashed ellipses, drawn by 2 pseudo-elements
+     (::before and ::after, "free" boxes that CSS adds without extra HTML),
+     tilted in mirror (−tilt / +tilt) → they cross in an X, symmetric
+     on each side of the photo.
+     Each one has a lighter twin alongside it, drawn with its "outline"
+     16 px further out (outline follows the rounded shape, like a border).
+     z-index: -1 → behind the photo and the logos */
+  .hero__stage::before,
+  .hero__stage::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    width: calc(2 * var(--rx));
+    height: calc(2 * var(--ry));
+    translate: -50% -50%;
+    border-radius: 50%;
+    pointer-events: none;
   }
-  .logo-grid--left  { grid-column: 1; grid-row: 1; }
-  .logo-grid--right { grid-column: 3; grid-row: 1; }
-  .logo-grid img { width: var(--w); }
-  /* Shifts that recreate the Framer layout's "scattered" feel */
-  .logo-grid--left  li:nth-child(2) { transform: translateX(-30px); }
-  .logo-grid--left  li:nth-child(3) { transform: translateX(30px); }
-  .logo-grid--right li:nth-child(3) { transform: translateX(-40px); }
+
+  .hero__stage::before,
+  .hero__stage::after {
+    border: 1px dashed color-mix(in srgb, var(--fg) 20%, transparent);
+    outline: 1px dashed color-mix(in srgb, var(--fg) 10%, transparent);
+    outline-offset: 16px;
+  }
+
+  .hero__stage::before { rotate: calc(var(--tilt) * -1); }   /* leans one way… */
+  .hero__stage::after  { rotate: var(--tilt); }              /* …and the other, in mirror */
+
+  /* The two lists cover the whole stage; their logos are placed inside */
+  .logo-grid {
+    position: absolute;
+    inset: 0;
+    display: block;
+    max-width: none;
+    margin: 0;
+    pointer-events: none;   /* the empty area doesn't catch the mouse… */
+  }
+  .logo-grid li {
+    position: absolute;
+    /* The logos sit on a straight (untilted) ellipse, between the two orbits */
+    left: calc(50% + var(--rx) * cos(var(--a)));
+    top: calc(50% + var(--ry) * sin(var(--a)));
+    translate: -50% -50%;   /* the logo's center sits on the orbit */
+    width: max-content;     /* its own width, even close to the edge of the stage */
+    line-height: 0;
+    pointer-events: auto;   /* …but the logos do (hover) */
+  }
+  /* Orbit radii: the photo's radius + a margin. Horizontal: limited by
+     the stage width (50cqw = half of it) so the logos never leave it. */
+  .hero__stage,
+  .hero__stage::before,
+  .hero__stage::after {
+    --rx: min(var(--size) / 2 + 230px, 50cqw - 110px);
+    --ry: calc(var(--size) / 2 + 24px);
+    --tilt: 10deg;    /* how much the two orbits lean (in mirror) */
+  }
+  .logo-grid img { width: var(--w); max-width: none; }
+
+  /* Each logo's spot: an angle. Each side is symmetric top/bottom, with
+     the same 36° step between logos:
+     right (4 logos): −54°, −18°, 18°, 54° · left (3 logos): 144°, 180°, 216° */
+  .logo-grid--left  li:nth-child(1) { --a: 216deg; }   /* TCS */
+  .logo-grid--left  li:nth-child(2) { --a: 180deg; }   /* Airbus */
+  .logo-grid--left  li:nth-child(3) { --a: 144deg; }   /* Addict Mobile */
+  .logo-grid--right li:nth-child(1) { --a: -54deg; }   /* Ubisoft */
+  .logo-grid--right li:nth-child(2) { --a: -18deg; }   /* Equans */
+  .logo-grid--right li:nth-child(3) { --a: 18deg; }    /* Danone */
+  .logo-grid--right li:nth-child(4) { --a: 54deg; }    /* Holusion */
 }
 
 /* Short screens (small laptops): we tighten up so the hero AND the arrow
@@ -1387,7 +1492,7 @@ a.window:hover .project-card__cta svg {
 .skills-grid {
   display: grid;
   gap: var(--space-7);
-  width: min(100% - 2 * var(--gutter), 960px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
   padding: 0;
   list-style: none;
@@ -1419,7 +1524,7 @@ a.window:hover .project-card__cta svg {
 /* Its top margin "collapses" with the bottom margin of .skills-grid:
    the larger of the two wins → one single section rhythm */
 .testimonial {
-  width: min(100% - 2 * var(--gutter), 1024px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
 }
 
@@ -1457,7 +1562,7 @@ a.window:hover .project-card__cta svg {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-7) var(--space-5);
-  width: min(100% - 2 * var(--gutter), 960px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
   padding-top: var(--section-y);
   border-top: 1px solid var(--color-border);
@@ -1484,7 +1589,7 @@ a.window:hover .project-card__cta svg {
 /* ---------- ABOUT ---------- */
 .about {
   position: relative;
-  width: min(100% - 2 * var(--gutter), 840px);
+  width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
 }
 
@@ -1695,9 +1800,8 @@ a.window:hover .project-card__cta svg {
   margin-inline: auto;
 }
 
-/* Text column = same width as the cover image: the text blocks start
-   at the image's left edge. The paragraphs keep their max length
-   (--measure), so they leave free space on the right. */
+/* Text column = same width as the cover image: the text starts at the
+   image's left edge and ends at its right edge (full width, like the menu) */
 .case__inner {
   width: 100%;
 }
@@ -1725,10 +1829,10 @@ a.window:hover .project-card__cta svg {
 }
 
 /* Left column in 3 blocks: title → intro → metadata.
-   The metadata (year + skill + client) form a single line of "labels",
+   The metadata (year + skill) form a single line of "labels",
    set a little further apart (24 px vs 16 px) to separate the context
    from the story. */
-/* The tags (skill + client): 24 px below the intro (vs 16 px between the
+/* The tag (skill): 24 px below the intro (vs 16 px between the
    blocks above), to separate the context from the story */
 .case__meta {
   margin-top: var(--space-2);
@@ -1739,7 +1843,6 @@ a.window:hover .project-card__cta svg {
    so it visually "belongs" to the title.
    (.case__head .case__year: more specific than .case__head p, which is meant for the intro) */
 .case__head .case__year {
-  max-width: none;
   margin-bottom: calc(var(--space-2) * -1);
   font-size: 14px;
   font-weight: 700;
@@ -1749,7 +1852,6 @@ a.window:hover .project-card__cta svg {
 
 /* Tier 3: body (the intro is reading text, not a heading) */
 .case__head p {
-  max-width: var(--measure);
   font-size: var(--text-body);
   color: var(--color-muted);
 }
@@ -1851,7 +1953,6 @@ a.window:hover .project-card__cta svg {
 /* Tier 3: body */
 .case__section p,
 .case__section li {
-  max-width: var(--measure);
   font-size: var(--text-body);
   color: var(--color-muted);
 }
