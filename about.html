@@ -24,6 +24,9 @@
 </head>
 <body>
 
+  <!-- First thing the Tab key reaches: jumps over the menu, straight to the content (hidden until focused) -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <nav class="site-nav" aria-label="Main navigation">
     <a class="site-nav__avatar" href="index.html" aria-label="Alexia Carré, home">
       <img src="assets/images/portrait.jpg" alt="" width="31" height="31">
@@ -37,7 +40,7 @@
     </ul>
   </nav>
 
-  <main class="about">
+  <main id="main" class="about">
     <!-- Decorative doodles: drawn by CSS masks (see "Doodles" in style.css) -->
     <div class="about__sticker about__sticker--sun" aria-hidden="true">
       <span class="doodle doodle--about-sun"></span>
@@ -71,7 +74,8 @@
     <!-- Carousel: without JS it's a horizontal scrolling strip;
          js/main.js adds the arrows and dots. -->
     <section class="carousel" aria-label="Photos" data-carousel>
-      <ul class="carousel__track">
+      <!-- tabindex="0": keyboard users can focus the strip, then scroll it with the arrow keys -->
+      <ul class="carousel__track" tabindex="0" aria-label="Photos, scroll sideways">
         <li class="carousel__slide"><img src="assets/images/about/award.jpg" alt="Alexia posing with her innovation award" width="840" height="612"></li>
         <li class="carousel__slide"><img src="assets/images/about/note-taking.jpg" alt="Alexia focused on note-taking" width="840" height="612" loading="lazy"></li>
         <li class="carousel__slide"><img src="assets/images/about/enjoying-life.jpg" alt="Alexia enjoying life" width="840" height="612" loading="lazy"></li>

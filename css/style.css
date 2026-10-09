@@ -38,7 +38,6 @@
   --accent-2: #a8285f;      /* raspberry: accent 2 = HIGHLIGHTS (5.9:1 on cream) */
   --on-accent-2: #f6efe3;
   --accent-2-on-band: #f2a7c3; /* light pink for the forest band (5.1:1) */
-  --portrait-glow: #a8285f;     /* neon around the hero photo: raspberry (accent 2) */
   --band: #2f4a3a;          /* dark section within light mode */
   --on-band: #f6efe3;
   /* Additions specific to our site (not in the file) */
@@ -68,7 +67,6 @@
     --accent-2: #ff3d81;    /* pink: accent 2 = HIGHLIGHTS (5.5:1 on the background) */
     --on-accent-2: #0e1512;
     --accent-2-on-band: #ff3d81;
-    --portrait-glow: #3df5c8;   /* mint (accent 1), like the sun doodle */
     --band: #16201b;
     --on-band: #f2ede3;
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
@@ -94,7 +92,6 @@
   --accent-2: #ff3d81;
   --on-accent-2: #0e1512;
   --accent-2-on-band: #ff3d81;
-  --portrait-glow: #3df5c8;   /* mint (accent 1), like the sun doodle */
   --band: #16201b;
   --on-band: #f2ede3;
   --logo-filter: invert(1) hue-rotate(180deg);
@@ -116,8 +113,6 @@
   --color-bg-soft: var(--bg);
   --color-border: var(--border);
   --color-accent: var(--accent);
-  --color-quote: var(--band);
-  --color-icon: var(--accent);
   --color-pill: var(--surface);
 
   /* Spring easing: the curve goes above 1 → slight overshoot, like Framer's "bounce: 0.2".
@@ -126,6 +121,7 @@
 
   /* Highlighted sections (key figures, page banners): 12% of accent 2 */
   --tint-accent-2: color-mix(in srgb, var(--accent-2) 12%, var(--bg));
+  --tint-accent-1: color-mix(in srgb, var(--accent) 14%, var(--bg));   /* same idea, in teal/mint (My Work covers) */
 
   /* Typography */
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -201,8 +197,7 @@ h1, h2, h3 {
 /* Subheadings (titles of content blocks): charcoal rather than forest */
 .about__text h2,
 .case__section h2,
-.skill h2,
-.traits h3 {
+.skill h2 {
   color: var(--color-subheading);
 }
 
@@ -221,6 +216,26 @@ a {
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+/* "Skip to content" link: off screen until a keyboard user reaches it
+   with Tab, then it appears at the top left, above the menu */
+.skip-link {
+  position: absolute;
+  z-index: 200;
+  top: var(--space-2);
+  left: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--accent-2);
+  color: var(--on-accent-2);
+  font-size: 15px;
+  font-weight: 700;
+  translate: 0 -200%;
+}
+
+.skip-link:focus {
+  translate: 0 0;
 }
 
 /* Hidden visually but read by screen readers */
@@ -668,7 +683,9 @@ a.window:hover .project-card__cta svg {
   .project-card__title { font-size: 20px; }
 }
 
-/* --- My Work page: card grid --- */
+/* --- My Work page --- */
+
+/* Card grid */
 .work-grid {
   display: grid;
   grid-auto-rows: 1fr;   /* all rows the height of the tallest → identical cards */
@@ -683,13 +700,97 @@ a.window:hover .project-card__cta svg {
   .work-grid {
     grid-template-columns: 1fr 1fr;
     gap: var(--space-6);
-    /* "stretch" (the default): the cards in the same row take the same
-       height, no JS needed here since they are siblings in the grid */
   }
 }
 
+/* The card: cover image on top (edge to edge), text below */
 .work-card {
-  height: 100%;   /* fills the grid cell (stretched to the tallest one) */
+  height: 100%;          /* fills the grid cell (stretched to the tallest one) */
+  gap: 0;
+  padding: 0;
+  overflow: hidden;      /* the image follows the card's rounded corners */
+  border-radius: var(--radius-lg);
+}
+
+.work-card__body {
+  display: flex;
+  flex: 1;               /* takes the remaining height → tags pushed to the bottom */
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+/* Doodle cover: a tinted background (teal or pink), a dashed orbit tilted
+   by --tilt, and one doodle in the middle.
+   Colors and shapes change from one card to the next (see mywork.html). */
+.work-card__media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.work-card__media--teal { background: var(--tint-accent-1); }
+.work-card__media--pink { background: var(--tint-accent-2); }
+
+/* The orbit + its lighter twin alongside (outline), like the home galaxy */
+.work-card__media::before {
+  content: "";
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 3 / 1;
+  border: 1px dashed color-mix(in srgb, var(--fg) 25%, transparent);
+  border-radius: 50%;
+  outline: 1px dashed color-mix(in srgb, var(--fg) 12%, transparent);
+  outline-offset: 10px;
+  rotate: var(--tilt, -10deg);
+}
+
+.work-card__doodle {
+  grid-area: 1 / 1;
+  width: 64px;
+  transition: scale 0.6s var(--ease-spring);
+}
+
+/* Colors: set here rather than by the doodle itself (the cards switch
+   --accent to pink, so the teal comes from --color-accent) */
+.work-card__doodle--pink { --doodle-color: var(--accent-2); }
+.work-card__doodle--teal { --doodle-color: var(--color-accent); }
+
+/* Hover: the doodle grows a little (it already turns on its own, see below) */
+a.work-card:hover .work-card__doodle {
+  scale: 1.12;
+}
+
+/* Project number in the corner, like the steps of the case studies (01, 02…) */
+.work-card__index {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+/* Every doodle turns slowly, on its own. The negative delays start each one
+   at a different point of its turn → they don't all move in sync. */
+.work-card__doodle {
+  animation: work-doodle-spin 14s linear infinite;
+}
+.work-grid li:nth-child(2) .work-card__doodle { animation-delay: -3.5s; }
+.work-grid li:nth-child(3) .work-card__doodle { animation-delay: -7s; }
+.work-grid li:nth-child(4) .work-card__doodle { animation-delay: -10.5s; }
+
+@keyframes work-doodle-spin {
+  to { rotate: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card__doodle { animation: none; }
 }
 
 /* "View more" only on hover (or keyboard focus)… but only on devices
@@ -756,7 +857,8 @@ a.window:hover .project-card__cta svg {
    "transform" (animation) and "translate" (centering) add up without conflict. */
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  .scroll-hint { animation: nudge 2s ease-in-out infinite; }
+  /* 2 bounces, then it stops: no endless motion (accessibility: WCAG 2.2.2) */
+  .scroll-hint { animation: nudge 2s ease-in-out 2; }
 }
 
 @keyframes nudge {
@@ -820,20 +922,12 @@ a.window:hover .project-card__cta svg {
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
-  /* Neon halo (--portrait-glow: mint in dark mode, like the sun doodle;
-     raspberry pink in light mode).
-     Several shadows stacked (separated by commas), from the inside out:
-     1. a thin, bright ring right against the photo (the "neon tube")
-     2. a tight glow
-     3. a wider, fainter aura
-     4. a touch of accent 2 (pink), shifted to the bottom right → the
-        cyberpunk duo of colors, without a large radius
-     No offset on 1–3 (0 0): they spread evenly around the circle. */
+  /* Soft pink glow (accent 2) behind the photo, in both modes: no hard ring,
+     just two very transparent, very blurred shadows with no offset (0 0),
+     so the light spreads evenly around the circle */
   box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--portrait-glow) 75%, transparent),
-    0 0 14px 2px color-mix(in srgb, var(--portrait-glow) 50%, transparent),
-    0 0 40px 4px color-mix(in srgb, var(--portrait-glow) 25%, transparent),
-    8px 10px 32px color-mix(in srgb, var(--accent-2) 30%, transparent);
+    0 0 32px 4px color-mix(in srgb, var(--accent-2) 18%, transparent),
+    0 0 80px 16px color-mix(in srgb, var(--accent-2) 10%, transparent);
 }
 
 .hero__logos {
@@ -1040,6 +1134,31 @@ a.window:hover .project-card__cta svg {
 }
 
 /* ---------- HOME: Venn diagram ---------- */
+/* Computer: key figures + Venn = exactly one screen (minus the menu).
+   The arrow of the hero lands on the key figures (#key-figures): the green
+   section then fills the rest of the window, down to its bottom edge.
+   - min-height: at least the window height → the green stretches on tall screens
+   - paddings in svh (% of the window height) → they shrink on short screens
+     so that everything fits */
+@media (min-width: 810px) {
+  .screen-fit {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--nav-height));
+    min-height: calc(100svh - var(--nav-height));
+  }
+  .screen-fit .stats { padding-block: clamp(28px, 6svh, 72px); }
+  .screen-fit .venn-section {
+    flex: 1;                       /* takes all the remaining height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;       /* content centered vertically in the green */
+    align-items: center;
+    padding-block: clamp(28px, 5svh, 72px);
+  }
+  .screen-fit .venn { width: 100%; margin-block: clamp(16px, 4svh, 48px); }
+}
+
 .venn-section {
   padding: var(--section-y) var(--gutter);
   background: var(--band);
@@ -1132,10 +1251,33 @@ a.window:hover .project-card__cta svg {
 }
 
 .facade__wall {
+  position: relative;   /* reference for the credits, at the bottom of the wall */
   padding: var(--section-y) var(--gutter);
+  padding-bottom: calc(var(--section-y) + var(--space-7));   /* room for the credits */
   background:
     linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
     url("../assets/images/facade/bricks.png") center bottom / cover;
+}
+
+/* Credits written on the wall: small, at the bottom, on a dark translucent
+   pill so they stay readable over the bricks (light or dark mode) */
+.facade__credits {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  translate: -50% 0;
+  width: max-content;
+  max-width: calc(100% - 2 * var(--gutter));
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: rgb(0 0 0 / 0.6);
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+}
+
+.facade__credits a {
+  text-decoration: underline;
 }
 
 .windows {
@@ -1400,7 +1542,7 @@ a.window:hover .project-card__cta svg {
   background: radial-gradient(circle at calc(100% - var(--gx, 50%)) var(--gy, 50%), rgba(255, 255, 255, 0.28), transparent 55%);
 }
 
-/* "Click to flip" button: discreet, bottom right */
+/* "Flip the card" button: discreet, bottom right */
 .bizcard__flip {
   position: absolute;
   right: var(--space-4);
@@ -1479,22 +1621,6 @@ a.window:hover .project-card__cta svg {
 }
 
 
-.credits {
-  padding: 0 var(--gutter) var(--space-7);
-  text-align: center;
-  font-size: 14px;
-  color: var(--fg-muted);
-}
-
-.credits a {
-  color: var(--color-text);
-  text-decoration: underline;
-}
-
-@media (min-width: 810px) {
-  .credits { font-size: 16px; }
-}
-
 /* ---------- MY SKILLS ---------- */
 .skills-grid {
   display: grid;
@@ -1505,31 +1631,63 @@ a.window:hover .project-card__cta svg {
   list-style: none;
 }
 
-.skill img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 20px;
-}
-
-/* More space above the heading (24) than below (8):
-   the heading visibly "belongs" to the paragraph it introduces */
-.skill h2 {
-  margin: var(--space-5) 0 var(--space-2);
-  font-size: 22px;
-}
-
-.skill p {
-  font-size: 17px;
-  color: var(--color-muted);
-}
-
 @media (min-width: 810px) {
   .skills-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
 }
 
-/* Its top margin "collapses" with the bottom margin of .skills-grid:
-   the larger of the two wins → one single section rhythm */
+/* Photo + a doodle "sticker" stuck on its top right corner */
+.skill__media {
+  position: relative;
+}
+
+.skill__media img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+/* The sticker overflows the corner a little (like a sticker half on the photo)
+   and turns slowly, like the doodles of the My Work cards */
+.skill__sticker {
+  position: absolute;
+  top: -18px;
+  right: -14px;
+  width: 52px;
+  animation: work-doodle-spin 14s linear infinite;
+}
+.skill:nth-child(2) .skill__sticker { animation-delay: -4.6s; }
+.skill:nth-child(3) .skill__sticker { animation-delay: -9.3s; }
+
+.skill__sticker--pink { --doodle-color: var(--accent-2); }
+.skill__sticker--teal { --doodle-color: var(--color-accent); }
+
+/* Number above the title, like the steps of the case studies (01, 02, 03) */
+.skill__index {
+  margin-top: var(--space-5);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--color-accent), var(--fg) calc(var(--tag-darken) * 2));
+}
+
+/* More space above the heading than below:
+   the heading visibly "belongs" to the paragraph it introduces */
+.skill h2 {
+  margin: var(--space-2) 0 var(--space-3);
+  font-size: var(--text-subheading);
+}
+
+.skill p:not(.skill__index) {
+  font-size: var(--text-body);
+  color: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill__sticker { animation: none; }
+}
+
+/* Testimonial */
 .testimonial {
   width: min(100% - 2 * var(--gutter), var(--container));
   margin: var(--section-y) auto;
@@ -1538,59 +1696,85 @@ a.window:hover .project-card__cta svg {
 .testimonial h2 {
   margin-bottom: var(--space-6);
   text-align: center;
-  font-size: 26px;
-  font-weight: 700;
+  font-size: var(--text-header);
+}
+
+/* The card: on the "surface" color like the project cards, with the two
+   dashed orbits of the home galaxy crossing behind the text */
+.testimonial__card {
+  position: relative;
+  isolation: isolate;          /* the orbits (z-index: -1) stay behind the text */
+  overflow: hidden;
+  /* Top: room for the quote mark and the sun (they sit in the corners, above the text) */
+  padding: calc(var(--space-8) + var(--space-5)) var(--space-5) var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.testimonial__card::before,
+.testimonial__card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 110%;
+  aspect-ratio: 3 / 1;
+  translate: -50% -50%;
+  border: 1px dashed color-mix(in srgb, var(--fg) 14%, transparent);
+  border-radius: 50%;
+}
+.testimonial__card::before { rotate: -8deg; }
+.testimonial__card::after  { rotate: 8deg; }
+
+/* Big pink opening quote mark, top left */
+.testimonial__mark {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-5);
+  font-size: 96px;
+  font-weight: 800;
+  line-height: 0.75;   /* the box hugs the glyph: it doesn't spill onto the text */
+  color: var(--accent-2);
+}
+
+/* Sun doodle, top right (opposite the quote mark), turning slowly */
+.testimonial__doodle {
+  --doodle-color: var(--color-accent);
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  width: 40px;
+  animation: work-doodle-spin 14s linear infinite;
 }
 
 .testimonial blockquote {
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-6) var(--space-5);
-  background: var(--color-quote);
-  border: 1px solid var(--border);   /* visible in dark, where band = surface */
-  border-radius: 10px;
-  color: var(--on-band);
-  font-size: 16px;
+  max-width: 46em;
+  font-size: var(--text-body);
   font-weight: 500;
+  color: var(--fg);
 }
 
 .testimonial figcaption {
-  margin-top: var(--space-2);
-  text-align: right;
-  font-weight: 900;
+  margin-top: var(--space-6);
+  color: var(--fg-muted);
+}
+
+.testimonial figcaption strong {
+  color: var(--fg);
 }
 
 @media (min-width: 810px) {
-  .testimonial h2 { font-size: 32px; }
-  .testimonial blockquote { padding: var(--space-7); font-size: 18px; }
+  .testimonial__card { padding: calc(var(--space-8) + var(--space-5)) var(--space-8) var(--space-7); }
+  .testimonial__mark { left: var(--space-7); }
+  .testimonial__doodle { right: var(--space-7); }
 }
 
-.traits {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-7) var(--space-5);
-  width: min(100% - 2 * var(--gutter), var(--container));
-  margin: var(--section-y) auto;
-  padding-top: var(--section-y);
-  border-top: 1px solid var(--color-border);
-  list-style: none;
-  text-align: center;
-}
-
-.traits svg {
-  width: 30px;
-  height: 30px;
-  margin: 0 auto var(--space-3);
-  stroke: var(--color-icon);
-}
-
-.traits h3 {
-  font-size: 20px;
-}
-
-@media (min-width: 810px) {
-  .traits { grid-template-columns: repeat(4, 1fr); }
-  .traits h3 { font-size: 22px; }
+@media (prefers-reduced-motion: reduce) {
+  .testimonial__doodle { animation: none; }
 }
 
 /* ---------- ABOUT ---------- */
@@ -1725,25 +1909,35 @@ a.window:hover .project-card__cta svg {
   left: 50%;
   translate: -50% 0;
   display: flex;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
+  padding: 0 var(--space-1);
   background: rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-radius: var(--radius-pill);
 }
 
+/* The button is 24 × 24 px (minimum size to tap comfortably, WCAG 2.5.8);
+   the visible dot (::before) stays 10 px in the middle */
 .carousel__dot {
-  width: 10px;
-  height: 10px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: none;
   cursor: pointer;
 }
 
-.carousel__dot[aria-current="true"] {
+.carousel__dot::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.carousel__dot[aria-current="true"]::before {
   background: #fff;
 }
 
@@ -1937,17 +2131,44 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
+/* Same format on every case study: "Role, working with…" → the role stands out */
+.case__team strong {
+  color: var(--fg);
+}
+
 .case__team svg {
   flex-shrink: 0;
   width: 26px;
   height: 26px;
 }
 
-/* Between two sections: 48 px. Between a heading and its text: 12 px.
-   That contrast is what makes the page easy to scan: you can see
-   where each block starts at a glance. */
+/* The story in 3 steps (Context → What I did → Results).
+   Each step starts with a thin rule + its label: you can see where each
+   block starts at a glance. Between a heading and its text: 12 px. */
 .case__section {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
   margin-bottom: var(--space-7);
+  border-top: 1px solid var(--border);
+}
+
+/* Step label: small, bold, in the accent (like the skill tags).
+   The accent is darkened a little with the text color so it stays readable
+   at 14 px (in dark mode, --tag-darken is 0: the mint is already readable).
+   ".case__section .case__label" beats ".case__section p" below. */
+.case__section .case__label {
+  display: flex;
+  gap: var(--space-2);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--color-accent), var(--fg) calc(var(--tag-darken) * 2));
+}
+
+.case__label span {
+  color: var(--fg-muted);   /* the step number, more discreet */
 }
 
 /* Tier 2: subheading */
@@ -1964,6 +2185,10 @@ a.window:hover .project-card__cta svg {
   color: var(--color-muted);
 }
 
+.case__body p + p {
+  margin-top: var(--space-3);   /* 2 paragraphs in the same step */
+}
+
 .case__section ul {
   display: grid;
   gap: var(--space-1);
@@ -1973,6 +2198,13 @@ a.window:hover .project-card__cta svg {
 
 @media (min-width: 810px) {
   .case-page { padding-top: var(--space-8); }
+  /* Steps: label in its own column on the left, content on the right.
+     padding-top on the label: lines it up with the heading's first line. */
+  .case__section {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+  .case__section .case__label { padding-top: 0.35em; }
   /* Header in 2 columns: the story takes the space, the figures stack up
      on the right, separated by a thin rule, aligned with the image's right edge */
   /* stretch: both columns take the height of the taller one. */

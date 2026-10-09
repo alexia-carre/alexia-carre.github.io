@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI assistant for Fire &amp; Safety Technicians · Alexia Carré</title>
+  <title>Finding the right regulation in 600+ pages with RAG · Alexia Carré</title>
   <meta name="description" content="Enabling Fire &amp; Safety technicians to quickly find the right regulation without getting lost in 600+ pages of untranslated documentation.">
-  <meta property="og:title" content="AI assistant for Fire &amp; Safety Technicians">
+  <meta property="og:title" content="Finding the right regulation in 600+ pages with RAG">
   <meta property="og:image" content="https://alexia-carre.github.io/assets/images/og-image.png">
   <meta property="og:url" content="https://alexia-carre.github.io/fire_safety">
   <link rel="canonical" href="https://alexia-carre.github.io/fire_safety">
@@ -23,6 +23,9 @@
 </head>
 <body>
 
+  <!-- First thing the Tab key reaches: jumps over the menu, straight to the content (hidden until focused) -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <nav class="site-nav" aria-label="Main navigation">
     <a class="site-nav__avatar" href="index.html" aria-label="Alexia Carré, home">
       <img src="assets/images/portrait.jpg" alt="" width="31" height="31">
@@ -36,7 +39,7 @@
     </ul>
   </nav>
 
-  <main class="case-page">
+  <main id="main" class="case-page">
     <nav class="case-nav" aria-label="Case studies">
       <a class="btn btn--secondary" href="mywork.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -53,7 +56,7 @@
       <div class="case__inner case__intro">
       <header class="case__head">
         <p class="case__year"><time datetime="2023">2023</time></p>
-        <h1>AI assistant for Fire &amp; Safety Technicians</h1>
+        <h1>Finding the right regulation in 600+ pages with RAG</h1>
         <p>Enabling Fire &amp; Safety technicians to quickly find the right regulation without getting lost in 600+ pages of untranslated documentation.</p>
         <!-- Skill -->
         <div class="case__meta">
@@ -77,21 +80,38 @@
 
       <p class="case__inner case__team">
         <svg viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="13" fill="#999"/><g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="10" r="2.6"/><path d="M6.5 18.5a4.5 4.5 0 0 1 9 0M15.5 7.6a2.6 2.6 0 0 1 0 5M17 15a4.5 4.5 0 0 1 2.5 3.5"/></g></svg>
-        <span>I was the Principal Designer, working with a broader team of 5 (Software Engineer, Tech Lead, Innovation Consultant, Product Owner, Initiative Sponsor)</span>
+        <span><strong>Lead Designer</strong>, working with a team of 5: Software Engineer, Tech Lead, Innovation Consultant, Product Owner, Sponsor</span>
       </p>
 
+      <!-- Story in 3 steps: Context → What I did → Results.
+           The label sits in its own column on desktop, above the heading on mobile. -->
       <div class="case__inner">
         <section class="case__section">
-          <h2>600+ pages of technical expertise</h2>
-          <p>Field technicians working in Fire &amp; Safety were struggling with lengthy documentation (600+ pages), that was not in their native language. They had to look through hundreds of pages to find the appropriate regulation for their need, or ask overloaded senior technicians for guidance.</p>
+          <p class="case__label"><span aria-hidden="true">01</span> Context</p>
+          <div class="case__body">
+            <h2>600+ pages, and not even in their language</h2>
+            <p>Fire &amp; Safety field technicians needed the right regulation, fast. Instead, they had to dig through 600+ pages of documentation that wasn’t in their native language, or ask senior technicians who were already overloaded.</p>
+            <p>High stakes: in a regulatory context, accuracy, transparency and explainability were non-negotiable.</p>
+          </div>
         </section>
         <section class="case__section">
-          <h2>We built a Proof of Concept in 4 weeks.</h2>
-          <p>I started with a discovery phase, conducting user interviews, building a prototype, testing it, and improving it accordingly. I collaborated with a software engineer to make it real and ready for deployment.</p>
+          <p class="case__label"><span aria-hidden="true">02</span> What I did</p>
+          <div class="case__body">
+            <h2>From interviews to a working PoC in 4 weeks</h2>
+            <p>I led the design from start to finish:</p>
+            <ul>
+              <li>Discovery first: 10 user interviews</li>
+              <li>A prototype, tested and improved round after round</li>
+              <li>Hand in hand with a software engineer to make it real and ready for deployment</li>
+            </ul>
+          </div>
         </section>
         <section class="case__section">
-          <h2>Awarded product</h2>
-          <p>In 2024, the product was nominated and received an innovation award. It led the way for many other AI-powered initiatives for our customer.</p>
+          <p class="case__label"><span aria-hidden="true">03</span> Results</p>
+          <div class="case__body">
+            <h2>Awarded, and the first of many</h2>
+            <p>40+ technicians use it. In 2024, it was nominated for an innovation award, and won it! It also opened the door to many other AI-powered initiatives for our customer.</p>
+          </div>
         </section>
       </div>
     </article>

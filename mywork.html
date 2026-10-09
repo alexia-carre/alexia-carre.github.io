@@ -22,6 +22,9 @@
 </head>
 <body>
 
+  <!-- First thing the Tab key reaches: jumps over the menu, straight to the content (hidden until focused) -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <nav class="site-nav" aria-label="Main navigation">
     <a class="site-nav__avatar" href="index.html" aria-label="Alexia Carré, home">
       <img src="assets/images/portrait.jpg" alt="" width="31" height="31">
@@ -35,61 +38,88 @@
     </ul>
   </nav>
 
-  <main>
+  <main id="main" class="work-page">
     <header class="page-banner grain">
-      <h1>My Work.</h1>
+      <h1>Selected work.</h1>
       <p>Discover my products and my achievements.</p>
     </header>
 
-    <!-- Same "project-card" component as the home page facade.
-         The "View more" pill is aria-hidden: the link is already announced by its title. -->
+    <!-- Same "project-card" component as the home page facade, plus a doodle
+         cover (.work-card__media): a tinted background, a dashed orbit and
+         1 doodle, with colors and shapes mixed from one card to the next.
+         The cover is decorative (aria-hidden): the link is announced by its
+         title. The "View more" pill is aria-hidden too. -->
     <ul class="work-grid">
       <li>
         <a class="work-card project-card" href="fire_safety.html">
-          <span class="project-card__top">
-            <span class="project-card__year">2023</span>
-            <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="work-card__media work-card__media--teal" style="--tilt: -10deg" aria-hidden="true">
+            <span class="work-card__doodle work-card__doodle--pink doodle doodle--star"></span>
+            <span class="work-card__index">01</span>
           </span>
-          <h2 class="project-card__title">Fire &amp; Safety technicians stuck searching through 600+ pages</h2>
-          <span class="tags">
-            <span class="tag tag--skill">UX/UI Design</span>
+          <span class="work-card__body">
+            <span class="project-card__top">
+              <span class="project-card__year">2023</span>
+              <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </span>
+            <h2 class="project-card__title">Finding the right regulation in 600+ pages with RAG</h2>
+            <span class="tags">
+              <span class="tag tag--skill">UX/UI Design</span>
+            </span>
           </span>
         </a>
       </li>
       <li>
         <!-- Work in progress: no page yet, so it's a <div>, not a link -->
-        <div class="work-card project-card">
-          <span class="project-card__top">
-            <span class="project-card__year">2024</span>
-            <span class="project-card__cta project-card__cta--soon">Coming soon</span>
+        <div class="work-card work-card--soon project-card">
+          <span class="work-card__media work-card__media--pink" style="--tilt: 10deg" aria-hidden="true">
+            <span class="work-card__doodle work-card__doodle--teal doodle doodle--sun"></span>
+            <span class="work-card__index">02</span>
           </span>
-          <h2 class="project-card__title">Inconsistent datasets slowing down decarbonation audits</h2>
-          <span class="tags">
-            <span class="tag tag--skill">Product Strategy</span>
+          <span class="work-card__body">
+            <span class="project-card__top">
+              <span class="project-card__year">2024</span>
+              <span class="project-card__cta project-card__cta--soon">Coming soon</span>
+            </span>
+            <h2 class="project-card__title">Cleaning decarbonization audit data</h2>
+            <span class="tags">
+              <span class="tag tag--skill">Product Strategy</span>
+            </span>
           </span>
         </div>
       </li>
       <li>
         <a class="work-card project-card" href="data_tagging.html">
-          <span class="project-card__top">
-            <span class="project-card__year">2025</span>
-            <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="work-card__media work-card__media--pink" style="--tilt: -6deg" aria-hidden="true">
+            <span class="work-card__doodle work-card__doodle--teal doodle doodle--about-star"></span>
+            <span class="work-card__index">03</span>
           </span>
-          <h2 class="project-card__title">Compliance officers struggling with 100k+ docs to classify</h2>
-          <span class="tags">
-            <span class="tag tag--skill">AI Experience Design</span>
+          <span class="work-card__body">
+            <span class="project-card__top">
+              <span class="project-card__year">2025</span>
+              <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </span>
+            <h2 class="project-card__title">Classifying 100k+ compliance documents with AI</h2>
+            <span class="tags">
+              <span class="tag tag--skill">AI Experience Design</span>
+            </span>
           </span>
         </a>
       </li>
       <li>
         <a class="work-card project-card" href="cookbook.html">
-          <span class="project-card__top">
-            <span class="project-card__year">2025</span>
-            <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <span class="work-card__media work-card__media--teal" style="--tilt: 8deg" aria-hidden="true">
+            <span class="work-card__doodle work-card__doodle--pink doodle doodle--about-sun"></span>
+            <span class="work-card__index">04</span>
           </span>
-          <h2 class="project-card__title">Cookbook for my best friend's wedding</h2>
-          <span class="tags">
-            <span class="tag tag--skill">Graphic Design &amp; Print</span>
+          <span class="work-card__body">
+            <span class="project-card__top">
+              <span class="project-card__year">2025</span>
+              <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </span>
+            <h2 class="project-card__title">Turning 20 friends’ recipes into a wedding cookbook</h2>
+            <span class="tags">
+              <span class="tag tag--skill">Graphic Design &amp; Print</span>
+            </span>
           </span>
         </a>
       </li>

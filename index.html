@@ -28,6 +28,9 @@
 </head>
 <body>
 
+  <!-- First thing the Tab key reaches: jumps over the menu, straight to the content (hidden until focused) -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <nav class="site-nav" aria-label="Main navigation">
     <a class="site-nav__avatar" href="index.html" aria-label="Alexia Carré, home">
       <img src="assets/images/portrait.jpg" alt="" width="31" height="31">
@@ -41,7 +44,7 @@
     </ul>
   </nav>
 
-  <main>
+  <main id="main">
 
     <!-- HERO: title, portrait and logos -->
     <section class="hero grain">
@@ -80,6 +83,9 @@
       </a>
     </section>
 
+    <!-- One "screen" (computer): key figures + Venn diagram together fill
+         exactly the window height when you arrive with the arrow of the hero -->
+    <div class="screen-fit">
     <!-- KEY FIGURES -->
     <section class="stats" id="key-figures" aria-label="Key figures">
       <div class="stat">
@@ -126,6 +132,7 @@
 
       <a class="btn btn--primary" href="myskills.html">Discover my skills</a>
     </section>
+    </div>
 
     <!-- FEATURED PRODUCTS: the building facade -->
     <section class="facade" aria-labelledby="featured-title">
@@ -146,7 +153,7 @@
                   <span class="project-card__year">2023</span>
                   <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
-                <span class="project-card__title">Fire &amp; Safety technicians stuck searching through 600+ pages</span>
+                <span class="project-card__title">Finding the right regulation in 600+ pages with RAG</span>
                 <span class="tags">
                   <span class="tag tag--skill">UX/UI Design</span>
                 </span>
@@ -160,7 +167,7 @@
                   <span class="project-card__year">2025</span>
                   <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
-                <span class="project-card__title">Compliance officers struggling with 100k+ docs to classify</span>
+                <span class="project-card__title">Classifying 100k+ compliance documents with AI</span>
                 <span class="tags">
                   <span class="tag tag--skill">AI Experience Design</span>
                 </span>
@@ -176,7 +183,7 @@
                   <span class="project-card__year">2024</span>
                   <span class="project-card__cta project-card__cta--soon">Coming soon</span>
                 </span>
-                <span class="project-card__title">Inconsistent datasets slowing down decarbonation audits</span>
+                <span class="project-card__title">Cleaning decarbonization audit data</span>
                 <span class="tags">
                   <span class="tag tag--skill">Product Strategy</span>
                 </span>
@@ -190,7 +197,7 @@
                   <span class="project-card__year">2025</span>
                   <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
-                <span class="project-card__title">Cookbook for my best friend's wedding</span>
+                <span class="project-card__title">Turning 20 friends’ recipes into a wedding cookbook</span>
                 <span class="tags">
                   <span class="tag tag--skill">Graphic Design &amp; Print</span>
                 </span>
@@ -198,6 +205,9 @@
             </a>
           </li>
         </ul>
+
+        <!-- Credits for the facade, written on the wall itself (bottom) -->
+        <p class="facade__credits">AI-generated background and windows. Stickmans from <a href="https://www.flaticon.com/fr/auteurs/paulalee">Paulalee</a>.</p>
       </div>
     </section>
 
@@ -224,7 +234,7 @@
             </div>
 
             <button class="bizcard__flip" type="button" hidden>
-              Click to flip
+              Flip the card
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>
             </button>
           </div>
@@ -252,9 +262,6 @@
 
   </main>
 
-  <footer class="credits">
-    <p>AI-generated background and windows. Stickmans from <a href="https://www.flaticon.com/fr/auteurs/paulalee">Paulalee</a>.</p>
-  </footer>
 
 </body>
 </html>
