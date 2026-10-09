@@ -128,6 +128,13 @@
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --tracking-tight: -0.015em;  /* headings and figures: tightened slightly (tuned for Jakarta) */
 
+  /* Type scale of the case studies: 3 tiers only.
+     Clear jumps (≈ ×1.4 and ×1.8) so the hierarchy reads at a glance.
+     clamp(min mobile, fluid value, max desktop). */
+  --text-header: clamp(32px, 4vw, 48px);       /* 1. page title */
+  --text-subheading: clamp(22px, 2.2vw, 26px); /* 2. section headings, key figures */
+  --text-body: clamp(17px, 1.4vw, 18px);       /* 3. all the reading text */
+
   /* Spacing scale: EVERY margin/padding/gap uses one of these steps.
      A small set of values (multiples of 4/8 px) = a regular rhythm that the
      eye picks up, and which makes the page easy to scan. */
@@ -1703,18 +1710,20 @@ a.window:hover .project-card__cta svg {
   text-align: center;
 }
 
+/* Tier 1: header */
 .case__head h1 {
-  font-size: 24px;
+  font-size: var(--text-header);
+  line-height: 1.1;
 }
 
 .case__head h1 span {
   color: var(--color-muted);
 }
 
+/* Tier 3: body (the intro is reading text, not a heading) */
 .case__head p {
   max-width: var(--measure);
-  font-size: 18px;
-  line-height: 1.45;
+  font-size: var(--text-body);
   color: var(--color-muted);
 }
 
@@ -1734,8 +1743,8 @@ a.window:hover .project-card__cta svg {
   display: block;
   margin-bottom: var(--space-1);
   color: var(--key-figure);
-  font-size: 28px;
-  font-weight: 500;
+  font-size: var(--text-subheading);   /* tier 2: no longer bigger than the title */
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: var(--tracking-tight);
 }
@@ -1744,7 +1753,7 @@ a.window:hover .project-card__cta svg {
    the odometer creates inside the figures */
 .case__stats dd > span {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-body);   /* tier 3 */
   line-height: 1.4;
   color: var(--color-muted);
 }
@@ -1782,8 +1791,7 @@ a.window:hover .project-card__cta svg {
   gap: var(--space-3);
   align-items: flex-start;
   margin: var(--space-5) auto var(--space-7);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: var(--text-body);   /* tier 3 */
   color: var(--color-muted);
 }
 
@@ -1800,15 +1808,18 @@ a.window:hover .project-card__cta svg {
   margin-bottom: var(--space-7);
 }
 
+/* Tier 2: subheading */
 .case__section h2 {
   margin-bottom: var(--space-3);
-  font-size: 22px;
+  font-size: var(--text-subheading);
+  line-height: 1.25;
 }
 
+/* Tier 3: body */
 .case__section p,
 .case__section li {
   max-width: var(--measure);
-  font-size: 18px;
+  font-size: var(--text-body);
   color: var(--color-muted);
 }
 
@@ -1822,16 +1833,8 @@ a.window:hover .project-card__cta svg {
 @media (min-width: 810px) {
   .case-page { padding-top: var(--space-8); }
   .case__head { padding: var(--space-7) 0 var(--space-6); }
-  .case__head h1 { font-size: 30px; }
-  .case__head p { font-size: 22px; }
-  .case__stats strong { font-size: 34px; }
-  .case__stats dd > span { font-size: 18px; }
+  /* (Text sizes: no override here, the 3 clamp() tokens adapt on their own) */
   .case__cover img { height: 298px; }
-  /* Same width as the sections (inherited from .case__inner): aligned on the left */
-  .case__team { font-size: 18px; }
-  .case__section h2 { font-size: 24px; }
-  .case__section p,
-  .case__section li { font-size: 22px; }
 }
 
 /* ---------- 404 ---------- */
