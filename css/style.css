@@ -1689,8 +1689,10 @@ a.work-card:hover .work-card__doodle {
   list-style: none;
 }
 
+/* Computer: 2 × 2 (4 skills). Two columns keep a comfortable line length
+   for the texts; more space between the rows than between the columns. */
 @media (min-width: 810px) {
-  .skills-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-8) var(--space-6); }
 }
 
 /* Photo + a doodle "sticker" stuck on its top right corner */
@@ -1700,8 +1702,21 @@ a.work-card:hover .work-card__doodle {
 
 .skill__media img {
   width: 100%;
-  aspect-ratio: 1;
+  height: auto;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+/* Square photo with the face in the upper part: we keep the top of the image
+   when it's cropped to 3:2 (instead of the middle) */
+.skill__media .skill__photo--top {
+  object-position: center 22%;
+}
+
+/* Skill without a photo yet: the doodle cover of the Work cards, same format */
+.skill__cover {
+  aspect-ratio: 3 / 2;
   border-radius: var(--radius-lg);
 }
 
@@ -1710,17 +1725,17 @@ a.work-card:hover .work-card__doodle {
 .skill__sticker {
   position: absolute;
   top: -18px;
-  right: -14px;
+  right: -10px;   /* its box grows when it turns: -10 px keeps it inside the 24 px page margin */
   width: 52px;
   animation: work-doodle-spin 14s linear infinite;
 }
 .skill:nth-child(2) .skill__sticker { animation-delay: -4.6s; }
-.skill:nth-child(3) .skill__sticker { animation-delay: -9.3s; }
+.skill:nth-child(4) .skill__sticker { animation-delay: -9.3s; }
 
 .skill__sticker--pink { --doodle-color: var(--accent-2); }
 .skill__sticker--teal { --doodle-color: var(--color-accent); }
 
-/* Number above the title, like the steps of the case studies (01, 02, 03) */
+/* Number above the title, like the steps of the case studies (01, 02…) */
 .skill__index {
   margin-top: var(--space-5);
   font-size: 14px;
