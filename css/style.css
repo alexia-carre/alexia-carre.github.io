@@ -2322,7 +2322,9 @@ a.work-card:hover .work-card__doodle {
   display: grid;
   place-content: center;
   gap: var(--space-5);
-  min-height: calc(100vh - var(--nav-height));
+  /* No menu on this page: the full window height (svh: visible height on phones) */
+  min-height: 100vh;
+  min-height: 100svh;
   padding: var(--gutter);
   text-align: center;
 }
@@ -2332,7 +2334,33 @@ a.work-card:hover .work-card__doodle {
 }
 
 .not-found p {
+  max-width: 30em;
+  margin-inline: auto;
   color: var(--color-muted);
+}
+
+/* The side-eye emoji: rolls in once with the spring easing */
+.not-found__emoji {
+  width: clamp(120px, 22vw, 168px);
+  height: auto;
+  margin: 0 auto var(--space-2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .not-found__emoji { animation: side-eye-in 0.9s var(--ease-spring) both; }
+}
+
+@keyframes side-eye-in {
+  from { opacity: 0; rotate: -25deg; scale: 0.6; }
+  to   { opacity: 1; rotate: 0deg;   scale: 1; }
+}
+
+/* "Error 404": small label above the title, like the years and step numbers */
+.not-found .not-found__code {
+  margin-bottom: calc(var(--space-3) * -1);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 /* Respect the system's "reduce motion" setting (accessibility) */
