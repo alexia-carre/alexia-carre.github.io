@@ -18,6 +18,24 @@
 </head>
 <body>
 
+  <!-- First thing the Tab key reaches: jumps over the menu, straight to the content (hidden until focused) -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Same menu as the other pages, with absolute paths ("/…"):
+       this page is shown at any address that doesn't exist, even deep ones -->
+  <nav class="site-nav" aria-label="Main navigation">
+    <a class="site-nav__avatar" href="/" aria-label="Alexia Carré, home">
+      <img src="/assets/images/portrait.jpg" alt="" width="31" height="31">
+      <span class="site-nav__name">Alexia Carré</span>
+    </a>
+    <ul class="site-nav__links">
+      <li><a href="/mywork.html">Work</a></li>
+      <li><a href="/myskills.html">Skills</a></li>
+      <li><a href="/about.html">About me</a></li>
+      <li><a href="/resume.html">Resume</a></li>
+    </ul>
+  </nav>
+
   <main id="main" class="not-found">
     <!-- Side-eye emoji: decorative (alt=""), the text carries the joke.
          Absolute path: this page is shown at any address that doesn't exist. -->
