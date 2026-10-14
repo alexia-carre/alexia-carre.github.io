@@ -2322,9 +2322,9 @@ a.work-card:hover .work-card__doodle {
   display: grid;
   place-content: center;
   gap: var(--space-5);
-  /* No menu on this page: the full window height (svh: visible height on phones) */
-  min-height: 100vh;
-  min-height: 100svh;
+  /* The window height minus the menu (svh: visible height on phones) */
+  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100svh - var(--nav-height));
   padding: var(--gutter);
   text-align: center;
 }
