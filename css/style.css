@@ -44,6 +44,13 @@
   --key-figure: var(--accent-2); /* key figures: accent 2 in both modes */
   --logo-filter: none;           /* black logos: unchanged in light */
   --facade-dim: 0;               /* facade (photos): not darkened in light */
+  /* Facade renders: day in light mode (rooms unlit), lamps on at night (dark) */
+  --img-window-overwhelmed: url("../assets/images/facade/window-open-overwhelmed-day.png");
+  --img-window-inspecting:  url("../assets/images/facade/window-open-inspecting-day.png");
+  --img-window-cooking:     url("../assets/images/facade/window-open-cooking-day.png");
+  --img-door-closed:        url("../assets/images/facade/door-closed-day.webp");
+  --img-door-hall:          url("../assets/images/facade/door-hall-day.webp");
+  --img-door-leaves:        url("../assets/images/facade/door-leaves-day.webp");
   --tag-darken: 20%;             /* tag text slightly darkened (contrast) */
 }
 
@@ -71,6 +78,12 @@
     --on-band: #f2ede3;
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
     --facade-dim: 0.5;                           /* "no brown in dark": darkened facade */
+    --img-window-overwhelmed: url("../assets/images/facade/window-open-overwhelmed.png");
+    --img-window-inspecting: url("../assets/images/facade/window-open-inspecting.png");
+    --img-window-cooking: url("../assets/images/facade/window-open-cooking.png");
+    --img-door-closed: url("../assets/images/facade/door-closed.webp");
+    --img-door-hall: url("../assets/images/facade/door-hall.webp");
+    --img-door-leaves: url("../assets/images/facade/door-leaves.webp");
     --tag-darken: 0%;                            /* the dark-mode colors already pass */
   }
 }
@@ -96,6 +109,12 @@
   --on-band: #f2ede3;
   --logo-filter: invert(1) hue-rotate(180deg);
   --facade-dim: 0.5;
+  --img-window-overwhelmed: url("../assets/images/facade/window-open-overwhelmed.png");
+  --img-window-inspecting: url("../assets/images/facade/window-open-inspecting.png");
+  --img-window-cooking: url("../assets/images/facade/window-open-cooking.png");
+  --img-door-closed: url("../assets/images/facade/door-closed.webp");
+  --img-door-hall: url("../assets/images/facade/door-hall.webp");
+  --img-door-leaves: url("../assets/images/facade/door-leaves.webp");
   --tag-darken: 0%;
 }
 
@@ -1322,7 +1341,7 @@ a.work-card:hover .work-card__doodle {
      ::before = closed window, ::after = open window (image chosen by --window-open)
    On hover we fade one out and the other in. */
 .window {
-  --window-open: url("../assets/images/facade/window-open-overwhelmed.png");
+  --window-open: var(--img-window-overwhelmed);
   position: relative;
   /* flow-root (rather than block): a block that is "self-contained". Without it,
      the card's margin-top would "collapse" outside the window and the card would
@@ -1331,8 +1350,8 @@ a.work-card:hover .work-card__doodle {
   width: 100%;
 }
 
-.window--inspecting { --window-open: url("../assets/images/facade/window-open-inspecting.png"); }
-.window--cooking    { --window-open: url("../assets/images/facade/window-open-cooking.png"); }
+.window--inspecting { --window-open: var(--img-window-inspecting); }
+.window--cooking    { --window-open: var(--img-window-cooking); }
 
 .window::before,
 .window::after {
@@ -1508,7 +1527,7 @@ a.work-card:hover .work-card__doodle {
   display: block;
   width: var(--door-w);
   aspect-ratio: 1215 / 1295;
-  background: url("../assets/images/facade/door-closed.webp") center / 100% 100% no-repeat;
+  background: var(--img-door-closed) center / 100% 100% no-repeat;
   filter: brightness(calc(1 - var(--facade-dim) * 0.6));
   -webkit-mask:
     linear-gradient(90deg, transparent 8%, #000 10.5% 89.5%, transparent 92%),
@@ -1542,7 +1561,7 @@ a.work-card:hover .work-card__doodle {
 .door__hall {
   position: absolute;
   inset: 0;
-  background: url("../assets/images/facade/door-hall.webp") center / 100% 100% no-repeat;
+  background: var(--img-door-hall) center / 100% 100% no-repeat;
   scale: 1.12;
   translate: calc(var(--px, 0) * -6px) calc(var(--py, 0) * -4px);
   transition: scale 1.4s ease, translate 0.5s ease-out;
@@ -1551,7 +1570,7 @@ a.work-card:hover .work-card__doodle {
 .door__leaves {
   position: absolute;
   inset: 0;
-  background: url("../assets/images/facade/door-leaves.webp") center / 100% 100% no-repeat;
+  background: var(--img-door-leaves) center / 100% 100% no-repeat;
 }
 
 .door:is(:hover, :focus-visible, .is-open) .door__open { opacity: 1; }
