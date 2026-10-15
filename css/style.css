@@ -1359,10 +1359,11 @@ a.work-card:hover .work-card__doodle {
   list-style: none;
 }
 
-/* Each window stacks three layers:
-     ::before      = closed shutters (the same day and night)
-     .window__day  = open window, by day (rooms unlit)
-     ::after       = open window, at night (lit), on top, opacity × --lights
+/* Each window stacks four layers:
+     ::before              = closed shutters, by day
+     .window__closed-night = closed shutters, at night (light through the slats), opacity × --lights
+     .window__day          = open window, by day (rooms unlit)
+     ::after               = open window, at night (lit), on top, opacity × --lights
    On hover we fade the closed one out and the open ones in. */
 .window {
   --open-day: url("../assets/images/facade/window-day-open-overwhelmed.webp");
@@ -1386,6 +1387,7 @@ a.work-card:hover .work-card__doodle {
 
 .window::before,
 .window::after,
+.window__closed-night,
 .window__day {
   content: "";
   position: absolute;
@@ -1410,6 +1412,15 @@ a.work-card:hover .work-card__doodle {
 }
 
 .window__day   { background-image: var(--open-day); }
+
+.window__closed-night {
+  background-image: url("../assets/images/facade/window-closed-night.webp");
+  opacity: var(--lights);
+  filter: brightness(calc(1 - var(--facade-dim) * 0.3));   /* same as the lit open window */
+}
+
+.window:is(:hover, :focus-within, .is-open) .window__closed-night { opacity: 0; }
+.window--soon:is(:hover, :focus-within, .is-open) .window__closed-night { opacity: var(--lights); }
 .window::after {
   background-image: var(--open-night);
   /* the lit room must glow: dimmed less than the wall and the shutters */
