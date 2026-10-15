@@ -1301,33 +1301,12 @@ a.work-card:hover .work-card__doodle {
 }
 
 .facade__wall {
-  position: relative;   /* reference for the credits, at the bottom of the wall */
   padding: var(--section-y) var(--gutter);
-  padding-bottom: calc(var(--section-y) + var(--space-7));   /* room for the credits */
+  /* Seamless brick tile, drawn at 2x and repeated at its real size (sharp
+     on every screen, instead of one small photo stretched to cover) */
   background:
     linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
-    url("../assets/images/facade/bricks.png") center bottom / cover;
-}
-
-/* Credits written on the wall: small, at the bottom, on a dark translucent
-   pill so they stay readable over the bricks (light or dark mode) */
-.facade__credits {
-  position: absolute;
-  bottom: var(--space-4);
-  left: 50%;
-  translate: -50% 0;
-  width: max-content;
-  max-width: calc(100% - 2 * var(--gutter));
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
-  background: rgb(0 0 0 / 0.6);
-  color: #fff;
-  font-size: 12px;
-  text-align: center;
-}
-
-.facade__credits a {
-  text-decoration: underline;
+    url("../assets/images/facade/bricks.webp") center top / 540px 240px repeat;
 }
 
 .windows {
@@ -1465,223 +1444,364 @@ a.work-card:hover .work-card__doodle {
   }
 }
 
-/* ---------- HOME: about teaser + credits ---------- */
-.teaser {
-  display: grid;
-  justify-items: center;
-  padding: var(--section-y) var(--gutter) var(--space-7);
-}
-
-/* --- Business card ---
-   Without JS: the two faces are stacked (everything stays accessible).
-   With JS (.is-interactive class): the two faces are superimposed in the same
-   grid cell, the back is turned 180°, and clicking flips the whole card. */
-.bizcard {
-  width: min(100%, 460px);
-  perspective: 1400px;   /* 3D depth: the lower it is, the more pronounced the effect */
-}
-
-.bizcard__inner {
-  display: grid;
-  gap: var(--space-5);   /* without JS: space between the two stacked faces */
-}
-
-.bizcard__face {
+/* ---------- HOME: ground floor (Haussmann door) + sidewalk ----------
+   The facade ends like a Paris building: a stone string course, a rusticated
+   ground floor with a carriage door (→ About page), and the sidewalk, which
+   is the page footer. The door is an illustration: its colors are fixed,
+   only the veil (--facade-dim) darkens the stone in dark mode. */
+.ground {
+  --door-w: 200px;
+  --frame: 14px;
+  --stone-veil: linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim)));
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-4);
-  min-height: 240px;
-  padding: var(--space-6);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.45);
-  overflow: hidden;   /* the doodles that stick out are cut by the edge of the card */
 }
 
-/* Front: cream, like a card printed on thick paper */
-.bizcard__face--front {
-  flex-direction: row;
-  align-items: center;
-  background: var(--surface);
-}
-
-/* Back: the accent 2 tint (like the key figures) */
-.bizcard__face--back {
-  align-items: flex-start;
-  background: var(--tint-accent-2);
-}
-
-.bizcard__photo {
-  flex-shrink: 0;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 0 0 4px var(--bg);   /* white "frame" around the photo */
-}
-
-.bizcard__id {
-  display: grid;
-  gap: var(--space-1);
-}
-
-.bizcard__name {
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: var(--tracking-tight);
-  color: var(--fg);
-}
-
-.bizcard__role {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--accent-2);
-}
-
-.bizcard__meta {
-  font-size: 14px;
-  line-height: 1.4;
-  color: var(--fg-muted);
-}
-
-.bizcard__headline {
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: var(--tracking-tight);
-  color: var(--heading);
-}
-
-.bizcard__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
-}
-
-/* The doodles, scattered as if drawn by hand around the edges.
-   They have NO movement of their own: they tilt with the card, like
-   ink printed on the paper (with their own parallax they seemed to
-   "float" above the card). */
-.bizcard__doodle {
+.ground__defs {
   position: absolute;
-  pointer-events: none;
+  width: 0;
+  height: 0;
 }
-.bizcard__doodle--star      { width: 34px; top: 18px;    right: 22px;  rotate: 14deg; }
-.bizcard__doodle--sun       { width: 30px; bottom: 16px; left: 20px;   rotate: -10deg; }
-.bizcard__doodle--a2        { width: 30px; top: 22px;    right: 74px;  rotate: -6deg; opacity: 0.8; }
-.bizcard__doodle--about-sun { width: 44px; top: 18px;    right: 22px;  rotate: 12deg; }
 
-/* Sheen: a soft light that follows the mouse (--gx, --gy as %), visible on hover */
-.bizcard__face::after {
+/* Rusticated stone: wide horizontal blocks with deep joints ("refends") */
+.ground__floor {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas: "plate door name";
+  align-items: end;
+  gap: var(--space-5);
+  padding: var(--space-8) var(--gutter) 0;
+  background:
+    var(--stone-veil),
+    linear-gradient(90deg, rgb(0 0 0 / 0.06), transparent 18% 82%, rgb(0 0 0 / 0.06)),
+    repeating-linear-gradient(#d3c3a4 0 44px, #ddd0b5 44px 46px, #8d7656 46px 49px, #c7b595 49px 52px);
+}
+
+/* String course between the bricks and the ground floor */
+.ground__floor::before {
   content: "";
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.28), transparent 55%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  inset: 0 0 auto;
+  height: 22px;
+  background:
+    var(--stone-veil),
+    linear-gradient(#efe4cd 0 4px, #d8c8a8 4px 12px, #b29d7a 12px 16px, #7e6a4e 16px 18px, rgb(0 0 0 / 0.18) 18px);
+  box-shadow: 0 6px 10px rgb(0 0 0 / 0.18);
 }
 
-.bizcard.is-tilting .bizcard__face::after {
-  opacity: 1;
+/* --- Door --- */
+.door {
+  grid-area: door;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  color: inherit;
+  text-decoration: none;
+  border-radius: calc(var(--door-w) / 2 + var(--frame)) calc(var(--door-w) / 2 + var(--frame)) var(--radius-sm) var(--radius-sm);
 }
 
-/* The back is rotated 180°: its horizontal axis is mirrored.
-   We flip the horizontal direction so the sheen follows the mouse
-   on the back too. */
-.bizcard__face--back::after {
-  background: radial-gradient(circle at calc(100% - var(--gx, 50%)) var(--gy, 50%), rgba(255, 255, 255, 0.28), transparent 55%);
+.door:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 6px;
 }
 
-/* "Flip the card" button: discreet, bottom right */
-.bizcard__flip {
+/* Stone surround, with an arched top */
+.door__frame {
+  position: relative;
+  display: grid;
+  padding: var(--frame) var(--frame) 0;
+  border-radius: calc(var(--door-w) / 2 + var(--frame)) calc(var(--door-w) / 2 + var(--frame)) 0 0;
+  background:
+    var(--stone-veil),
+    linear-gradient(90deg, #cdbd9e, #e9dec6 30% 70%, #cdbd9e);
+  box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.08), 0 10px 24px rgb(0 0 0 / 0.25);
+}
+
+/* Keystone, with the sun doodle carved in it */
+.door__keystone {
   position: absolute;
-  right: var(--space-4);
-  bottom: var(--space-3);
-  display: inline-flex;
-  align-items: center;
+  top: -10px;
+  left: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 52px;
+  translate: -50% 0;
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+  background:
+    var(--stone-veil),
+    linear-gradient(#f0e6d0, #cdbd9e);
+}
+
+.door__keystone .doodle {
+  width: 24px;
+  margin-top: -6px;
+  --doodle-color: #9c8462;
+}
+
+.door__transom {
+  display: block;
+  width: var(--door-w);
+  height: calc(var(--door-w) / 2);
+}
+
+/* The opening: the warm hallway, and the two leaves in front of it */
+.door__opening {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: var(--door-w);
+  height: calc(var(--door-w) * 1.5);
+  background: #1b130c;
+}
+
+.door__inside {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-2);
+  background: radial-gradient(circle at 50% 75%, #ffe2ad, #f2b26b 45%, #8a5a2e 100%);
+}
+
+.door__inside img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px #fff4df, 0 0 28px 6px rgb(255 214 150 / 0.9);
+}
+
+.door__hello {
+  color: #3b2410;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.door__leaf {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.9s var(--ease-spring);
+}
+
+.door__leaf svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.door__leaf--left  { transform-origin: left center; }
+.door__leaf--left svg { scale: -1 1; }   /* mirrored */
+.door__leaf--right { transform-origin: right center; transform: perspective(700px) rotateY(-14deg); }  /* ajar */
+
+/* Brass knob, in the middle of the door (Haussmann style) */
+.door__knob {
+  position: absolute;
+  top: 54%;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff1c2, #c9a24a 45%, #6f5216);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.5);
+}
+
+/* Open sesame (mouse hover or keyboard focus) */
+.door:is(:hover, :focus-visible) .door__leaf--left  { transform: perspective(700px) rotateY(76deg); }
+.door:is(:hover, :focus-visible) .door__leaf--right { transform: perspective(700px) rotateY(-76deg); }
+
+/* Doormat = the label. It lies on the sidewalk, in front of the door. */
+.door__mat {
+  position: relative;
+  z-index: 2;
+  margin-top: 10px;
+  margin-bottom: -46px;   /* it overlaps the sidewalk */
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-sm);
+  background:
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.07) 0 2px, transparent 2px 5px),
+    #8a5a2e;
+  box-shadow: inset 0 0 0 3px #5e3a17, 0 4px 8px rgb(0 0 0 / 0.35);
+  color: #fff7ea;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.door:is(:hover, :focus-visible) .door__mat {
+  background-color: #a8253c;
+  box-shadow: inset 0 0 0 3px #6e1424, 0 0 26px 6px rgb(247 201 131 / 0.55);
+}
+
+/* --- Paris street sign --- */
+.street-plate {
+  grid-area: plate;
+  justify-self: end;
+  align-self: start;
+  display: grid;
+  justify-items: center;
+  margin: var(--space-6) 0 0;
+  padding: var(--space-2) var(--space-4) var(--space-3);
+  border: 3px solid #f6efe3;
+  border-radius: 6px;
+  outline: 3px solid #2c6a4f;          /* the green frame of real plates */
+  background: #1d3a6e;
+  color: #f6efe3;
+  text-align: center;
+  line-height: 1.1;
+  box-shadow: 0 6px 12px rgb(0 0 0 / 0.3);
+}
+
+.street-plate__arr {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+}
+
+.street-plate__name {
+  font-size: 17px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* --- Brass nameplate + intercom --- */
+.nameplate {
+  grid-area: name;
+  justify-self: start;
+  align-self: center;
+  display: grid;
+  gap: var(--space-3);
+  width: 200px;
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(145deg, #f3dc9a, #c9a24a 45%, #a07c2c);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6), 0 6px 14px rgb(0 0 0 / 0.3);
+  color: #2b1f08;
+}
+
+.nameplate__plate {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  text-align: center;
+}
+
+.nameplate__name {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+}
+
+.nameplate__role {
+  font-size: 12px;
+}
+
+.nameplate__intercom {
+  display: grid;
   gap: var(--space-1);
+  margin: 0;
+  padding: var(--space-2);
+  border-radius: 4px;
+  background: #2b2a26;
+  list-style: none;
+}
+
+.nameplate__intercom a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-1) var(--space-2);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: none;
-  color: var(--fg-muted);
-  font: inherit;
+  border-radius: 3px;
+  color: #f6efe3;
   font-size: 13px;
   font-weight: 600;
-  cursor: pointer;
+  text-decoration: none;
 }
 
-.bizcard__flip svg {
-  width: 14px;
-  height: 14px;
-  transition: rotate 0.4s var(--ease-spring);
+.nameplate__intercom a:hover { background: rgb(255 255 255 / 0.1); }
+
+.nameplate__intercom a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-.bizcard__flip:hover {
-  color: var(--accent-2);
+/* The bell button lights up when you ring */
+.nameplate__bell {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff1c2, #c9a24a 55%, #6f5216);
+  transition: box-shadow 0.2s ease;
 }
 
-/* --- Interactive mode (JS active) --- */
-.bizcard.is-interactive .bizcard__inner {
-  gap: 0;
-  transform-style: preserve-3d;   /* the children keep their 3D (needed for the back) */
-  transition: transform 0.8s var(--ease-spring);
+.nameplate__intercom a:is(:hover, :focus-visible) .nameplate__bell {
+  background: #ffd36b;
+  box-shadow: 0 0 8px 2px rgb(255 211 107 / 0.8);
 }
 
-.bizcard.is-interactive .bizcard__face {
-  grid-area: 1 / 1;              /* both faces in the same cell → superimposed */
-  backface-visibility: hidden;   /* a turned face is invisible from behind */
-  -webkit-backface-visibility: hidden;
+/* --- Sidewalk (footer): curb, paving, and the light from the open door --- */
+.sidewalk {
+  position: relative;
+  padding: calc(46px + var(--space-6)) var(--gutter) var(--space-5);
+  background:
+    linear-gradient(#b9b3a8 0 6px, #8d877c 6px 9px, transparent 9px),
+    repeating-linear-gradient(90deg, transparent 0 118px, rgb(0 0 0 / 0.18) 118px 120px),
+    #4a4844;
+  overflow: hidden;
 }
 
-.bizcard.is-interactive .bizcard__face--back {
-  transform: rotateY(180deg);    /* the back starts out "turned over" */
-}
-
-/* Parallax tilt: the OUTER card tilts toward the mouse (--tilt-x / --tilt-y,
-   set by JS), while the INNER card handles the flip. Two different elements
-   → the two rotations add up without overwriting each other. */
-.bizcard.is-interactive {
-  cursor: pointer;
-  transform: perspective(1200px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
-  transform-style: preserve-3d;
-}
-
-/* Hover: the card lifts slightly and the arrows turn → "it's interactive" */
-.bizcard.is-interactive:hover .bizcard__inner {
-  translate: 0 -4px;
-}
-
-.bizcard.is-interactive:hover .bizcard__flip svg {
-  rotate: 180deg;
-}
-
-.bizcard.is-flipped .bizcard__inner {
-  transform: rotateY(180deg);
-}
-
-/* The face we can't see must not catch the mouse: in 3D, the browser can
-   still "hit" the hidden face lying on top, and the click then flips the card
-   instead of following the link ("Get to know me", LinkedIn) */
-.bizcard.is-interactive:not(.is-flipped) .bizcard__face--back,
-.bizcard.is-flipped .bizcard__face--front {
+.sidewalk::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  width: calc(var(--door-w) * 1.8);
+  height: 120px;
+  translate: -50% 0;
+  background: radial-gradient(ellipse at 50% 0, rgb(255 210 140 / 0.45), transparent 70%);
+  opacity: 0.35;
+  transition: opacity 0.6s ease;
   pointer-events: none;
 }
 
-/* Very narrow screens: the front goes vertical (photo above the name) */
-@media (max-width: 420px) {
-  .bizcard__face--front {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+.ground:has(.door:is(:hover, :focus-visible)) .sidewalk::before { opacity: 1; }
+
+.sidewalk .facade__credits {
+  position: relative;
+  margin: 0;
+  color: #f6efe3;
+  font-size: 12px;
+  text-align: center;
+}
+
+.sidewalk .facade__credits a { text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .door__leaf { transition: none; }
+}
+
+/* Phones: the plates go side by side above the door */
+@media (max-width: 699px) {
+  .ground__floor {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "plate name" "door door";
+    gap: var(--space-6) var(--space-4);
   }
-  .bizcard__face { padding: var(--space-5); min-height: 280px; }
+  .street-plate { margin: 0; align-self: center; }
+  .street-plate__name { font-size: 14px; }
+  .nameplate { width: auto; max-width: 180px; padding: var(--space-3); }
+}
+
+@media (min-width: 810px) {
+  .ground { --door-w: 240px; --frame: 18px; }
 }
 
 
