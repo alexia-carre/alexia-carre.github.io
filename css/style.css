@@ -1342,7 +1342,7 @@ a.work-card:hover .work-card__doodle {
 }
 
 .facade__wall {
-  padding: var(--section-y) var(--gutter);
+  padding: var(--space-7) var(--gutter) var(--section-y);
   /* Seamless brick tile, drawn at 2x and repeated at its real size (sharp
      on every screen, instead of one small photo stretched to cover) */
   background:
@@ -1391,7 +1391,9 @@ a.work-card:hover .work-card__doodle {
   position: absolute;
   inset: 0 0 auto;          /* pinned to the top… */
   aspect-ratio: 453 / 485;  /* …with the window's proportions */
-  background: center / contain no-repeat;
+  /* pinned to the top: the renders are wider than the box, the spare
+     height goes below them, where the project card sits */
+  background: center top / contain no-repeat;
   /* Windows darkened a little less than the wall: the lit window stands out at night */
   filter: brightness(calc(1 - var(--facade-dim) * 0.6));
   transition: opacity 0.3s ease, scale 0.4s var(--ease-spring);
@@ -1484,7 +1486,7 @@ a.work-card:hover .work-card__doodle {
   .facade__cornice { height: 276px; }
   .facade__cornice h2 { font-size: 40px; }
   /* A bit more wall above/below: the facade is an illustration, it needs room */
-  .facade__wall { padding: calc(var(--section-y) + var(--space-8)) var(--gutter); }
+  .facade__wall { padding: var(--space-8) var(--gutter) calc(var(--section-y) + var(--space-8)); }
   .windows {
     grid-template-columns: repeat(2, 453px);
     gap: var(--space-6);
