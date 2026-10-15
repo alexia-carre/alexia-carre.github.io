@@ -405,9 +405,6 @@ a {
 .doodle--sun        { --doodle-mask: url("../assets/images/deco/stickman-right.svg"); aspect-ratio: 142 / 140; --doodle-color: var(--accent); }
 .doodle--about-sun  { --doodle-mask: url("../assets/images/deco/sun.png");            aspect-ratio: 142 / 141; --doodle-color: var(--accent-2); }
 .doodle--about-star { --doodle-mask: url("../assets/images/deco/star.png");           aspect-ratio: 262 / 267; --doodle-color: var(--accent); }
-.doodle--stick-tickets { --doodle-mask: url("../assets/images/deco/stick-tickets.svg"); }
-.doodle--stick-papers  { --doodle-mask: url("../assets/images/deco/stick-papers.svg"); }
-.doodle--stick-book    { --doodle-mask: url("../assets/images/deco/stick-book.svg"); }
 .doodle--a2         { --doodle-mask: url("../assets/images/deco/a-squared.svg");      aspect-ratio: 60 / 58;   --doodle-color: var(--fg); }
 
 /* --- Rolling numbers (odometer), built by js/main.js ---
@@ -1321,11 +1318,11 @@ a.work-card:hover .work-card__doodle {
   list-style: none;
 }
 
-/* Each window stacks three layers:
-     ::before = closed window, ::after = open window,
-     .window__scene = the character drawn behind the glass (a doodle, one per project)
-   On hover we fade the closed one out and the others in. */
+/* Each window stacks two layers:
+     ::before = closed window, ::after = open window (image chosen by --window-open)
+   On hover we fade one out and the other in. */
 .window {
+  --window-open: url("../assets/images/facade/window-open-overwhelmed.png");
   position: relative;
   /* flow-root (rather than block): a block that is "self-contained". Without it,
      the card's margin-top would "collapse" outside the window and the card would
@@ -1333,6 +1330,9 @@ a.work-card:hover .work-card__doodle {
   display: flow-root;
   width: 100%;
 }
+
+.window--inspecting { --window-open: url("../assets/images/facade/window-open-inspecting.png"); }
+.window--cooking    { --window-open: url("../assets/images/facade/window-open-cooking.png"); }
 
 .window::before,
 .window::after {
@@ -1351,7 +1351,7 @@ a.work-card:hover .work-card__doodle {
 }
 
 .window::after {
-  background-image: url("../assets/images/facade/window-open.png");
+  background-image: var(--window-open);
   opacity: 0;
   scale: 0.92 1;   /* shutters slightly "folded": they unfold on opening */
 }
@@ -1369,42 +1369,6 @@ a.work-card:hover .work-card__doodle {
 .window.is-open::after {
   opacity: 1;
   scale: 1;
-}
-
-/* The character: same box as the window images, then placed in the glass
-   above the railing (measured on the render) */
-.window__scene {
-  position: absolute;
-  inset: 0 0 auto;
-  aspect-ratio: 453 / 485;
-  z-index: 1;               /* above ::after (painted after the children); the card comes later in the DOM, so stays on top */
-  pointer-events: none;
-}
-
-.window__character {
-  position: absolute;
-  left: 29%;
-  top: 15.7%;
-  width: 42%;
-  opacity: 0;
-  translate: 0 8%;
-  /* cream outline, like a sticker (on the parent: a filter on the masked
-     element itself would be masked away) */
-  filter:
-    drop-shadow(2px 0 0 #fff7ea) drop-shadow(-2px 0 0 #fff7ea)
-    drop-shadow(0 2px 0 #fff7ea) drop-shadow(0 -2px 0 #fff7ea)
-    brightness(calc(1 - var(--facade-dim) * 0.6));
-  transition: opacity 0.3s ease 0.1s, translate 0.5s var(--ease-spring) 0.1s;
-}
-
-.window__character .doodle {
-  aspect-ratio: 200 / 190;
-  --doodle-color: #1f3328;
-}
-
-.window:is(:hover, :focus-within, .is-open) .window__character {
-  opacity: 1;
-  translate: 0 0;
 }
 
 /* Project not available yet: the shutters STAY closed.
@@ -1482,28 +1446,35 @@ a.work-card:hover .work-card__doodle {
 
 /* ---------- HOME: ground floor (Haussmann door) + sidewalk ----------
    The facade ends like a Paris building: a stone string course, a rusticated
-   ground floor with an oak carriage door (→ About page), and the sidewalk,
-   which is the page footer. The door is made of rendered layers, back to front:
-   the hall, the host (a doodle), the two leaves, the stone surround.
-   Only the veil (--facade-dim) darkens the stone in dark mode. */
+   ground floor with a carriage door (→ About page), and the sidewalk, which
+   is the page footer. The door is an illustration: its colors are fixed,
+   only the veil (--facade-dim) darkens the stone in dark mode. */
 .ground {
-  --door-w: 300px;                 /* width of the whole stone surround */
+  --door-w: 200px;
+  --frame: 14px;
   --stone-veil: linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim)));
   position: relative;
 }
 
-/* Rusticated stone (rendered tile, 2x) */
+.ground__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* Rusticated stone: wide horizontal blocks with deep joints ("refends") */
 .ground__floor {
   position: relative;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  grid-template-areas: ". door name";
+  grid-template-areas: "plate door name";
   align-items: end;
   gap: var(--space-5);
   padding: var(--space-8) var(--gutter) 0;
   background:
     var(--stone-veil),
-    url("../assets/images/facade/stone.webp") center bottom / 320px 104px repeat;
+    linear-gradient(90deg, rgb(0 0 0 / 0.06), transparent 18% 82%, rgb(0 0 0 / 0.06)),
+    repeating-linear-gradient(#d3c3a4 0 44px, #ddd0b5 44px 46px, #8d7656 46px 49px, #c7b595 49px 52px);
 }
 
 /* String course between the bricks and the ground floor */
@@ -1526,7 +1497,7 @@ a.work-card:hover .work-card__doodle {
   justify-items: center;
   color: inherit;
   text-decoration: none;
-  border-radius: var(--radius-sm);
+  border-radius: calc(var(--door-w) / 2 + var(--frame)) calc(var(--door-w) / 2 + var(--frame)) var(--radius-sm) var(--radius-sm);
 }
 
 .door:focus-visible {
@@ -1534,99 +1505,117 @@ a.work-card:hover .work-card__doodle {
   outline-offset: 6px;
 }
 
-/* All layers share the proportions of the rendered surround (720 × 936) */
-.door__scene {
+/* Stone surround, with an arched top */
+.door__frame {
   position: relative;
+  display: grid;
+  padding: var(--frame) var(--frame) 0;
+  border-radius: calc(var(--door-w) / 2 + var(--frame)) calc(var(--door-w) / 2 + var(--frame)) 0 0;
+  background:
+    var(--stone-veil),
+    linear-gradient(90deg, #cdbd9e, #e9dec6 30% 70%, #cdbd9e);
+  box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.08), 0 10px 24px rgb(0 0 0 / 0.25);
+}
+
+/* Keystone, with the sun doodle carved in it */
+.door__keystone {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 52px;
+  translate: -50% 0;
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+  background:
+    var(--stone-veil),
+    linear-gradient(#f0e6d0, #cdbd9e);
+}
+
+.door__keystone .doodle {
+  width: 24px;
+  margin-top: -6px;
+  --doodle-color: #9c8462;
+}
+
+.door__transom {
   display: block;
   width: var(--door-w);
-  aspect-ratio: 720 / 936;
+  height: calc(var(--door-w) / 2);
 }
 
-.door__frame {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background: url("../assets/images/facade/door-frame.webp") center / 100% 100% no-repeat;
-  filter: brightness(calc(1 - var(--facade-dim) * 0.6));
-  pointer-events: none;
-}
-
-/* The hole in the surround (arched top: the frame covers the corners) */
+/* The opening: the warm hallway, and the two leaves in front of it */
 .door__opening {
-  position: absolute;
-  left: 13.889%;
-  top: 13.889%;
-  width: 72.222%;
-  height: 86.111%;
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  overflow: hidden;
+  width: var(--door-w);
+  height: calc(var(--door-w) * 1.5);
   background: #1b130c;
-  /* shadow cast by the stone onto the leaves / into the hall */
-  box-shadow: inset 0 14px 18px -8px rgb(0 0 0 / 0.55);
 }
 
-/* Parallax: --px / --py (-1 → 1) are set by js/main.js. Far things move a
-   little, the host (closer) a bit more: that difference gives the depth. */
-.door__hall {
+.door__inside {
   position: absolute;
-  inset: -6% -8%;
-  background: url("../assets/images/facade/hall.webp") center / cover no-repeat;
-  translate: calc(var(--px, 0) * -10px) calc(var(--py, 0) * -8px);
-  scale: 1.08;
-  transition: scale 1.2s ease, translate 0.4s ease-out;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-2);
+  background: radial-gradient(circle at 50% 75%, #ffe2ad, #f2b26b 45%, #8a5a2e 100%);
 }
 
-.door__host {
-  position: absolute;
-  left: 50%;
-  bottom: 7%;
-  width: 40%;
-  translate: calc(-50% + var(--px, 0) * -22px) calc(var(--py, 0) * -10px + 12%);
-  opacity: 0;
-  /* cream outline (on the parent: a filter on the masked element itself would be masked away) */
-  filter:
-    drop-shadow(2px 0 0 #fff7ea) drop-shadow(-2px 0 0 #fff7ea)
-    drop-shadow(0 2px 0 #fff7ea) drop-shadow(0 -2px 0 #fff7ea);
-  transition: opacity 0.5s ease 0.15s, translate 0.4s ease-out;
+.door__inside img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px #fff4df, 0 0 28px 6px rgb(255 214 150 / 0.9);
 }
 
-.door__host .doodle {
-  --doodle-mask: url("../assets/images/deco/stick-welcome.svg");
-  --doodle-color: #1f3328;
-  aspect-ratio: 170 / 270;
-  transform-origin: 50% 100%;
+.door__hello {
+  color: #3b2410;
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .door__leaf {
   position: relative;
-  z-index: 2;
-  background: center / 100% 100% no-repeat;
-  filter: brightness(calc(1 - var(--facade-dim) * 0.5));
-  transition: transform 1s var(--ease-spring), filter 1s ease;
+  z-index: 1;
+  transition: transform 0.9s var(--ease-spring);
 }
 
-.door__leaf--left  { background-image: url("../assets/images/facade/door-leaf-left.webp");  transform-origin: left center; }
-.door__leaf--right { background-image: url("../assets/images/facade/door-leaf-right.webp"); transform-origin: right center;
-                     transform: perspective(900px) rotateY(-9deg); }   /* ajar: a hint of light */
-
-/* Open sesame: mouse hover, keyboard focus, or .is-open (touch, js/main.js) */
-.door:is(:hover, :focus-visible, .is-open) .door__leaf--left  { transform: perspective(900px) rotateY(78deg); filter: brightness(0.55); }
-.door:is(:hover, :focus-visible, .is-open) .door__leaf--right { transform: perspective(900px) rotateY(-78deg); filter: brightness(0.55); }
-.door:is(:hover, :focus-visible, .is-open) .door__hall { scale: 1.02; }
-.door:is(:hover, :focus-visible, .is-open) .door__host { opacity: 1; translate: calc(-50% + var(--px, 0) * -22px) calc(var(--py, 0) * -10px); }
-.door:is(:hover, :focus-visible, .is-open) .door__host .doodle { animation: wave 1.6s ease-in-out 0.5s 2; }
-
-@keyframes wave {
-  0%, 100% { rotate: 0deg; }
-  25%      { rotate: -3deg; }
-  75%      { rotate: 3deg; }
+.door__leaf svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
+
+.door__leaf--left  { transform-origin: left center; }
+.door__leaf--left svg { scale: -1 1; }   /* mirrored */
+.door__leaf--right { transform-origin: right center; transform: perspective(700px) rotateY(-14deg); }  /* ajar */
+
+/* Brass knob, in the middle of the door (Haussmann style) */
+.door__knob {
+  position: absolute;
+  top: 54%;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff1c2, #c9a24a 45%, #6f5216);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.5);
+}
+
+/* Open sesame (mouse hover or keyboard focus) */
+.door:is(:hover, :focus-visible) .door__leaf--left  { transform: perspective(700px) rotateY(76deg); }
+.door:is(:hover, :focus-visible) .door__leaf--right { transform: perspective(700px) rotateY(-76deg); }
 
 /* Doormat = the label. It lies on the sidewalk, in front of the door. */
 .door__mat {
   position: relative;
-  z-index: 4;
+  z-index: 2;
   margin-top: 10px;
   margin-bottom: -46px;   /* it overlaps the sidewalk */
   padding: var(--space-2) var(--space-5);
@@ -1643,9 +1632,43 @@ a.work-card:hover .work-card__doodle {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.door:is(:hover, :focus-visible, .is-open) .door__mat {
+.door:is(:hover, :focus-visible) .door__mat {
   background-color: #a8253c;
   box-shadow: inset 0 0 0 3px #6e1424, 0 0 26px 6px rgb(247 201 131 / 0.55);
+}
+
+/* --- Paris street sign --- */
+.street-plate {
+  grid-area: plate;
+  justify-self: end;
+  align-self: start;
+  display: grid;
+  justify-items: center;
+  margin: var(--space-6) 0 0;
+  padding: var(--space-2) var(--space-4) var(--space-3);
+  border: 3px solid #f6efe3;
+  border-radius: 6px;
+  outline: 3px solid #2c6a4f;          /* the green frame of real plates */
+  background: #1d3a6e;
+  color: #f6efe3;
+  text-align: center;
+  line-height: 1.1;
+  box-shadow: 0 6px 12px rgb(0 0 0 / 0.3);
+}
+
+.street-plate__arr {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+}
+
+.street-plate__name {
+  font-size: 17px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 /* --- Brass nameplate + intercom --- */
@@ -1740,16 +1763,16 @@ a.work-card:hover .work-card__doodle {
   position: absolute;
   top: 9px;
   left: 50%;
-  width: calc(var(--door-w) * 1.5);
+  width: calc(var(--door-w) * 1.8);
   height: 120px;
   translate: -50% 0;
   background: radial-gradient(ellipse at 50% 0, rgb(255 210 140 / 0.45), transparent 70%);
-  opacity: 0.3;
+  opacity: 0.35;
   transition: opacity 0.6s ease;
   pointer-events: none;
 }
 
-.ground:has(.door:is(:hover, :focus-visible, .is-open)) .sidewalk::before { opacity: 1; }
+.ground:has(.door:is(:hover, :focus-visible)) .sidewalk::before { opacity: 1; }
 
 .sidewalk .facade__credits {
   position: relative;
@@ -1759,24 +1782,26 @@ a.work-card:hover .work-card__doodle {
   text-align: center;
 }
 
+.sidewalk .facade__credits a { text-decoration: underline; }
+
 @media (prefers-reduced-motion: reduce) {
-  .door__leaf, .door__hall, .door__host { transition: none; }
-  .door .door__host .doodle { animation: none; }
+  .door__leaf { transition: none; }
 }
 
-/* Phones: the nameplate goes above the door */
+/* Phones: the plates go side by side above the door */
 @media (max-width: 699px) {
   .ground__floor {
-    grid-template-columns: 1fr;
-    grid-template-areas: "name" "door";
-    justify-items: center;
-    gap: var(--space-6);
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "plate name" "door door";
+    gap: var(--space-6) var(--space-4);
   }
-  .nameplate { justify-self: center; }
+  .street-plate { margin: 0; align-self: center; }
+  .street-plate__name { font-size: 14px; }
+  .nameplate { width: auto; max-width: 180px; padding: var(--space-3); }
 }
 
 @media (min-width: 810px) {
-  .ground { --door-w: 360px; }
+  .ground { --door-w: 240px; --frame: 18px; }
 }
 
 
