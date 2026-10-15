@@ -1346,7 +1346,8 @@ a.work-card:hover .work-card__doodle {
   /* Seamless brick tile, drawn at 2x and repeated at its real size (sharp
      on every screen, instead of one small photo stretched to cover) */
   background:
-    linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
+    /* night veil: same as the ground floor and the renders (black, 0.6 × --facade-dim) */
+    linear-gradient(rgb(0 0 0 / calc(var(--facade-dim) * 0.6)), rgb(0 0 0 / calc(var(--facade-dim) * 0.6))),
     url("../assets/images/facade/bricks.webp") center top / 540px 240px repeat;
 }
 
