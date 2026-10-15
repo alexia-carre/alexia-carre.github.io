@@ -237,14 +237,21 @@
                opens (hover, keyboard focus, or mid-screen on touch: js/main.js)
                the hall and the open leaves fade in; the hall drifts a little
                behind the leaves (parallax). -->
-          <a class="door" href="about.html" data-door>
+          <!-- The door is clickable with the mouse, but the keyboard and screen
+               readers get ONE link: the call to action next to it (tabindex -1
+               + aria-hidden on the door). Focusing the CTA opens the door too. -->
+          <a class="door" href="about.html" data-door tabindex="-1" aria-hidden="true">
             <span class="door__scene" aria-hidden="true">
               <span class="door__open">
                 <span class="door__hole"><span class="door__hall"></span></span>
                 <span class="door__leaves"></span>
               </span>
             </span>
-            <span class="visually-hidden">Get to know me</span>
+          </a>
+
+          <a class="btn btn--primary door-cta" href="about.html">
+            Come in &amp; get to know me
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
       </div>
