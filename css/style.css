@@ -121,6 +121,14 @@
   initial-value: 0;
 }
 
+/* Theme switch (js/theme.js): the browser takes a snapshot of the page and
+   cross-fades it into the new theme. Slower and softer than the default. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.6s;
+  animation-timing-function: ease-in-out;
+}
+
 /* b) Component aliases → tokens (the same for both themes) */
 :root {
   --color-text: var(--fg);

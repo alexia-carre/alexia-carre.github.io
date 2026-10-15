@@ -55,9 +55,19 @@
 
     button.addEventListener("click", () => {
       const next = current() === "dark" ? "light" : "dark";
-      root.dataset.theme = next;
-      save(next);
-      render();
+      const apply = () => {
+        root.dataset.theme = next;
+        save(next);
+        render();
+      };
+      // Soft cross-fade of the whole page between the two themes (View
+      // Transitions API, see the CSS). Not supported, or "reduce motion":
+      // the theme simply switches.
+      if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.startViewTransition(apply);
+      } else {
+        apply();
+      }
     });
 
     // If the visitor changes their system theme while the page is open
