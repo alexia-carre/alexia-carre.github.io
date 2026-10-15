@@ -1398,7 +1398,7 @@ a.work-card:hover .work-card__doodle {
 }
 
 .window::before {
-  background-image: url("../assets/images/facade/window-closed.png");
+  background-image: url("../assets/images/facade/window-closed.webp");
 }
 
 .window__day,
