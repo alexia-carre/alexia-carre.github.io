@@ -1507,9 +1507,14 @@ a.work-card:hover .work-card__doodle {
   .facade__cornice h2 { font-size: 40px; }
   /* A bit more wall above/below: the facade is an illustration, it needs room */
   .facade__wall { padding: var(--space-8) var(--gutter) calc(var(--section-y) + var(--space-8)); }
+  /* Same width as the top menu: the windows line up with its left and
+     right edges, the space between them adapts */
   .windows {
     grid-template-columns: repeat(2, 453px);
+    justify-content: space-between;
     gap: var(--space-6);
+    width: min(100%, var(--container));
+    margin-inline: auto;
   }
   /* Odd number of windows: the last one sits alone, centered on its row */
   .windows > li:last-child:nth-child(odd) {
