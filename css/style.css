@@ -1515,7 +1515,10 @@ a.work-card:hover .work-card__doodle {
   /* width of the door render (1215 × 1295 px): in proportion with the
      windows (453 px), never wider than the screen */
   --door-w: min(560px, 100vw - 2 * var(--gutter));
-  --stone-veil: linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim)));
+  /* Night veil of the ground floor: plain black at 0.6 × --facade-dim, i.e. exactly
+     the brightness() filter applied to the door render, so the render's own
+     strip of wall and the wall of the page get the same shade */
+  --stone-veil: linear-gradient(rgb(0 0 0 / calc(var(--facade-dim) * 0.6)), rgb(0 0 0 / calc(var(--facade-dim) * 0.6)));
   position: relative;
 }
 
