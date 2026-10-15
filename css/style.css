@@ -1520,10 +1520,10 @@ a.work-card:hover .work-card__doodle {
   }
 }
 
-/* ---------- HOME: ground floor (Haussmann door) + sidewalk ----------
-   The facade ends like a Paris building: a stone string course, the ground
-   floor with the door (→ About page), and the sidewalk, which is the page
-   footer. The door is an AI render (closed / open), split into layers.
+/* ---------- HOME: ground floor (Haussmann door) ----------
+   The facade ends like a Paris building: a stone string course, then the
+   ground floor with the door (→ About page), which stands on the bottom
+   edge of the page. The door is an AI render (closed / open), split into layers.
    Only the veil (--facade-dim) darkens the stone in dark mode. */
 .ground {
   /* width of the door render (1215 × 1295 px): in proportion with the
@@ -1543,7 +1543,7 @@ a.work-card:hover .work-card__doodle {
   position: relative;
   display: grid;
   justify-items: center;
-  padding: var(--space-8) var(--gutter) 0;
+  padding: calc(22px + var(--space-5)) var(--gutter) 0;   /* 22 px: the string course */
   background:
     var(--stone-veil),
     url("../assets/images/facade/stone-wall.webp")
@@ -1645,42 +1645,20 @@ a.work-card:hover .work-card__doodle {
 .door:is(:hover, :focus-visible, .is-open) .door__open { opacity: 1; }
 .door:is(:hover, :focus-visible, .is-open) .door__hall { scale: 1.07; }   /* a slow step "into" the hall */
 
-/* --- Sidewalk (footer): curb, paving, and the light from the open door --- */
-.sidewalk {
-  position: relative;
-  padding: var(--space-6) var(--gutter) var(--space-5);
-  background:
-    linear-gradient(#b9b3a8 0 6px, #8d877c 6px 9px, transparent 9px),
-    repeating-linear-gradient(90deg, transparent 0 118px, rgb(0 0 0 / 0.18) 118px 120px),
-    #4a4844;
-  overflow: hidden;
-}
-
-.sidewalk::before {
-  content: "";
-  position: absolute;
-  top: 9px;
-  left: 50%;
-  width: calc(var(--door-w) * 1.2);
-  height: 120px;
-  translate: -50% 0;
-  background: radial-gradient(ellipse at 50% 0, rgb(255 210 140 / 0.45), transparent 70%);
-  opacity: 0.35;
-  transition: opacity 0.6s ease;
-  pointer-events: none;
-}
-
-.ground:has(.door:is(:hover, :focus-visible, .is-open)) .sidewalk::before { opacity: 1; }
-
-.sidewalk .facade__credits {
-  position: relative;
-  margin: 0;
-  color: #f6efe3;
+/* Credits written on the wall, above the door: small, on a dark
+   translucent pill so they stay readable over the stone */
+.ground .facade__credits {
+  max-width: 100%;
+  margin: 0 0 var(--space-6);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: rgb(0 0 0 / 0.6);
+  color: #fff;
   font-size: 12px;
   text-align: center;
 }
 
-.sidewalk .facade__credits a { text-decoration: underline; }
+.ground .facade__credits a { text-decoration: underline; }
 
 @media (prefers-reduced-motion: reduce) {
   .door__open, .door__hall { transition: none; }
