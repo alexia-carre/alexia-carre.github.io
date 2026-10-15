@@ -45,7 +45,7 @@
   --logo-filter: none;           /* black logos: unchanged in light */
   --facade-dim: 0;               /* facade (photos): not darkened in light */
   /* Facade renders: day in light mode (rooms unlit), lamps on at night (dark) */
-  --img-window-closed:      url("../assets/images/facade/window-day-closed.webp");
+  --img-window-closed:      url("../assets/images/facade/window-closed.png");   /* shutters closed: same day and night */
   --img-window-overwhelmed: url("../assets/images/facade/window-day-open-overwhelmed.webp");
   --img-window-inspecting:  url("../assets/images/facade/window-day-open-inspecting.webp");
   --img-window-cooking:     url("../assets/images/facade/window-day-open-cooking.webp");
