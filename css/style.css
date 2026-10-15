@@ -1448,6 +1448,12 @@ a.work-card:hover .work-card__doodle {
     grid-template-columns: repeat(2, 453px);
     gap: var(--space-6);
   }
+  /* Odd number of windows: the last one sits alone, centered on its row */
+  .windows > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 453px;
+  }
   /* Desktop: the card overlaps the bottom of the window, like on Framer */
   .window { aspect-ratio: 453 / 485; }
   .window__card {
