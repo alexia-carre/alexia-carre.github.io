@@ -192,108 +192,53 @@ if (windowList && windowCards.length) {
 
 
 // ===========================================================================
-// Business card that flips over (home page)
+// Door (home page): light parallax in the hall + opening on touch
 // ---------------------------------------------------------------------------
-// - Without JS, both faces are shown one below the other (see CSS).
-// - With JS, we enable the .is-interactive mode (faces superimposed, 3D).
-// - Click ANYWHERE on the card = flip it… except on a link
-//   ("Get to know me", LinkedIn), which must keep working.
-// - "inert" makes the hidden face unreachable: neither Tab nor screen readers
-//   land on links you can't see.
+// - Mouse: --px / --py (-1 → 1) follow the cursor over the ground floor;
+//   the CSS shifts the hall a few pixels behind the leaves.
+// - Touch: no hover, so the door opens when it reaches the middle of the
+//   screen (like the windows), and the scroll position drives --py.
 // ===========================================================================
 
-document.querySelectorAll("[data-bizcard]").forEach((card) => {
-  const front = card.querySelector(".bizcard__face--front");
-  const back = card.querySelector(".bizcard__face--back");
-  const buttons = card.querySelectorAll(".bizcard__flip");
+const door = document.querySelector("[data-door]");
 
-  card.classList.add("is-interactive");
-  buttons.forEach((button) => { button.hidden = false; });
-
-  const setFlipped = (flipped, moveFocus) => {
-    card.classList.toggle("is-flipped", flipped);
-    front.inert = flipped;
-    back.inert = !flipped;
-    // Keyboard: focus follows onto the visible face
-    if (moveFocus) (flipped ? back : front).querySelector(".bizcard__flip").focus();
+if (door) {
+  const setParallax = (x, y) => {
+    door.style.setProperty("--px", Math.max(-1, Math.min(1, x)).toFixed(3));
+    door.style.setProperty("--py", Math.max(-1, Math.min(1, y)).toFixed(3));
   };
 
-  // Where the mouse was PRESSED. A "click" only lands on a link if the mouse
-  // is pressed AND released on it; with the tilt, the button can move a few
-  // pixels in between, and the browser then sends the click to the card
-  // instead → it would flip instead of following the link. So we remember
-  // where the press happened, and that decides.
-  let pressedOnAction = false;
-  let pressing = false;
-  card.addEventListener("pointerdown", (event) => {
-    pressing = true;
-    pressedOnAction = !!event.target.closest("a, .bizcard__actions");
-  });
-  window.addEventListener("pointerup", () => { pressing = false; });
-  window.addEventListener("pointercancel", () => { pressing = false; });
+  if (canHover && !reduceMotion) {
+    const ground = door.closest(".ground");
+    ground.addEventListener("pointermove", (event) => {
+      const box = door.getBoundingClientRect();
+      setParallax(
+        (event.clientX - (box.left + box.width / 2)) / (box.width / 2),
+        (event.clientY - (box.top + box.height / 2)) / (box.height / 2),
+      );
+    });
+    ground.addEventListener("pointerleave", () => setParallax(0, 0));
+  }
 
-  card.addEventListener("click", (event) => {
-    // A link, the buttons area, or a press that started there: never flip
-    if (event.target.closest("a, .bizcard__actions") || pressedOnAction) {
-      pressedOnAction = false;
-      return;
+  if (!canHover) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((entry) => door.classList.toggle("is-open", entry.isIntersecting));
+    }, { rootMargin: "-30% 0px -30% 0px" }).observe(door);
+
+    if (!reduceMotion) {
+      let ticking = false;
+      window.addEventListener("scroll", () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const box = door.getBoundingClientRect();
+          setParallax(0, (box.top + box.height / 2 - innerHeight / 2) / (innerHeight / 2));
+          ticking = false;
+        });
+      }, { passive: true });
     }
-    const fromKeyboard = event.detail === 0;          // Enter/Space on the button
-    setFlipped(!card.classList.contains("is-flipped"), fromKeyboard);
-  });
-
-  setFlipped(false, false);
-
-  // --- Parallax: the card tilts toward the mouse (the doodles, "printed" on it, follow) ---
-  // Same principle as the logo galaxy: we compute a target (-1 → 1), then
-  // approach it a bit more on each frame (smoothing), and the loop
-  // stops once the card has settled. Mouse only, and not with "reduce motion".
-  if (!canHover || reduceMotion) return;
-
-  const MAX_TILT = 8;        // max tilt, in degrees
-  const SMOOTHING = 0.12;
-  let targetX = 0, targetY = 0, currentX = 0, currentY = 0, running = false;
-
-  const render = () => {
-    currentX += (targetX - currentX) * SMOOTHING;
-    currentY += (targetY - currentY) * SMOOTHING;
-
-    card.style.setProperty("--tilt-y", `${(currentX * MAX_TILT).toFixed(2)}deg`);
-    card.style.setProperty("--tilt-x", `${(-currentY * MAX_TILT).toFixed(2)}deg`);
-    // Sheen: position of the light, in % of the card
-    card.style.setProperty("--gx", `${((currentX + 1) * 50).toFixed(1)}%`);
-    card.style.setProperty("--gy", `${((currentY + 1) * 50).toFixed(1)}%`);
-
-    if (Math.abs(targetX - currentX) < 0.001 && Math.abs(targetY - currentY) < 0.001) {
-      running = false;
-      return;
-    }
-    requestAnimationFrame(render);
-  };
-
-  const start = () => {
-    if (!running) { running = true; requestAnimationFrame(render); }
-  };
-
-  card.addEventListener("pointermove", (event) => {
-    // Mouse button held down: the card stays still, so the button being
-    // clicked doesn't slide away from under the cursor
-    if (pressing) return;
-    const box = card.getBoundingClientRect();
-    targetX = ((event.clientX - box.left) / box.width) * 2 - 1;
-    targetY = ((event.clientY - box.top) / box.height) * 2 - 1;
-    card.classList.add("is-tilting");
-    start();
-  });
-
-  // Mouse leaves the card: it gently returns to flat
-  card.addEventListener("pointerleave", () => {
-    targetX = 0;
-    targetY = 0;
-    card.classList.remove("is-tilting");
-    start();
-  });
-});
+  }
+}
 
 
 // ===========================================================================

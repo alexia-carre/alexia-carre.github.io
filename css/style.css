@@ -44,6 +44,8 @@
   --key-figure: var(--accent-2); /* key figures: accent 2 in both modes */
   --logo-filter: none;           /* black logos: unchanged in light */
   --facade-dim: 0;               /* facade (photos): not darkened in light */
+  --lights: 0;                   /* facade lamps: off by day (see "lights" below) */
+  --lights-delay: 0s;            /* lamps go off right away… */
   --tag-darken: 20%;             /* tag text slightly darkened (contrast) */
 }
 
@@ -71,6 +73,8 @@
     --on-band: #f2ede3;
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
     --facade-dim: 0.5;                           /* "no brown in dark": darkened facade */
+    --lights: 1;
+    --lights-delay: 0.45s;                        /* …and come on once dusk has fallen */
     --tag-darken: 0%;                            /* the dark-mode colors already pass */
   }
 }
@@ -96,7 +100,25 @@
   --on-band: #f2ede3;
   --logo-filter: invert(1) hue-rotate(180deg);
   --facade-dim: 0.5;
+  --lights: 1;
+  --lights-delay: 0.45s;
   --tag-darken: 0%;
+}
+
+/* Lights: --facade-dim (the dusk veil) and --lights (lamps on) are numbers
+   registered with @property, so the browser can ANIMATE them when the theme
+   changes, instead of jumping. Every day layer has a night twin on top of it
+   whose opacity is --lights: when it goes 0 → 1, the lamps come on. */
+@property --facade-dim {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --lights {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
 }
 
 /* b) Component aliases → tokens (the same for both themes) */
@@ -1275,6 +1297,25 @@ a.work-card:hover .work-card__doodle {
 }
 
 /* ---------- HOME: building facade ---------- */
+.facade {
+  transition: --facade-dim 1.1s ease-in-out;
+}
+
+/* Lamps: each window / the door animates its own --lights, one after the
+   other (--stagger), like neighbours switching their lights on */
+.window,
+.door {
+  transition: --lights 0.9s cubic-bezier(0.5, 0, 0.3, 1) calc(var(--lights-delay) + var(--stagger, 0s));
+}
+
+.windows > li:nth-child(2) .window { --stagger: 0.2s; }
+.windows > li:nth-child(3) .window { --stagger: 0.4s; }
+.windows > li:nth-child(4) .window { --stagger: 0.6s; }
+.door { --stagger: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .facade, .window, .door { transition: none; }
+}
 .facade__cornice {
   position: relative;
   display: grid;
@@ -1301,33 +1342,13 @@ a.work-card:hover .work-card__doodle {
 }
 
 .facade__wall {
-  position: relative;   /* reference for the credits, at the bottom of the wall */
-  padding: var(--section-y) var(--gutter);
-  padding-bottom: calc(var(--section-y) + var(--space-7));   /* room for the credits */
+  padding: var(--space-7) var(--gutter) var(--section-y);
+  /* Seamless brick tile, drawn at 2x and repeated at its real size (sharp
+     on every screen, instead of one small photo stretched to cover) */
   background:
-    linear-gradient(rgb(14 21 18 / var(--facade-dim)), rgb(14 21 18 / var(--facade-dim))),
-    url("../assets/images/facade/bricks.png") center bottom / cover;
-}
-
-/* Credits written on the wall: small, at the bottom, on a dark translucent
-   pill so they stay readable over the bricks (light or dark mode) */
-.facade__credits {
-  position: absolute;
-  bottom: var(--space-4);
-  left: 50%;
-  translate: -50% 0;
-  width: max-content;
-  max-width: calc(100% - 2 * var(--gutter));
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
-  background: rgb(0 0 0 / 0.6);
-  color: #fff;
-  font-size: 12px;
-  text-align: center;
-}
-
-.facade__credits a {
-  text-decoration: underline;
+    /* night veil: same as the ground floor and the renders (black, 0.6 × --facade-dim) */
+    linear-gradient(rgb(0 0 0 / calc(var(--facade-dim) * 0.6)), rgb(0 0 0 / calc(var(--facade-dim) * 0.6))),
+    url("../assets/images/facade/bricks.webp") center top / 540px 240px repeat;
 }
 
 .windows {
@@ -1339,11 +1360,15 @@ a.work-card:hover .work-card__doodle {
   list-style: none;
 }
 
-/* Each window stacks two layers:
-     ::before = closed window, ::after = open window (image chosen by --window-open)
-   On hover we fade one out and the other in. */
+/* Each window stacks four layers:
+     ::before              = closed shutters, by day
+     .window__closed-night = closed shutters, at night (light through the slats), opacity × --lights
+     .window__day          = open window, by day (rooms unlit)
+     ::after               = open window, at night (lit), on top, opacity × --lights
+   On hover we fade the closed one out and the open ones in. */
 .window {
-  --window-open: url("../assets/images/facade/window-open-overwhelmed.png");
+  --open-day: url("../assets/images/facade/window-day-open-overwhelmed.webp");
+  --open-night: url("../assets/images/facade/window-night-open-overwhelmed.webp");
   position: relative;
   /* flow-root (rather than block): a block that is "self-contained". Without it,
      the card's margin-top would "collapse" outside the window and the card would
@@ -1352,29 +1377,55 @@ a.work-card:hover .work-card__doodle {
   width: 100%;
 }
 
-.window--inspecting { --window-open: url("../assets/images/facade/window-open-inspecting.png"); }
-.window--cooking    { --window-open: url("../assets/images/facade/window-open-cooking.png"); }
+.window--inspecting {
+  --open-day: url("../assets/images/facade/window-day-open-inspecting.webp");
+  --open-night: url("../assets/images/facade/window-night-open-inspecting.webp");
+}
+.window--cooking {
+  --open-day: url("../assets/images/facade/window-day-open-cooking.webp");
+  --open-night: url("../assets/images/facade/window-night-open-cooking.webp");
+}
 
 .window::before,
-.window::after {
+.window::after,
+.window__closed-night,
+.window__day {
   content: "";
   position: absolute;
   inset: 0 0 auto;          /* pinned to the top… */
   aspect-ratio: 453 / 485;  /* …with the window's proportions */
-  background: center / contain no-repeat;
+  /* pinned to the top: the renders are wider than the box, the spare
+     height goes below them, where the project card sits */
+  background: center top / contain no-repeat;
   /* Windows darkened a little less than the wall: the lit window stands out at night */
   filter: brightness(calc(1 - var(--facade-dim) * 0.6));
   transition: opacity 0.3s ease, scale 0.4s var(--ease-spring);
 }
 
 .window::before {
-  background-image: url("../assets/images/facade/window-closed.png");
+  background-image: url("../assets/images/facade/window-closed.webp");
 }
 
+.window__day,
 .window::after {
-  background-image: var(--window-open);
   opacity: 0;
   scale: 0.92 1;   /* shutters slightly "folded": they unfold on opening */
+}
+
+.window__day   { background-image: var(--open-day); }
+
+.window__closed-night {
+  background-image: url("../assets/images/facade/window-closed-night.webp");
+  opacity: var(--lights);
+  filter: brightness(calc(1 - var(--facade-dim) * 0.3));   /* same as the lit open window */
+}
+
+.window:is(:hover, :focus-within, .is-open) .window__closed-night { opacity: 0; }
+.window--soon:is(:hover, :focus-within, .is-open) .window__closed-night { opacity: var(--lights); }
+.window::after {
+  background-image: var(--open-night);
+  /* the lit room must glow: dimmed less than the wall and the shutters */
+  filter: brightness(calc(1 - var(--facade-dim) * 0.3));
 }
 
 /* Opening: mouse hover, keyboard focus on the card,
@@ -1385,10 +1436,13 @@ a.work-card:hover .work-card__doodle {
   opacity: 0;
 }
 
-.window:hover::after,
-.window:focus-within::after,
-.window.is-open::after {
+.window:is(:hover, :focus-within, .is-open) .window__day {
   opacity: 1;
+  scale: 1;
+}
+
+.window:is(:hover, :focus-within, .is-open)::after {
+  opacity: var(--lights);
   scale: 1;
 }
 
@@ -1399,7 +1453,8 @@ a.work-card:hover .work-card__doodle {
   opacity: 1;
 }
 
-.window--soon:is(:hover, :focus-within, .is-open)::after {
+.window--soon:is(:hover, :focus-within, .is-open)::after,
+.window--soon:is(:hover, :focus-within, .is-open) .window__day {
   opacity: 0;
   scale: 0.92 1;
 }
@@ -1443,10 +1498,16 @@ a.work-card:hover .work-card__doodle {
   .facade__cornice { height: 276px; }
   .facade__cornice h2 { font-size: 40px; }
   /* A bit more wall above/below: the facade is an illustration, it needs room */
-  .facade__wall { padding: calc(var(--section-y) + var(--space-8)) var(--gutter); }
+  .facade__wall { padding: var(--space-8) var(--gutter) calc(var(--section-y) + var(--space-8)); }
   .windows {
     grid-template-columns: repeat(2, 453px);
     gap: var(--space-6);
+  }
+  /* Odd number of windows: the last one sits alone, centered on its row */
+  .windows > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 453px;
   }
   /* Desktop: the card overlaps the bottom of the window, like on Framer */
   .window { aspect-ratio: 453 / 485; }
@@ -1459,223 +1520,173 @@ a.work-card:hover .work-card__doodle {
   }
 }
 
-/* ---------- HOME: about teaser + credits ---------- */
-.teaser {
+/* ---------- HOME: ground floor (Haussmann door) ----------
+   The facade ends like a Paris building: a stone string course, then the
+   ground floor with the door (→ About page), which stands on the bottom
+   edge of the page. The door is an AI render (closed / open), split into layers.
+   Only the veil (--facade-dim) darkens the stone in dark mode. */
+.ground {
+  /* width of the door render (1215 × 1295 px): in proportion with the
+     windows (453 px), never wider than the screen */
+  --door-w: min(560px, 100vw - 2 * var(--gutter));
+  /* Night veil of the ground floor: plain black at 0.6 × --facade-dim, i.e. exactly
+     the brightness() filter applied to the door render, so the render's own
+     strip of wall and the wall of the page get the same shade */
+  --stone-veil: linear-gradient(rgb(0 0 0 / calc(var(--facade-dim) * 0.6)), rgb(0 0 0 / calc(var(--facade-dim) * 0.6)));
+  position: relative;
+}
+
+/* Stone wall: a tile made from the render's own wall, scaled and aligned so
+   its joints continue those of the image (courses of 98 px, the first joint
+   55 px above the bottom of the render) */
+.ground__floor {
+  position: relative;
   display: grid;
   justify-items: center;
-  padding: var(--section-y) var(--gutter) var(--space-7);
+  padding: calc(22px + var(--space-6)) var(--gutter) 0;   /* 22 px: the string course */
+  background:
+    var(--stone-veil),
+    url("../assets/images/facade/stone-wall.webp")
+      0 calc(100% - var(--door-w) * 55 / 1215) / calc(var(--door-w) * 600 / 1215) calc(var(--door-w) * 196 / 1215)
+      repeat;
 }
 
-/* --- Business card ---
-   Without JS: the two faces are stacked (everything stays accessible).
-   With JS (.is-interactive class): the two faces are superimposed in the same
-   grid cell, the back is turned 180°, and clicking flips the whole card. */
-.bizcard {
-  width: min(100%, 460px);
-  perspective: 1400px;   /* 3D depth: the lower it is, the more pronounced the effect */
-}
-
-.bizcard__inner {
-  display: grid;
-  gap: var(--space-5);   /* without JS: space between the two stacked faces */
-}
-
-.bizcard__face {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-4);
-  min-height: 240px;
-  padding: var(--space-6);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.45);
-  overflow: hidden;   /* the doodles that stick out are cut by the edge of the card */
-}
-
-/* Front: cream, like a card printed on thick paper */
-.bizcard__face--front {
-  flex-direction: row;
-  align-items: center;
-  background: var(--surface);
-}
-
-/* Back: the accent 2 tint (like the key figures) */
-.bizcard__face--back {
-  align-items: flex-start;
-  background: var(--tint-accent-2);
-}
-
-.bizcard__photo {
-  flex-shrink: 0;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 0 0 4px var(--bg);   /* white "frame" around the photo */
-}
-
-.bizcard__id {
-  display: grid;
-  gap: var(--space-1);
-}
-
-.bizcard__name {
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: var(--tracking-tight);
-  color: var(--fg);
-}
-
-.bizcard__role {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--accent-2);
-}
-
-.bizcard__meta {
-  font-size: 14px;
-  line-height: 1.4;
-  color: var(--fg-muted);
-}
-
-.bizcard__headline {
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: var(--tracking-tight);
-  color: var(--heading);
-}
-
-.bizcard__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
-}
-
-/* The doodles, scattered as if drawn by hand around the edges.
-   They have NO movement of their own: they tilt with the card, like
-   ink printed on the paper (with their own parallax they seemed to
-   "float" above the card). */
-.bizcard__doodle {
+/* String course between the bricks and the ground floor */
+.ground__floor::before {
+  content: "";
   position: absolute;
-  pointer-events: none;
+  inset: 0 0 auto;
+  height: 22px;
+  background:
+    var(--stone-veil),
+    linear-gradient(#efe4cd 0 4px, #d8c8a8 4px 12px, #b29d7a 12px 16px, #7e6a4e 16px 18px, rgb(0 0 0 / 0.18) 18px);
+  box-shadow: 0 6px 10px rgb(0 0 0 / 0.18);
 }
-.bizcard__doodle--star      { width: 34px; top: 18px;    right: 22px;  rotate: 14deg; }
-.bizcard__doodle--sun       { width: 30px; bottom: 16px; left: 20px;   rotate: -10deg; }
-.bizcard__doodle--a2        { width: 30px; top: 22px;    right: 74px;  rotate: -6deg; opacity: 0.8; }
-.bizcard__doodle--about-sun { width: 44px; top: 18px;    right: 22px;  rotate: 12deg; }
 
-/* Sheen: a soft light that follows the mouse (--gx, --gy as %), visible on hover */
-.bizcard__face::after {
+/* --- Door --- */
+.door {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.door:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 6px;
+}
+
+/* The closed render. A mask cut along the stone surround (cornice,
+   pilasters, plinth) hides the render's own wall: the door sits directly on
+   the wall of the page, so there are no joints to line up */
+.door__scene {
+  position: relative;
+  display: block;
+  width: var(--door-w);
+  aspect-ratio: 1215 / 1295;
+  background: url("../assets/images/facade/door-closed-day.webp") center / 100% 100% no-repeat;
+  filter: brightness(calc(1 - var(--facade-dim) * 0.6));
+  -webkit-mask: url("../assets/images/facade/door-mask.png") 0 0 / 100% 100% no-repeat;
+  mask: url("../assets/images/facade/door-mask.png") 0 0 / 100% 100% no-repeat;
+}
+
+/* Night twins of the door layers: same image, lamps on, opacity = --lights */
+.door__scene::after,
+.door__hall::after,
+.door__leaves::after {
   content: "";
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.28), transparent 55%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  background: center / 100% 100% no-repeat;
+  opacity: var(--lights);
 }
 
-.bizcard.is-tilting .bizcard__face::after {
-  opacity: 1;
-}
+.door__scene::after  { background-image: url("../assets/images/facade/door-closed.webp"); }
+.door__hall::after   { background-image: url("../assets/images/facade/door-hall.webp"); }
+.door__leaves::after { background-image: url("../assets/images/facade/door-leaves.webp"); }
 
-/* The back is rotated 180°: its horizontal axis is mirrored.
-   We flip the horizontal direction so the sheen follows the mouse
-   on the back too. */
-.bizcard__face--back::after {
-  background: radial-gradient(circle at calc(100% - var(--gx, 50%)) var(--gy, 50%), rgba(255, 255, 255, 0.28), transparent 55%);
-}
-
-/* "Flip the card" button: discreet, bottom right */
-.bizcard__flip {
+/* Open state: placed exactly on the opening of the render (276→934 × 228→1199 px) */
+.door__open {
+  z-index: 1;               /* above the closed night twin (::after) */
   position: absolute;
-  right: var(--space-4);
-  bottom: var(--space-3);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-2);
-  border: 0;
+  left: calc(276 / 1215 * 100%);
+  top: calc(228 / 1295 * 100%);
+  width: calc(658 / 1215 * 100%);
+  height: calc(971 / 1295 * 100%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.door__hole {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Parallax: --px / --py (-1 → 1) are set by js/main.js; the hall is
+   enlarged a little so its edges never show when it moves */
+.door__hall {
+  position: absolute;
+  inset: 0;
+  background: url("../assets/images/facade/door-hall-day.webp") center / 100% 100% no-repeat;
+  scale: 1.12;
+  translate: calc(var(--px, 0) * -6px) calc(var(--py, 0) * -4px);
+  transition: scale 1.4s ease, translate 0.5s ease-out;
+}
+
+.door__leaves {
+  position: absolute;
+  inset: 0;
+  background: url("../assets/images/facade/door-leaves-day.webp") center / 100% 100% no-repeat;
+}
+
+.door:is(:hover, :focus-visible, .is-open) .door__open { opacity: 1; }
+.door:is(:hover, :focus-visible, .is-open) .door__hall { scale: 1.07; }   /* a slow step "into" the hall */
+
+/* The door and its call to action, placed on the leaves */
+.door-wrap {
+  position: relative;
+}
+
+.door-cta {
+  position: absolute;
+  left: 50%;
+  top: 64%;                 /* on the lower panels of the leaves */
+  translate: -50% -50%;
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.35);
+}
+
+.door-cta:hover { transform: none; translate: -50% calc(-50% - 2px); }
+
+/* Hovering or focusing the CTA opens the door */
+.door-wrap:has(.door-cta:is(:hover, :focus-visible)) .door__open { opacity: 1; }
+.door-wrap:has(.door-cta:is(:hover, :focus-visible)) .door__hall { scale: 1.07; }
+
+/* Credits at the very bottom of the page, over the step: small, on a dark
+   translucent pill so they stay readable over the stone */
+.ground .facade__credits {
+  position: absolute;
+  bottom: var(--space-2);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 1;
+  width: max-content;
+  max-width: calc(100% - 2 * var(--gutter));
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-pill);
-  background: none;
-  color: var(--fg-muted);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
+  background: rgb(0 0 0 / 0.6);
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
 }
 
-.bizcard__flip svg {
-  width: 14px;
-  height: 14px;
-  transition: rotate 0.4s var(--ease-spring);
-}
+.ground .facade__credits a { text-decoration: underline; }
 
-.bizcard__flip:hover {
-  color: var(--accent-2);
-}
-
-/* --- Interactive mode (JS active) --- */
-.bizcard.is-interactive .bizcard__inner {
-  gap: 0;
-  transform-style: preserve-3d;   /* the children keep their 3D (needed for the back) */
-  transition: transform 0.8s var(--ease-spring);
-}
-
-.bizcard.is-interactive .bizcard__face {
-  grid-area: 1 / 1;              /* both faces in the same cell → superimposed */
-  backface-visibility: hidden;   /* a turned face is invisible from behind */
-  -webkit-backface-visibility: hidden;
-}
-
-.bizcard.is-interactive .bizcard__face--back {
-  transform: rotateY(180deg);    /* the back starts out "turned over" */
-}
-
-/* Parallax tilt: the OUTER card tilts toward the mouse (--tilt-x / --tilt-y,
-   set by JS), while the INNER card handles the flip. Two different elements
-   → the two rotations add up without overwriting each other. */
-.bizcard.is-interactive {
-  cursor: pointer;
-  transform: perspective(1200px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
-  transform-style: preserve-3d;
-}
-
-/* Hover: the card lifts slightly and the arrows turn → "it's interactive" */
-.bizcard.is-interactive:hover .bizcard__inner {
-  translate: 0 -4px;
-}
-
-.bizcard.is-interactive:hover .bizcard__flip svg {
-  rotate: 180deg;
-}
-
-.bizcard.is-flipped .bizcard__inner {
-  transform: rotateY(180deg);
-}
-
-/* The face we can't see must not catch the mouse: in 3D, the browser can
-   still "hit" the hidden face lying on top, and the click then flips the card
-   instead of following the link ("Get to know me", LinkedIn) */
-.bizcard.is-interactive:not(.is-flipped) .bizcard__face--back,
-.bizcard.is-flipped .bizcard__face--front {
-  pointer-events: none;
-}
-
-/* Very narrow screens: the front goes vertical (photo above the name) */
-@media (max-width: 420px) {
-  .bizcard__face--front {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-  }
-  .bizcard__face { padding: var(--space-5); min-height: 280px; }
+@media (prefers-reduced-motion: reduce) {
+  .door__open, .door__hall { transition: none; }
 }
 
 

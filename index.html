@@ -142,7 +142,7 @@
     <!-- FEATURED PRODUCTS: the building facade -->
     <section class="facade" aria-labelledby="featured-title">
       <div class="facade__cornice">
-        <h2 id="featured-title">My Featured Products.</h2>
+        <h2 id="featured-title">A glimpse into the experiences I've built</h2>
       </div>
 
       <div class="facade__wall">
@@ -151,23 +151,28 @@
                the whole area is clickable, with a single link per project.
                The CTA is aria-hidden: a screen reader already announces the
                link with its title, no need to also hear "View more". -->
+          <!-- Newest project first -->
           <li>
-            <a class="window" href="fire_safety.html">
+            <a class="window" href="it_support.html">
+              <span class="window__closed-night" aria-hidden="true"></span>
+              <span class="window__day" aria-hidden="true"></span>
               <span class="window__card project-card">
                 <span class="project-card__top">
-                  <span class="project-card__year">2023</span>
+                  <span class="project-card__year">2026</span>
                   <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
-                <span class="project-card__title">Finding the right regulation in 600+ pages with RAG</span>
+                <span class="project-card__title">Simplifying IT support for 70,000 employees with AI</span>
                 <span class="tags">
-                  <span class="tag tag--skill">UX/UI Design</span>
-                  <span class="tag"><time datetime="P4W">4 weeks</time></span>
+                  <span class="tag tag--skill">AI Experience Design</span>
+                  <span class="tag"><time datetime="P9M">9 months</time></span>
                 </span>
               </span>
             </a>
           </li>
           <li>
             <a class="window window--inspecting" href="data_tagging.html">
+              <span class="window__closed-night" aria-hidden="true"></span>
+              <span class="window__day" aria-hidden="true"></span>
               <span class="window__card project-card">
                 <span class="project-card__top">
                   <span class="project-card__year">2025</span>
@@ -182,9 +187,29 @@
             </a>
           </li>
           <li>
+            <a class="window" href="fire_safety.html">
+              <span class="window__closed-night" aria-hidden="true"></span>
+              <span class="window__day" aria-hidden="true"></span>
+              <span class="window__card project-card">
+                <span class="project-card__top">
+                  <span class="project-card__year">2023</span>
+                  <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                </span>
+                <span class="project-card__title">Finding the right regulation in 600+ pages with RAG</span>
+                <span class="tags">
+                  <span class="tag tag--skill">UX/UI Design</span>
+                  <span class="tag"><time datetime="P4W">4 weeks</time></span>
+                </span>
+              </span>
+            </a>
+          </li>
+          <!-- Work in progress: last -->
+          <li>
             <!-- Work in progress: no page yet, so it's a <div>, not a link.
                  window--soon: the shutters stay closed, only "Coming soon" appears -->
             <div class="window window--soon">
+              <span class="window__closed-night" aria-hidden="true"></span>
+              <span class="window__day" aria-hidden="true"></span>
               <span class="window__card project-card">
                 <span class="project-card__top">
                   <span class="project-card__year">2024</span>
@@ -197,78 +222,45 @@
               </span>
             </div>
           </li>
-          <li>
-            <a class="window" href="it_support.html">
-              <span class="window__card project-card">
-                <span class="project-card__top">
-                  <span class="project-card__year">2026</span>
-                  <span class="project-card__cta" aria-hidden="true">View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-                </span>
-                <span class="project-card__title">Simplifying IT support for 70,000 employees with AI</span>
-                <span class="tags">
-                  <span class="tag tag--skill">AI Experience Design</span>
-                  <span class="tag"><time datetime="P9M">9 months</time></span>
+        </ul>
+
+      </div>
+
+      <!-- GROUND FLOOR: a Haussmann door that leads to the About page.
+           It is the last thing on the page: the door stands on its bottom edge. -->
+      <div class="ground">
+        <div class="ground__floor">
+          <!-- The door: closed render on top of everything at rest. When it
+               opens (hover, keyboard focus, or mid-screen on touch: js/main.js)
+               the hall and the open leaves fade in; the hall drifts a little
+               behind the leaves (parallax). -->
+          <div class="door-wrap">
+            <!-- The door is clickable with the mouse, but the keyboard and screen
+                 readers get ONE link: the call to action placed on it (tabindex -1
+                 + aria-hidden on the door). Focusing the CTA opens the door too. -->
+            <a class="door" href="about.html" data-door tabindex="-1" aria-hidden="true">
+              <span class="door__scene" aria-hidden="true">
+                <span class="door__open">
+                  <span class="door__hole"><span class="door__hall"></span></span>
+                  <span class="door__leaves"></span>
                 </span>
               </span>
             </a>
-          </li>
-        </ul>
 
-        <!-- Credits for the facade, written on the wall itself (bottom) -->
-        <p class="facade__credits">AI-generated background and windows. Stickmans from <a href="https://www.flaticon.com/fr/auteurs/paulalee">Paulalee</a>.</p>
-      </div>
-    </section>
-
-    <!-- ABOUT TEASER -->
-    <!-- BUSINESS CARD that flips over (js/main.js).
-         Without JS: the two faces are shown one below the other. -->
-    <section class="teaser" aria-labelledby="card-title">
-      <h2 id="card-title" class="visually-hidden">Business card</h2>
-
-      <div class="bizcard" data-bizcard>
-        <div class="bizcard__inner">
-
-          <!-- FRONT -->
-          <div class="bizcard__face bizcard__face--front">
-            <span class="bizcard__doodle bizcard__doodle--star doodle doodle--star" aria-hidden="true"></span>
-            <span class="bizcard__doodle bizcard__doodle--sun doodle doodle--sun" aria-hidden="true"></span>
-            <span class="bizcard__doodle bizcard__doodle--a2 doodle doodle--a2" aria-hidden="true"></span>
-
-            <img class="bizcard__photo" src="assets/images/portrait.jpg" alt="" width="88" height="88" loading="lazy">
-            <div class="bizcard__id">
-              <p class="bizcard__name">Alexia Carré</p>
-              <p class="bizcard__role">Product Manager &amp; Designer</p>
-              <p class="bizcard__meta">Enterprise UX · Paris</p>
-            </div>
-
-            <button class="bizcard__flip" type="button" hidden>
-              Flip the card
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>
-            </button>
+            <a class="btn btn--primary door-cta" href="about.html">
+              Come in and meet me
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
           </div>
 
-          <!-- BACK -->
-          <div class="bizcard__face bizcard__face--back">
-            <span class="bizcard__doodle bizcard__doodle--about-sun doodle doodle--about-sun" aria-hidden="true"></span>
-
-            <p class="bizcard__headline">Curious &amp; detail-oriented.</p>
-            <p class="bizcard__meta">Product Strategy × UX Design</p>
-            <div class="bizcard__actions">
-              <a class="btn btn--primary" href="about.html">Get to know me</a>
-              <a class="btn btn--secondary" href="https://www.linkedin.com/in/alexiacarre1/" target="_blank" rel="noopener">LinkedIn</a>
-            </div>
-
-            <button class="bizcard__flip" type="button" hidden>
-              Flip back
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>
-            </button>
-          </div>
-
+          <!-- Credits, at the very bottom of the page -->
+          <p class="facade__credits">AI-generated cornice, windows and door. Stickmans from <a href="https://www.flaticon.com/fr/auteurs/paulalee">Paulalee</a>.</p>
         </div>
       </div>
     </section>
 
   </main>
+
 
 
 </body>
