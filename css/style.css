@@ -44,14 +44,8 @@
   --key-figure: var(--accent-2); /* key figures: accent 2 in both modes */
   --logo-filter: none;           /* black logos: unchanged in light */
   --facade-dim: 0;               /* facade (photos): not darkened in light */
-  /* Facade renders: day in light mode (rooms unlit), lamps on at night (dark) */
-  --img-window-closed:      url("../assets/images/facade/window-closed.png");   /* shutters closed: same day and night */
-  --img-window-overwhelmed: url("../assets/images/facade/window-day-open-overwhelmed.webp");
-  --img-window-inspecting:  url("../assets/images/facade/window-day-open-inspecting.webp");
-  --img-window-cooking:     url("../assets/images/facade/window-day-open-cooking.webp");
-  --img-door-closed:        url("../assets/images/facade/door-closed.webp");   /* no unlit closed render yet */
-  --img-door-hall:          url("../assets/images/facade/door-hall-day.webp");
-  --img-door-leaves:        url("../assets/images/facade/door-leaves-day.webp");
+  --lights: 0;                   /* facade lamps: off by day (see "lights" below) */
+  --lights-delay: 0s;            /* lamps go off right away… */
   --tag-darken: 20%;             /* tag text slightly darkened (contrast) */
 }
 
@@ -79,13 +73,8 @@
     --on-band: #f2ede3;
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
     --facade-dim: 0.5;                           /* "no brown in dark": darkened facade */
-    --img-window-closed: url("../assets/images/facade/window-closed.png");
-    --img-window-overwhelmed: url("../assets/images/facade/window-open-overwhelmed.png");
-    --img-window-inspecting: url("../assets/images/facade/window-open-inspecting.png");
-    --img-window-cooking: url("../assets/images/facade/window-open-cooking.png");
-    --img-door-closed: url("../assets/images/facade/door-closed.webp");
-    --img-door-hall: url("../assets/images/facade/door-hall.webp");
-    --img-door-leaves: url("../assets/images/facade/door-leaves.webp");
+    --lights: 1;
+    --lights-delay: 0.7s;                        /* …and come on once dusk has fallen */
     --tag-darken: 0%;                            /* the dark-mode colors already pass */
   }
 }
@@ -111,14 +100,25 @@
   --on-band: #f2ede3;
   --logo-filter: invert(1) hue-rotate(180deg);
   --facade-dim: 0.5;
-  --img-window-closed: url("../assets/images/facade/window-closed.png");
-  --img-window-overwhelmed: url("../assets/images/facade/window-open-overwhelmed.png");
-  --img-window-inspecting: url("../assets/images/facade/window-open-inspecting.png");
-  --img-window-cooking: url("../assets/images/facade/window-open-cooking.png");
-  --img-door-closed: url("../assets/images/facade/door-closed.webp");
-  --img-door-hall: url("../assets/images/facade/door-hall.webp");
-  --img-door-leaves: url("../assets/images/facade/door-leaves.webp");
+  --lights: 1;
+  --lights-delay: 0.7s;
   --tag-darken: 0%;
+}
+
+/* Lights: --facade-dim (the dusk veil) and --lights (lamps on) are numbers
+   registered with @property, so the browser can ANIMATE them when the theme
+   changes, instead of jumping. Every day layer has a night twin on top of it
+   whose opacity is --lights: when it goes 0 → 1, the lamps come on. */
+@property --facade-dim {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --lights {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
 }
 
 /* b) Component aliases → tokens (the same for both themes) */
@@ -1297,6 +1297,25 @@ a.work-card:hover .work-card__doodle {
 }
 
 /* ---------- HOME: building facade ---------- */
+.facade {
+  transition: --facade-dim 1.6s ease-in-out;
+}
+
+/* Lamps: each window / the door animates its own --lights, one after the
+   other (--stagger), like neighbours switching their lights on */
+.window,
+.door {
+  transition: --lights 1.4s cubic-bezier(0.5, 0, 0.3, 1) calc(var(--lights-delay) + var(--stagger, 0s));
+}
+
+.windows > li:nth-child(2) .window { --stagger: 0.35s; }
+.windows > li:nth-child(3) .window { --stagger: 0.7s; }
+.windows > li:nth-child(4) .window { --stagger: 1s; }
+.door { --stagger: 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .facade, .window, .door { transition: none; }
+}
 .facade__cornice {
   position: relative;
   display: grid;
@@ -1340,11 +1359,14 @@ a.work-card:hover .work-card__doodle {
   list-style: none;
 }
 
-/* Each window stacks two layers:
-     ::before = closed window, ::after = open window (image chosen by --window-open)
-   On hover we fade one out and the other in. */
+/* Each window stacks three layers:
+     ::before      = closed shutters (the same day and night)
+     .window__day  = open window, by day (rooms unlit)
+     ::after       = open window, at night (lit), on top, opacity × --lights
+   On hover we fade the closed one out and the open ones in. */
 .window {
-  --window-open: var(--img-window-overwhelmed);
+  --open-day: url("../assets/images/facade/window-day-open-overwhelmed.webp");
+  --open-night: url("../assets/images/facade/window-open-overwhelmed.png");
   position: relative;
   /* flow-root (rather than block): a block that is "self-contained". Without it,
      the card's margin-top would "collapse" outside the window and the card would
@@ -1353,11 +1375,18 @@ a.work-card:hover .work-card__doodle {
   width: 100%;
 }
 
-.window--inspecting { --window-open: var(--img-window-inspecting); }
-.window--cooking    { --window-open: var(--img-window-cooking); }
+.window--inspecting {
+  --open-day: url("../assets/images/facade/window-day-open-inspecting.webp");
+  --open-night: url("../assets/images/facade/window-open-inspecting.png");
+}
+.window--cooking {
+  --open-day: url("../assets/images/facade/window-day-open-cooking.webp");
+  --open-night: url("../assets/images/facade/window-open-cooking.png");
+}
 
 .window::before,
-.window::after {
+.window::after,
+.window__day {
   content: "";
   position: absolute;
   inset: 0 0 auto;          /* pinned to the top… */
@@ -1369,14 +1398,17 @@ a.work-card:hover .work-card__doodle {
 }
 
 .window::before {
-  background-image: var(--img-window-closed);
+  background-image: url("../assets/images/facade/window-closed.png");
 }
 
+.window__day,
 .window::after {
-  background-image: var(--window-open);
   opacity: 0;
   scale: 0.92 1;   /* shutters slightly "folded": they unfold on opening */
 }
+
+.window__day   { background-image: var(--open-day); }
+.window::after { background-image: var(--open-night); }
 
 /* Opening: mouse hover, keyboard focus on the card,
    or .is-open class (added by JS on touchscreens) */
@@ -1386,10 +1418,13 @@ a.work-card:hover .work-card__doodle {
   opacity: 0;
 }
 
-.window:hover::after,
-.window:focus-within::after,
-.window.is-open::after {
+.window:is(:hover, :focus-within, .is-open) .window__day {
   opacity: 1;
+  scale: 1;
+}
+
+.window:is(:hover, :focus-within, .is-open)::after {
+  opacity: var(--lights);
   scale: 1;
 }
 
@@ -1400,7 +1435,8 @@ a.work-card:hover .work-card__doodle {
   opacity: 1;
 }
 
-.window--soon:is(:hover, :focus-within, .is-open)::after {
+.window--soon:is(:hover, :focus-within, .is-open)::after,
+.window--soon:is(:hover, :focus-within, .is-open) .window__day {
   opacity: 0;
   scale: 0.92 1;
 }
@@ -1528,7 +1564,7 @@ a.work-card:hover .work-card__doodle {
   display: block;
   width: var(--door-w);
   aspect-ratio: 1215 / 1295;
-  background: var(--img-door-closed) center / 100% 100% no-repeat;
+  background: url("../assets/images/facade/door-closed-day.webp") center / 100% 100% no-repeat;
   filter: brightness(calc(1 - var(--facade-dim) * 0.6));
   -webkit-mask:
     linear-gradient(90deg, transparent 8%, #000 10.5% 89.5%, transparent 92%),
@@ -1540,8 +1576,24 @@ a.work-card:hover .work-card__doodle {
   mask-composite: intersect;
 }
 
+/* Night twins of the door layers: same image, lamps on, opacity = --lights */
+.door__scene::after,
+.door__hall::after,
+.door__leaves::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: center / 100% 100% no-repeat;
+  opacity: var(--lights);
+}
+
+.door__scene::after  { background-image: url("../assets/images/facade/door-closed.webp"); }
+.door__hall::after   { background-image: url("../assets/images/facade/door-hall.webp"); }
+.door__leaves::after { background-image: url("../assets/images/facade/door-leaves.webp"); }
+
 /* Open state: placed exactly on the opening of the render (276→934 × 228→1199 px) */
 .door__open {
+  z-index: 1;               /* above the closed night twin (::after) */
   position: absolute;
   left: calc(276 / 1215 * 100%);
   top: calc(228 / 1295 * 100%);
@@ -1562,7 +1614,7 @@ a.work-card:hover .work-card__doodle {
 .door__hall {
   position: absolute;
   inset: 0;
-  background: var(--img-door-hall) center / 100% 100% no-repeat;
+  background: url("../assets/images/facade/door-hall-day.webp") center / 100% 100% no-repeat;
   scale: 1.12;
   translate: calc(var(--px, 0) * -6px) calc(var(--py, 0) * -4px);
   transition: scale 1.4s ease, translate 0.5s ease-out;
@@ -1571,7 +1623,7 @@ a.work-card:hover .work-card__doodle {
 .door__leaves {
   position: absolute;
   inset: 0;
-  background: var(--img-door-leaves) center / 100% 100% no-repeat;
+  background: url("../assets/images/facade/door-leaves-day.webp") center / 100% 100% no-repeat;
 }
 
 .door:is(:hover, :focus-visible, .is-open) .door__open { opacity: 1; }
