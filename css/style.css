@@ -1542,6 +1542,9 @@ a.work-card:hover .work-card__doodle {
 .ground__floor {
   position: relative;
   display: grid;
+  /* door centered, the call to action beside it, at mid height */
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: var(--space-6);
   justify-items: center;
   padding: calc(22px + var(--space-5)) var(--gutter) 0;   /* 22 px: the string course */
   background:
@@ -1645,9 +1648,30 @@ a.work-card:hover .work-card__doodle {
 .door:is(:hover, :focus-visible, .is-open) .door__open { opacity: 1; }
 .door:is(:hover, :focus-visible, .is-open) .door__hall { scale: 1.07; }   /* a slow step "into" the hall */
 
+.door { grid-column: 2; }
+
+/* Call to action at door level. Hovering or focusing it opens the door. */
+.door-cta {
+  grid-column: 3;
+  justify-self: start;
+  align-self: center;
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.25);
+}
+
+.ground__floor:has(.door-cta:is(:hover, :focus-visible)) .door__open { opacity: 1; }
+.ground__floor:has(.door-cta:is(:hover, :focus-visible)) .door__hall { scale: 1.07; }
+
+/* Below 1200 px there is no room beside the 560 px door: the CTA goes above it */
+@media (max-width: 1199px) {
+  .ground__floor { grid-template-columns: 1fr; }
+  .door { grid-column: 1; grid-row: 3; }
+  .door-cta { grid-column: 1; grid-row: 2; justify-self: center; margin-bottom: var(--space-6); }
+}
+
 /* Credits written on the wall, above the door: small, on a dark
    translucent pill so they stay readable over the stone */
 .ground .facade__credits {
+  grid-column: 1 / -1;
   max-width: 100%;
   margin: 0 0 var(--space-6);
   padding: var(--space-1) var(--space-3);
