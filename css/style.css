@@ -1366,7 +1366,7 @@ a.work-card:hover .work-card__doodle {
    On hover we fade the closed one out and the open ones in. */
 .window {
   --open-day: url("../assets/images/facade/window-day-open-overwhelmed.webp");
-  --open-night: url("../assets/images/facade/window-open-overwhelmed.png");
+  --open-night: url("../assets/images/facade/window-night-open-overwhelmed.webp");
   position: relative;
   /* flow-root (rather than block): a block that is "self-contained". Without it,
      the card's margin-top would "collapse" outside the window and the card would
@@ -1377,11 +1377,11 @@ a.work-card:hover .work-card__doodle {
 
 .window--inspecting {
   --open-day: url("../assets/images/facade/window-day-open-inspecting.webp");
-  --open-night: url("../assets/images/facade/window-open-inspecting.png");
+  --open-night: url("../assets/images/facade/window-night-open-inspecting.webp");
 }
 .window--cooking {
   --open-day: url("../assets/images/facade/window-day-open-cooking.webp");
-  --open-night: url("../assets/images/facade/window-open-cooking.png");
+  --open-night: url("../assets/images/facade/window-night-open-cooking.webp");
 }
 
 .window::before,
@@ -1408,7 +1408,11 @@ a.work-card:hover .work-card__doodle {
 }
 
 .window__day   { background-image: var(--open-day); }
-.window::after { background-image: var(--open-night); }
+.window::after {
+  background-image: var(--open-night);
+  /* the lit room must glow: dimmed less than the wall and the shutters */
+  filter: brightness(calc(1 - var(--facade-dim) * 0.3));
+}
 
 /* Opening: mouse hover, keyboard focus on the card,
    or .is-open class (added by JS on touchscreens) */
