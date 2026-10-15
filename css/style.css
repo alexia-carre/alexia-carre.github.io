@@ -45,10 +45,11 @@
   --logo-filter: none;           /* black logos: unchanged in light */
   --facade-dim: 0;               /* facade (photos): not darkened in light */
   /* Facade renders: day in light mode (rooms unlit), lamps on at night (dark) */
-  --img-window-overwhelmed: url("../assets/images/facade/window-open-overwhelmed-day.png");
-  --img-window-inspecting:  url("../assets/images/facade/window-open-inspecting-day.png");
-  --img-window-cooking:     url("../assets/images/facade/window-open-cooking-day.png");
-  --img-door-closed:        url("../assets/images/facade/door-closed-day.webp");
+  --img-window-closed:      url("../assets/images/facade/window-day-closed.webp");
+  --img-window-overwhelmed: url("../assets/images/facade/window-day-open-overwhelmed.webp");
+  --img-window-inspecting:  url("../assets/images/facade/window-day-open-inspecting.webp");
+  --img-window-cooking:     url("../assets/images/facade/window-day-open-cooking.webp");
+  --img-door-closed:        url("../assets/images/facade/door-closed.webp");   /* no unlit closed render yet */
   --img-door-hall:          url("../assets/images/facade/door-hall-day.webp");
   --img-door-leaves:        url("../assets/images/facade/door-leaves-day.webp");
   --tag-darken: 20%;             /* tag text slightly darkened (contrast) */
@@ -78,6 +79,7 @@
     --on-band: #f2ede3;
     --logo-filter: invert(1) hue-rotate(180deg); /* black logos → light */
     --facade-dim: 0.5;                           /* "no brown in dark": darkened facade */
+    --img-window-closed: url("../assets/images/facade/window-closed.png");
     --img-window-overwhelmed: url("../assets/images/facade/window-open-overwhelmed.png");
     --img-window-inspecting: url("../assets/images/facade/window-open-inspecting.png");
     --img-window-cooking: url("../assets/images/facade/window-open-cooking.png");
@@ -109,6 +111,7 @@
   --on-band: #f2ede3;
   --logo-filter: invert(1) hue-rotate(180deg);
   --facade-dim: 0.5;
+  --img-window-closed: url("../assets/images/facade/window-closed.png");
   --img-window-overwhelmed: url("../assets/images/facade/window-open-overwhelmed.png");
   --img-window-inspecting: url("../assets/images/facade/window-open-inspecting.png");
   --img-window-cooking: url("../assets/images/facade/window-open-cooking.png");
@@ -1366,7 +1369,7 @@ a.work-card:hover .work-card__doodle {
 }
 
 .window::before {
-  background-image: url("../assets/images/facade/window-closed.png");
+  background-image: var(--img-window-closed);
 }
 
 .window::after {
