@@ -1564,8 +1564,9 @@ a.work-card:hover .work-card__doodle {
   outline-offset: 6px;
 }
 
-/* The closed render. Its own strip of wall (left/right) is faded out just
-   outside the cornice, so the door sits on the wall of the page */
+/* The closed render. A mask cut along the stone surround (cornice,
+   pilasters, plinth) hides the render's own wall: the door sits directly on
+   the wall of the page, so there are no joints to line up */
 .door__scene {
   position: relative;
   display: block;
@@ -1573,14 +1574,8 @@ a.work-card:hover .work-card__doodle {
   aspect-ratio: 1215 / 1295;
   background: url("../assets/images/facade/door-closed-day.webp") center / 100% 100% no-repeat;
   filter: brightness(calc(1 - var(--facade-dim) * 0.6));
-  -webkit-mask:
-    linear-gradient(90deg, transparent 8%, #000 10.5% 89.5%, transparent 92%),
-    linear-gradient(transparent, #000 1.5%);
-  -webkit-mask-composite: source-in;
-  mask:
-    linear-gradient(90deg, transparent 8%, #000 10.5% 89.5%, transparent 92%),
-    linear-gradient(transparent, #000 1.5%);
-  mask-composite: intersect;
+  -webkit-mask: url("../assets/images/facade/door-mask.png") 0 0 / 100% 100% no-repeat;
+  mask: url("../assets/images/facade/door-mask.png") 0 0 / 100% 100% no-repeat;
 }
 
 /* Night twins of the door layers: same image, lamps on, opacity = --lights */
