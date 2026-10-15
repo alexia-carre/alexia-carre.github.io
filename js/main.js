@@ -192,6 +192,56 @@ if (windowList && windowCards.length) {
 
 
 // ===========================================================================
+// Door (home page): light parallax in the hall + opening on touch
+// ---------------------------------------------------------------------------
+// - Mouse: --px / --py (-1 → 1) follow the cursor over the ground floor;
+//   the CSS shifts the hall a few pixels behind the leaves.
+// - Touch: no hover, so the door opens when it reaches the middle of the
+//   screen (like the windows), and the scroll position drives --py.
+// ===========================================================================
+
+const door = document.querySelector("[data-door]");
+
+if (door) {
+  const setParallax = (x, y) => {
+    door.style.setProperty("--px", Math.max(-1, Math.min(1, x)).toFixed(3));
+    door.style.setProperty("--py", Math.max(-1, Math.min(1, y)).toFixed(3));
+  };
+
+  if (canHover && !reduceMotion) {
+    const ground = door.closest(".ground");
+    ground.addEventListener("pointermove", (event) => {
+      const box = door.getBoundingClientRect();
+      setParallax(
+        (event.clientX - (box.left + box.width / 2)) / (box.width / 2),
+        (event.clientY - (box.top + box.height / 2)) / (box.height / 2),
+      );
+    });
+    ground.addEventListener("pointerleave", () => setParallax(0, 0));
+  }
+
+  if (!canHover) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((entry) => door.classList.toggle("is-open", entry.isIntersecting));
+    }, { rootMargin: "-30% 0px -30% 0px" }).observe(door);
+
+    if (!reduceMotion) {
+      let ticking = false;
+      window.addEventListener("scroll", () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const box = door.getBoundingClientRect();
+          setParallax(0, (box.top + box.height / 2 - innerHeight / 2) / (innerHeight / 2));
+          ticking = false;
+        });
+      }, { passive: true });
+    }
+  }
+}
+
+
+// ===========================================================================
 // Photo carousel (About page)
 // ---------------------------------------------------------------------------
 // "Progressive enhancement" principle: the HTML/CSS already work without
